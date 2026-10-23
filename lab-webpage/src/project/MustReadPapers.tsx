@@ -11,17 +11,17 @@ function MustReadPapers() {
       src: "/images/must_read_paper_1.png",
       alt: "Effect of annealing on the microstructure and magnetic properties of soft magnetic Fe-Si produced via laser additive manufacturing",
       keywords:
-        "Additive manufacturing, Annealing, Powder processing, Soft magnetic materals, Magnetic properties",
+        "Additive manufacturing, Annealing, Powder processing, Soft magnetic materials, Magnetic properties",
     },
     {
       src: "/images/must_read_paper_2.png", // 예시 이미지
       alt: "Diffusion driven columnar grain growth induced in an Al–Si-coated steel substrate",
       keywords:
-        "Difussion, Metallic coating, Grain growth, Phase transformation, Electrical steel",
+        "Diffusion, Metallic coating, Grain growth, Phase transformation, Electrical steel",
     },
     {
       src: "/images/must_read_paper_3.png", // 예시 이미지
-      alt: "Developmentof (100) Texture in Silicon Steel Sheets by Removal of Manganeseand Decarbunzatron",
+      alt: "Development of (100) Texture in Silicon Steel Sheets by Removal of Manganese and Decarburization",
       keywords:
         "(100) texture, Removal of manganese, Decarburization, Silicon steel sheets, Magnetic properties",
     },

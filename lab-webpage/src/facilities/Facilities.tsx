@@ -103,7 +103,7 @@ function Facilities() {
                       alt=""
                     />
                     <div className="font-bold">
-                      {"Gas Furnace (H decarbonization & diffusion)"}
+                      {"Gas Furnace (H decarburization & diffusion)"}
                     </div>
                   </div>
                   <div className="flex flex-col items-center">

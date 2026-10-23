@@ -4,14 +4,14 @@ function Footer() {
       <div className="ml-10">
         <div className="text-xl">Data Driven Material Design Lab @PKNU</div>
         <div className="text-xl mb-5">
-          Advanded Steel Design & Data Processing-Based AI
+          Advanced Steel Design & Data Processing-Based AI
         </div>
         <div>
           <div></div>Department of Materials System Engineering, Pukyong
           National University, 45 Yongso-ro, Nam-gu, Busan, 48513 Republic of
           Korea
         </div>
-        <div className="mb-5">Office Engeneering 1 Building 1001</div>
+        <div className="mb-5">Office Engineering 1 Building 1001</div>
         <div>Phone : +82-51-629-6378</div>
         <div>Email : newtain@pknu.ac.kr</div>
         <div className="text-my_name">
