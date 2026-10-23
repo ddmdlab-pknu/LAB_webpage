@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { Label, PageHead, useCopy } from "../ui";
+import { PageHead, useCopy } from "../ui";
+import { Mark } from "../sections";
 
 const EMAIL = "newtain@pknu.ac.kr";
 
@@ -47,7 +48,6 @@ function JoinUs() {
     <>
       <PageHead label="Join us" title="Join Us" ko="다음 소재를 함께 설계할 학부연구생과 대학원생을 찾습니다." />
       <section className="wrap band-s">
-        <Label>Research</Label>
         <h2 className="h">주요 연구 분야</h2>
         <div className="grid4" style={{ marginTop: 32 }}>
           {AREAS.map((a) => (
@@ -56,7 +56,7 @@ function JoinUs() {
                 <img src={a.img} alt={a.title} loading="lazy" />
               </div>
               <div className="txt">
-                <h3 style={{ fontSize: 18 }}>{a.title}</h3>
+                <h3>{a.title}</h3>
                 <p>{a.desc}</p>
               </div>
             </article>
@@ -64,7 +64,6 @@ function JoinUs() {
         </div>
       </section>
       <section className="wrap band-s">
-        <Label>Why DDMD</Label>
         <h2 className="h">연구실 혜택</h2>
         <div className="grid3" style={{ marginTop: 32 }}>
           {BENEFITS.map((b) => (
@@ -73,7 +72,7 @@ function JoinUs() {
                 <h3>{b.title}</h3>
                 <ul className="dots mute">
                   {b.items.map((i) => (
-                    <li key={i} style={{ fontSize: 14.5 }}>
+                    <li key={i} style={{ fontSize: 14 }}>
                       {i}
                     </li>
                   ))}
@@ -84,29 +83,24 @@ function JoinUs() {
         </div>
       </section>
       <section className="wrap band-s">
-        <Label>Who we look for</Label>
         <h2 className="h">이런 분들과 함께하고 싶습니다</h2>
         <ul className="ideal">
           {IDEAL.map((t) => (
             <li key={t}>
-              <i>●</i>
+              <Mark size={22} />
               {t}
             </li>
           ))}
         </ul>
       </section>
       <section className="wrap band-s">
-        <div className="cta" style={{ gridTemplateColumns: "1fr" }}>
-          <div className="cta-copy" style={{ gap: 20 }}>
-            <h2 className="h">관심 있으신가요?</h2>
-            <p>CV와 간단한 자기소개를 아래 주소로 보내 주세요.</p>
-            <div className="btns" style={{ marginTop: 0 }}>
-              <button type="button" className="btn dark" onClick={() => copy(mailRef.current)}>
-                <span ref={mailRef}>{EMAIL}</span>
-                <i>{copied ? "복사됨" : "복사"}</i>
-              </button>
-            </div>
-          </div>
+        <div className="joinbox">
+          <h2 className="h">관심 있으신가요?</h2>
+          <p className="body" style={{ margin: 0 }}>CV와 간단한 자기소개를 아래 주소로 보내 주세요.</p>
+          <button type="button" className="btn" onClick={() => copy(mailRef.current)}>
+            <span ref={mailRef}>{EMAIL}</span>
+            <i>{copied ? "복사됨" : "복사"}</i>
+          </button>
         </div>
       </section>
     </>

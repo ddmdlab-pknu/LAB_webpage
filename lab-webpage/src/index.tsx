@@ -9,6 +9,9 @@ import { SITE_DESIGN } from "./siteDesign";
 const ClassicSite = React.lazy(() => import("./ClassicSite"));
 const CopperApp = React.lazy(() => import("./copper/CopperApp"));
 
+// 스크립트가 도는 경우에만 등장 움직임을 켠다 (스크립트가 없으면 모든 내용이 처음부터 보인다)
+document.documentElement.classList.add("js");
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
@@ -16,7 +19,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       {SITE_DESIGN === "copper" ? (
-        <Suspense fallback={<div style={{ minHeight: "100vh", background: "#f6f4f0" }} />}>
+        <Suspense fallback={<div style={{ minHeight: "100vh", background: "#f8f8f8" }} />}>
           <CopperApp />
         </Suspense>
       ) : (

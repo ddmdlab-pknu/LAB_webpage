@@ -28,7 +28,7 @@ function MustRead() {
                   <JournalChips journal={p.journal} />
                   <span className="chip">{p.year}</span>
                 </div>
-                <h3>{p.title}</h3>
+                <p className="ttl">{p.title}</p>
                 {p.authors && (
                   <p className="au">
                     <PaperAuthors authors={p.authors} />

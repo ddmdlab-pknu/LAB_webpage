@@ -11,11 +11,11 @@ function Projects() {
             <summary>
               <div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                  <span className={p.status === "In Progress" ? "chip s" : "chip"}>
+                  <span className={p.status === "In Progress" ? "chip q1" : "chip"}>
                     {p.status === "In Progress" ? "진행 중" : "완료"}
                   </span>
                   <span className="chip">{p.category}</span>
-                  <span className="chip c">{p.period}</span>
+                  <span className="chip">{p.period}</span>
                 </div>
                 <h3>{p.title}</h3>
                 <p>{p.description}</p>
@@ -27,10 +27,10 @@ function Projects() {
             <div className="pbody">
               <div>
                 <p className="en">{p.englishTitle}</p>
-                <p style={{ margin: "10px 0 0", color: "var(--mute)", fontSize: 14.5 }}>{p.org}</p>
+                <p style={{ margin: "10px 0 0", color: "var(--muted)", fontSize: 14 }}>{p.org}</p>
               </div>
               {p.image && (
-                <img src={p.image} alt={p.title} loading="lazy" style={{ width: "100%", maxWidth: 720, borderRadius: 10 }} />
+                <img src={p.image} alt={p.title} loading="lazy" style={{ width: "100%", maxWidth: 720 }} />
               )}
               <div>
                 <h4 className="sub">Keywords</h4>
@@ -60,7 +60,7 @@ function Projects() {
                     <li key={li}>
                       {line.map((part, pi) =>
                         part.bold ? (
-                          <b key={pi} style={{ color: "var(--fg)", fontWeight: 500 }}>
+                          <b key={pi} style={{ fontWeight: 600 }}>
                             {part.text}
                           </b>
                         ) : (

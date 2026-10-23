@@ -13,7 +13,7 @@ function News() {
             <div key={y} className="year">
               <h2>
                 {y}
-                <small>{items.length} ITEMS</small>
+                <small>{items.length}건</small>
               </h2>
               {items.map((n, i) => (
                 <div key={`${y}-${i}`} className="nrow">

@@ -1,5 +1,5 @@
-import { Label, PageHead, groupOf } from "../ui";
-import { ResearchTrack } from "../sections";
+import { PageHead, groupOf } from "../ui";
+import { ResearchIndex } from "../sections";
 
 const AREAS = [
   {
@@ -39,22 +39,19 @@ function ResearchAreas() {
     <>
       <PageHead label="Research" title="Research Areas" ko="자성 재료 · 집합조직 · AI 소재 설계 · 시뮬레이션" group={groupOf("Research")} />
       <section className="wrap band-s">
-        <Label>Introduction</Label>
-        <ul className="dots" style={{ marginTop: 24, maxWidth: 820, gap: 14 }}>
+        <h2 className="h">연구 방향</h2>
+        <ul className="dots" style={{ marginTop: 32, maxWidth: 860, gap: 14 }}>
           {INTRO.map(([a, b, c]) => (
-            <li key={b} style={{ fontSize: 19 }}>
+            <li key={b} className="statement" style={{ fontSize: "var(--t-lead)" }}>
               {a}
-              <b className="sage" style={{ fontWeight: 400 }}>
-                {b}
-              </b>
+              <b style={{ fontWeight: 700 }}>{b}</b>
               {c}
             </li>
           ))}
         </ul>
       </section>
-      <ResearchTrack />
+      <ResearchIndex />
       <section className="wrap band-s">
-        <Label>Major research areas</Label>
         <h2 className="h">주요 연구 분야</h2>
         <div className="grid2" style={{ marginTop: 36 }}>
           {AREAS.map((a) => (
@@ -72,7 +69,7 @@ function ResearchAreas() {
                 <div className="tagrow">
                   {a.tags.map((t) => (
                     <span key={t} className="chip">
-                      #{t}
+                      {t}
                     </span>
                   ))}
                 </div>

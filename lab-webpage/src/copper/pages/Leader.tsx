@@ -11,22 +11,23 @@ function Leader() {
         <PIBlock full />
       </section>
       <section className="wrap band-s">
-        <h3 className="sub">특허 목록</h3>
+        <h2 className="h" style={{ marginBottom: 32 }}>특허 목록</h2>
         <div className="grid3">
           {groups.map((g) => (
             <div key={g.label} className="tile">
               <div className="txt">
-                <span className="tag">{g.label}</span>
-                <h3>{g.count}건</h3>
+                <h3>
+                  {g.label} {g.count}건
+                </h3>
                 <ul className="dots mute">
                   {g.items.map((p) => (
-                    <li key={p} style={{ fontSize: 13.5 }}>
+                    <li key={p} style={{ fontSize: 14 }}>
                       {p}
                     </li>
                   ))}
                 </ul>
                 {g.count > g.items.length && (
-                  <p style={{ fontSize: 13 }}>외 {g.count - g.items.length}건</p>
+                  <p>외 {g.count - g.items.length}건</p>
                 )}
               </div>
             </div>
@@ -34,7 +35,7 @@ function Leader() {
         </div>
       </section>
       <section className="wrap band-s">
-        <h3 className="sub">자격 인증</h3>
+        <h2 className="h" style={{ marginBottom: 32 }}>자격 인증</h2>
         <div className="split" style={{ alignItems: "center" }}>
           <div className="cream" style={{ maxWidth: 520 }}>
             <img src="/images/Certificate_Prof.png" alt="Pandat 트레이너 인증서" style={{ width: "100%", display: "block" }} loading="lazy" />

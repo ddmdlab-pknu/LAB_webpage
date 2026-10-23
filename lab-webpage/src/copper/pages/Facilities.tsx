@@ -1,4 +1,4 @@
-import { Label, PageHead } from "../ui";
+import { PageHead } from "../ui";
 
 const GROUPS: { title: string; ko: string; items: { img: string; name: string; imgs?: string[]; contain?: boolean }[] }[] = [
   {
@@ -48,13 +48,10 @@ function Facilities() {
       {GROUPS.map((g) => (
         <section key={g.title} className="wrap band-s">
           <div className="head-row">
-            <div>
-              <Label>{g.ko}</Label>
-              <h2 className="h3" style={{ marginTop: 16 }}>
-                {g.title}
-              </h2>
-            </div>
-            <span className="chip">{g.items.length}</span>
+            <h2 className="h">{g.ko}</h2>
+            <p className="tag" style={{ margin: 0 }}>
+              {g.title} · {g.items.length}종
+            </p>
           </div>
           <div className="grid4" style={{ marginTop: 24 }}>
             {g.items.map((it) => (
@@ -64,8 +61,8 @@ function Facilities() {
                     <img key={src} src={src} alt={it.name} loading="lazy" style={{ minWidth: 0, flex: 1, padding: it.contain ? 18 : 0 }} />
                   ))}
                 </div>
-                <figcaption className="txt" style={{ padding: "12px 14px 14px" }}>
-                  <b style={{ fontWeight: 500, fontSize: 15 }}>{it.name}</b>
+                <figcaption className="txt" style={{ padding: "14px 16px 16px" }}>
+                  <b style={{ fontWeight: 600 }}>{it.name}</b>
                 </figcaption>
               </figure>
             ))}

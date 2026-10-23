@@ -20,8 +20,8 @@ import Gallery from "./pages/Gallery";
 import LabGame from "./pages/LabGame";
 import JoinUs from "./pages/JoinUs";
 
-const FONT_URL =
-  "https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap";
+// 글꼴: Pretendard 한 가지 (한글·라틴 모두, SIL OFL). public/fonts/pretendard 에 두고 쓰는 글자 묶음만 내려받는다
+const FONT_URL = "/fonts/pretendard/pretendardvariable-dynamic-subset.css";
 
 function useCopperDocument() {
   useEffect(() => {
@@ -34,17 +34,65 @@ function useCopperDocument() {
     const body = document.body.style;
     const html = document.documentElement.style;
     const prev = [body.background, html.colorScheme, html.scrollBehavior];
-    body.background = "#f6f4f0";
+    body.background = "#f8f8f8";
     html.colorScheme = "light";
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) html.scrollBehavior = "smooth";
     const meta = document.querySelector('meta[name="theme-color"]');
-    meta?.setAttribute("content", "#f6f4f0");
+    meta?.setAttribute("content", "#f8f8f8");
     return () => {
       body.background = prev[0];
       html.colorScheme = prev[1];
       html.scrollBehavior = prev[2];
     };
   }, []);
+}
+
+// 구역이 화면에 들어오면 제목 → 글 → 그림 순서로 한 번씩 떠오른다.
+// 숨김 상태는 CSS 의 prefers-reduced-motion: no-preference 안에만 있어서, 움직임 줄이기 설정이면 처음부터 다 보인다.
+const PARTS =
+  "h2:not(.sr), h3.h3, .body, .statement, .chart, .plate, .tabs, .kit, .cells, .ix-list, .ix-frame, .acc, .pi-left, .pi-right, .career > *, .ptile, .st-head, .photos, .team-copy, .roster, .nl-item, .tile, .prow, .mcard, .gitem, .proj, .nrow, .joinbox, .map, .info";
+function useReveal() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    const root = document.querySelector(".cu main");
+    // 휴대폰에서는 등장 움직임 없이 바로 보여 준다 (짧은 화면에서 읽기가 먼저)
+    if (!root || !("IntersectionObserver" in window) || window.matchMedia("(max-width: 700px)").matches) return;
+    const timers: number[] = [];
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const sec = e.target as HTMLElement;
+          sec.classList.add("in");
+          io.unobserve(sec);
+          // 등장이 끝나면 표시를 지워 이후의 마우스 반응이 원래 속도로 돌아오게 한다
+          timers.push(
+            window.setTimeout(() => sec.querySelectorAll("[data-part]").forEach((el) => el.removeAttribute("data-part")), 1800)
+          );
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.01 }
+    );
+    const prep = () =>
+      root.querySelectorAll<HTMLElement>("section:not([data-rv])").forEach((sec) => {
+        sec.setAttribute("data-rv", "");
+        let i = 0;
+        sec.querySelectorAll<HTMLElement>(PARTS).forEach((el) => {
+          if (el.parentElement?.closest("[data-part]")) return;
+          el.setAttribute("data-part", "");
+          el.style.setProperty("--i", String(Math.min(i++, 5)));
+        });
+        io.observe(sec);
+      });
+    prep();
+    const mo = new MutationObserver(prep);
+    mo.observe(root, { childList: true, subtree: true });
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+      timers.forEach((t) => clearTimeout(t));
+    };
+  }, [pathname]);
 }
 
 function ScrollToTop() {
@@ -64,6 +112,7 @@ function ScrollToTop() {
 
 function CopperApp() {
   useCopperDocument();
+  useReveal();
   return (
     <div className="cu">
       <div className="safe-top" />

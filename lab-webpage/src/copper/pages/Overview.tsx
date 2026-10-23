@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Label, PageHead, groupOf } from "../ui";
+import { PageHead, groupOf } from "../ui";
 import { piProfile } from "../../data/piData";
 
 const RESEARCH_ON = [
@@ -17,11 +17,10 @@ function Overview() {
       <section className="wrap band-s">
         <div className="split" style={{ alignItems: "start" }}>
           <div>
-            <Label>Introduce</Label>
             <h2 className="h">
               첨단 모빌리티의 핵심,
               <br />
-              <span className="sage">자성 소재</span>를 설계합니다.
+              자성 소재를 설계합니다.
             </h2>
             <p className="body">
               <b>Data Driven Material Design Lab</b>은 첨단 모빌리티에 꼭 필요한 철심 같은 자성 소재의 물성을 높이는 연구를
@@ -33,7 +32,7 @@ function Overview() {
               cores, which are essential in advanced mobility applications.
             </p>
           </div>
-          <div className="panel" style={{ padding: 0, aspectRatio: "1", maxWidth: 520 }}>
+          <div className="panel" style={{ padding: 0, aspectRatio: "1", maxWidth: 560 }}>
             <img src="/images/copper/logo.jpg" alt="DDMD Lab 로고" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
         </div>
@@ -41,10 +40,7 @@ function Overview() {
       <section className="wrap band-s">
         <div className="split" style={{ alignItems: "start" }}>
           <div>
-            <Label>We research on</Label>
-            <h3 className="h3" style={{ marginTop: 18 }}>
-              연구 주제
-            </h3>
+            <h2 className="h">연구 주제</h2>
           </div>
           <ul className="dots">
             {RESEARCH_ON.map((t) => (
@@ -54,18 +50,16 @@ function Overview() {
         </div>
       </section>
       <section className="wrap band-s">
-        <div className="panel rings" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 20 }}>
+        <div className="panel" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 20 }}>
           <div>
-            <Label>Data Driven Material Design Lab</Label>
-            <p className="h3" style={{ marginTop: 14 }}>
-              데이터 융합 철강소재 설계 연구실 · Prof. {piProfile.nameKo}
-            </p>
+            <h2 className="h3">데이터 융합 철강소재 설계 연구실</h2>
+            <p className="body" style={{ marginTop: 8 }}>Data Driven Material Design Lab · 지도교수 {piProfile.nameKo}</p>
           </div>
           <div className="btns" style={{ marginTop: 0 }}>
             <Link className="btn" to="/project/ResearchAreas">
               연구 분야 <i>→</i>
             </Link>
-            <Link className="btn ghost" to="/about/Pi">
+            <Link className="btn tone" to="/about/Pi">
               지도교수 <i>→</i>
             </Link>
           </div>

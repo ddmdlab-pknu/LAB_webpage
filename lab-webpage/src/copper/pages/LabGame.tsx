@@ -26,7 +26,7 @@ function LabGame() {
       <section className="wrap band-s">
         {game ? (
           <>
-            <button type="button" className="btn ghost" onClick={() => setGame(null)}>
+            <button type="button" className="btn tone" onClick={() => setGame(null)}>
               ← 게임 선택으로 <i />
             </button>
             <div className="cream" style={{ marginTop: 20 }}>
@@ -39,16 +39,18 @@ function LabGame() {
               <button
                 key={g.id}
                 type="button"
-                className="panel rings"
+                className="panel"
                 onClick={() => setGame(g.id)}
                 style={{ textAlign: "left", cursor: "pointer", minHeight: 260, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 24 }}
               >
-                <span className="tag">{g.en}</span>
                 <span>
                   <span className="h3" style={{ display: "block" }}>
                     {g.title}
                   </span>
-                  <span className="body" style={{ display: "block", marginTop: 12 }}>
+                  <span className="tag" style={{ display: "block", marginTop: 6 }}>
+                    {g.en}
+                  </span>
+                  <span className="body" style={{ display: "block", marginTop: 16 }}>
                     {g.desc}
                   </span>
                 </span>

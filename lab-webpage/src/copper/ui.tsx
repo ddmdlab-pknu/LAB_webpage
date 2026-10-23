@@ -1,5 +1,5 @@
 // 새 디자인 공용 조각들
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 export interface MenuItem {
@@ -47,10 +47,6 @@ export const MENU: MenuGroup[] = [
   { label: "Join us", href: "/join_us/Join_us", items: [] },
 ];
 
-export function Label({ children }: { children: ReactNode }) {
-  return <p className="label">{children}</p>;
-}
-
 // "Ha Jun Seo(하준서)" → "하준서"
 export function krName(name: string) {
   const m = name.match(/\(([^)]+)\)/);
@@ -60,26 +56,26 @@ export function enName(name: string) {
   return name.replace(/\s*\([^)]*\)\s*/, "").trim();
 }
 
-const CAT: Record<string, { ko: string; cls: string }> = {
-  Award: { ko: "수상", cls: "chip c" },
-  Conference: { ko: "학회", cls: "chip s" },
-  Publication: { ko: "논문", cls: "chip s" },
-  Event: { ko: "행사", cls: "chip" },
-  News: { ko: "소식", cls: "chip" },
+const CAT: Record<string, string> = {
+  Award: "수상",
+  Conference: "학회",
+  Publication: "논문",
+  Event: "행사",
+  News: "소식",
 };
+export const catLabel = (cat?: string) => (cat && CAT[cat]) || CAT.News;
 export function catChip(cat?: string) {
-  const v = (cat && CAT[cat]) || CAT.News;
-  return <span className={v.cls}>{v.ko}</span>;
+  return <span className="chip">{catLabel(cat)}</span>;
 }
 
 // 하위 페이지 머리말
 export function PageHead({
-  label,
   title,
   ko,
   group,
 }: {
-  label: string;
+  label?: string; // 예전 머리말 위 작은 라벨. 이제는 쓰지 않는다
+
   title: string;
   ko?: string;
   group?: MenuGroup;
@@ -88,7 +84,6 @@ export function PageHead({
   return (
     <header className="phead">
       <div className="wrap">
-        <Label>{label}</Label>
         <h1>{title}</h1>
         {ko && <p>{ko}</p>}
         {group && group.items.length > 1 && (

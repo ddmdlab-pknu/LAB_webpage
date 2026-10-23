@@ -14,10 +14,8 @@ function Nav() {
     <div className="navwrap">
       <nav className="nav" aria-label="주 메뉴">
         <Link className="logo" to="/" aria-label="DDMD Lab 처음으로">
-          <span>D</span>
-          <span>D</span>
-          <span>M</span>
-          <span>D</span>
+          <i className="mark" aria-hidden="true" />
+          DDMD Lab
         </Link>
         <ul className="links">
           {MENU.map((g) => (
@@ -55,7 +53,7 @@ function Nav() {
       <div className="mnav" id="mnav" hidden={!open}>
         {MENU.map((g) => (
           <section key={g.label}>
-            <b>{g.label.toUpperCase()}</b>
+            <b>{g.label}</b>
             {(g.items.length ? g.items : [{ label: g.label, href: g.href }]).map((i) => (
               <Link key={i.href} to={i.href} className={pathname === i.href ? "on" : ""}>
                 {i.label}

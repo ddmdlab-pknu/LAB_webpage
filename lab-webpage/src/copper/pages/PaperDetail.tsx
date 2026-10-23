@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import { Label } from "../ui";
 import PaperAuthors from "../../components/PaperAuthors";
 import { publicationsData } from "../../data/papersData";
 import { JournalChips } from "../sections";
@@ -16,12 +15,10 @@ function PaperDetail() {
         <p className="empty">논문을 찾을 수 없습니다.</p>
       ) : (
         <article className="doc">
-          <div style={{ marginTop: 28 }}>
-            <Label>
-              {paper.journal} · {paper.year}
-            </Label>
-          </div>
           <h1>{paper.title}</h1>
+          <p className="meta">
+            {paper.journal} · {paper.year}
+          </p>
           {paper.authors && (
             <p className="au">
               <PaperAuthors authors={paper.authors} />
@@ -44,7 +41,7 @@ function PaperDetail() {
           )}
           {paper.figure && (
             <section>
-              <h2 className="sub">Graphical abstract</h2>
+              <h2 className="h3" style={{ marginBottom: 16 }}>Graphical abstract</h2>
               <figure>
                 <img src={paper.figure} alt={paper.figureCaption ?? paper.title} />
                 {paper.figureCaption && <figcaption>{paper.figureCaption}</figcaption>}
@@ -53,7 +50,7 @@ function PaperDetail() {
           )}
           {paper.abstract && (
             <section className="abs">
-              <h2 className="sub">Abstract</h2>
+              <h2 className="h3" style={{ marginBottom: 16 }}>Abstract</h2>
               {paper.abstract.split(/\n\s*\n/).map((para, i) => (
                 <p key={i}>{para}</p>
               ))}
@@ -61,7 +58,7 @@ function PaperDetail() {
           )}
           {paper.firstPage && (
             <section>
-              <h2 className="sub">First page</h2>
+              <h2 className="h3" style={{ marginBottom: 16 }}>First page</h2>
               <a className="firstpage" href={paper.firstPage} target="_blank" rel="noreferrer">
                 <img src={paper.firstPage} alt={`${paper.title} 첫 페이지`} loading="lazy" />
               </a>
