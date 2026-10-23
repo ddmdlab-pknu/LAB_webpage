@@ -66,8 +66,6 @@ export const career: CareerItem[] = [
 export const honors: HonorItem[] = [
   { date: "2026.06", title: "한국열처리공학회 편집위원", detail: "KSHT Editorial Board" },
   { date: "2024.07", title: "Pandat 공인 트레이너", detail: "CompuTherm 인증 · 국내 교육 트레이너" },
-  { date: "2018.12", title: "포스코 기술연구원장 표창", detail: "영구 자구미세화 23PHE080 양산 개발" },
-  { date: "2018.08", title: "POSCO 기술상", detail: "방향성 전기강판 자구미세화 양산 개발" },
 ];
 
 // 특허 건수와 대표 목록 (Leader 페이지에 목록으로 표시)

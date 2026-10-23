@@ -410,7 +410,7 @@ export function PIBlock({ full = false }: { full?: boolean }) {
             </div>
           </div>
           <div>
-            <h3 className="sub">수상과 위촉</h3>
+            <h3 className="sub">위촉과 자격</h3>
             <ul className="honors">
               {honors.map((h) => (
                 <li key={h.title}>
