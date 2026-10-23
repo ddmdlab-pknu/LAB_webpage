@@ -11,7 +11,7 @@ export interface Member {
 export const masters: Member[] = [
   {
     name: "Ha Jun Seo(하준서)",
-    profileImg: "/images/HJS_profile.jpg",
+    profileImg: "/images/HJS_profile_2026.jpg",
     edu: "Combined B.S./M.S.",
     major: "Department of Materials System Engineering",
     email: "hjs081435@pukyong.ac.kr",
