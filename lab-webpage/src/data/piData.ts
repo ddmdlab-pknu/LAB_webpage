@@ -22,8 +22,6 @@ export const piProfile = {
   email: "newtain@pknu.ac.kr",
   phone: "+82-51-629-6378",
   office: "공학1관 1001호",
-  headline: "POSCO에서 9년,",
-  headline2: "이제는 데이터로 소재를 설계합니다.",
   summary:
     "POSCO 기술연구원에서 방향성 전기강판의 자구미세화 기술을 개발해 양산까지 이었습니다. 2023년 국립부경대학교에 부임해, 현장에서 다룬 공정 데이터에 AI와 시뮬레이션을 결합하는 연구실을 운영하고 있습니다.",
   interests: [

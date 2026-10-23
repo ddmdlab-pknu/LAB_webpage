@@ -118,11 +118,11 @@ export function ChartSection() {
               AI · 베이지안 최적화
             </li>
             <li>
-              <i style={{ borderColor: "rgba(244,241,236,.6)" }} />
+              <i style={{ borderColor: "rgba(23,21,19,.6)" }} />
               무작위 탐색
             </li>
             <li>
-              <i style={{ borderColor: "rgba(244,241,236,.32)", borderTopStyle: "dashed" }} />
+              <i style={{ borderColor: "rgba(23,21,19,.32)", borderTopStyle: "dashed" }} />
               순차 탐색
             </li>
           </ul>
@@ -352,8 +352,6 @@ export function PIBlock({ full = false }: { full?: boolean }) {
         </div>
         <div className="pi-copy">
           <h2 className="h">
-            {piProfile.headline}
-            <br />
             이제는 <span className="sage">데이터로</span> 소재를 설계합니다.
           </h2>
           <p className="body">{piProfile.summary}</p>

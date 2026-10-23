@@ -16,7 +16,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       {SITE_DESIGN === "copper" ? (
-        <Suspense fallback={<div style={{ minHeight: "100vh", background: "#030303" }} />}>
+        <Suspense fallback={<div style={{ minHeight: "100vh", background: "#f6f4f0" }} />}>
           <CopperApp />
         </Suspense>
       ) : (

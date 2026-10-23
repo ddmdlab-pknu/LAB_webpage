@@ -34,11 +34,11 @@ function useCopperDocument() {
     const body = document.body.style;
     const html = document.documentElement.style;
     const prev = [body.background, html.colorScheme, html.scrollBehavior];
-    body.background = "#030303";
-    html.colorScheme = "dark";
+    body.background = "#f6f4f0";
+    html.colorScheme = "light";
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) html.scrollBehavior = "smooth";
     const meta = document.querySelector('meta[name="theme-color"]');
-    meta?.setAttribute("content", "#030303");
+    meta?.setAttribute("content", "#f6f4f0");
     return () => {
       body.background = prev[0];
       html.colorScheme = prev[1];

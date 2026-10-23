@@ -86,12 +86,18 @@ export function useCanvas(draw: (f: Frame) => void, opts: Opts = {}) {
 
 // 디자인 색 (copper.css 의 값과 같게 유지)
 export const C = {
-  bg: "#030303",
-  panel: "#111110",
-  fg: "244,241,236",
-  copper: "201,132,79",
-  sage: "143,186,163",
-  gold: "228,186,126",
+  bg: "#f6f4f0",
+  bgRgb: "246,244,240",
+  panel: "#ffffff",
+  fg: "23,21,19",
+  copper: "176,104,58",
+  sage: "61,122,94",
+  gold: "214,162,92",
+  // 지원 안내 카드의 어두운 그림 창 전용
+  ink: "#12110f",
+  inkFg: "244,241,236",
+  inkGold: "228,186,126",
+  inkCopper: "201,132,79",
   mono: '"Geist Mono", "IBM Plex Mono", ui-monospace, Menlo, monospace',
   sans: '"Geist", "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif',
 };
@@ -353,7 +359,7 @@ export function drawMag(f: Frame, ptr: Pointer, hud?: { tilt: HTMLElement | null
     ct = Math.cos(tilt),
     st = Math.sin(tilt);
   const g = c.createRadialGradient(cx, cy, 0, cx, cy, S * 0.55);
-  g.addColorStop(0, rgba(C.copper, 0.3));
+  g.addColorStop(0, rgba(C.copper, 0.16));
   g.addColorStop(1, rgba(C.copper, 0));
   c.fillStyle = g;
   c.fillRect(cx - S * 0.6, cy - S * 0.6, S * 1.2, S * 1.2);
@@ -370,7 +376,7 @@ export function drawMag(f: Frame, ptr: Pointer, hud?: { tilt: HTMLElement | null
       const ph = (k / NP) * Math.PI * 2 + spin,
         cp = Math.cos(ph),
         sp = Math.sin(ph);
-      const al = (0.06 + 0.32 * (0.5 - 0.5 * sp * ct)) * (1 - li * 0.11);
+      const al = (0.08 + 0.4 * (0.5 - 0.5 * sp * ct)) * (1 - li * 0.1);
       c.strokeStyle = rgba(C.copper, al);
       c.beginPath();
       for (let j = 0; j <= NS; j++) {
@@ -425,9 +431,9 @@ export function drawDomain(f: Frame, hud?: { h: HTMLElement | null; m: HTMLEleme
       const m = 0.5 + 0.5 * Math.tanh((v / 2.6 + Hf) * 3),
         q = (y * W + x) * 4;
       sum += 2 * m - 1;
-      D[q] = 13 + m * (cop[0] - 13);
-      D[q + 1] = 12 + m * (cop[1] - 12);
-      D[q + 2] = 11 + m * (cop[2] - 11);
+      D[q] = 236 + m * (cop[0] - 236);
+      D[q + 1] = 230 + m * (cop[1] - 230);
+      D[q + 2] = 221 + m * (cop[2] - 221);
       D[q + 3] = 255;
     }
   c.putImageData(img, 0, 0);
@@ -568,7 +574,7 @@ export function drawLoop(f: Frame, onStep: (i: number) => void) {
     const al = (k / N) * Math.PI * 2 + rot,
       ox = cx + d * Math.cos(al),
       oy = cy + d * Math.sin(al);
-    c.strokeStyle = rgba(C.copper, 0.1 + 0.16 * (0.5 + 0.5 * Math.sin(al * 2 + t * 0.6)));
+    c.strokeStyle = rgba(C.copper, 0.14 + 0.2 * (0.5 + 0.5 * Math.sin(al * 2 + t * 0.6)));
     c.beginPath();
     c.arc(ox, oy, r, 0, 6.2832);
     c.stroke();
@@ -640,7 +646,7 @@ export function drawLoop(f: Frame, onStep: (i: number) => void) {
     c.font = "400 " + fs + "px " + C.sans;
     const tw = Math.max(c.measureText(STEPS[i].ko).width, 58),
       bx = align === "center" ? lx - tw / 2 : align === "right" ? lx - tw : lx;
-    c.fillStyle = "rgba(3,3,3,.72)";
+    c.fillStyle = rgba(C.bgRgb, 0.86);
     c.fillRect(bx - 6, ly - fs - 4, tw + 12, fs * 2 + 8);
     c.fillStyle = on ? `rgb(${C.sage})` : rgba(C.fg, 0.55);
     c.font = "500 10px " + C.mono;
@@ -669,9 +675,9 @@ export function drawOrb(f: Frame) {
     cy = h / 2,
     sx = w * 0.34,
     sy = h * 0.3;
-  c.fillStyle = C.bg;
+  c.fillStyle = C.ink;
   c.fillRect(0, 0, w, h);
-  c.strokeStyle = rgba(C.fg, 0.08);
+  c.strokeStyle = rgba(C.inkFg, 0.08);
   c.lineWidth = 1;
   c.beginPath();
   c.moveTo(cx - sx * 1.25, cy);
@@ -680,10 +686,10 @@ export function drawOrb(f: Frame) {
   c.lineTo(cx, cy + sy * 1.3);
   c.stroke();
   c.font = "11px " + C.mono;
-  c.fillStyle = rgba(C.fg, 0.35);
+  c.fillStyle = rgba(C.inkFg, 0.35);
   c.fillText("H", cx + sx * 1.25 - 8, cy - 8);
   c.fillText("M", cx + 8, cy - sy * 1.3 + 12);
-  c.strokeStyle = rgba(C.gold, 0.18);
+  c.strokeStyle = rgba(C.inkGold, 0.18);
   c.lineWidth = 1.4;
   c.beginPath();
   for (let k = 0; k <= 120; k++) {
@@ -709,7 +715,7 @@ export function drawOrb(f: Frame) {
       X = cx + Hh * sx,
       Y = cy - Mm * sy;
     if (i < Np) {
-      c.strokeStyle = rgba(C.gold, 1 - i / Np);
+      c.strokeStyle = rgba(C.inkGold, 1 - i / Np);
       c.lineWidth = 3.4 * (1 - i / Np) + 0.5;
       c.beginPath();
       c.moveTo(px, py);
@@ -726,8 +732,8 @@ export function drawOrb(f: Frame) {
     flick = 1 + 0.08 * Math.sin(t * 13);
   const gr = c.createRadialGradient(gx, gy, 0, gx, gy, 46 * flick);
   gr.addColorStop(0, "rgba(255,236,200,.95)");
-  gr.addColorStop(0.25, rgba(C.gold, 0.75));
-  gr.addColorStop(1, rgba(C.copper, 0));
+  gr.addColorStop(0.25, rgba(C.inkGold, 0.75));
+  gr.addColorStop(1, rgba(C.inkCopper, 0));
   c.fillStyle = gr;
   c.beginPath();
   c.arc(gx, gy, 46 * flick, 0, 7);
@@ -736,6 +742,6 @@ export function drawOrb(f: Frame) {
   c.beginPath();
   c.arc(gx, gy, 3.5, 0, 7);
   c.fill();
-  c.fillStyle = rgba(C.fg, 0.4);
+  c.fillStyle = rgba(C.inkFg, 0.4);
   c.fillText("B–H loop · soft magnet", 14, h - 14);
 }

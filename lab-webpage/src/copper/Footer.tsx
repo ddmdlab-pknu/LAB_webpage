@@ -37,7 +37,7 @@ function Footer() {
           <span>© DDMD Lab · made by @Ha Jun Seo</span>
           <a href="https://info.flagcounter.com/0UwV" aria-label="방문자 국가 통계">
             <img
-              src="https://s11.flagcounter.com/count2/0UwV/bg_111110/txt_9D978F/border_111110/columns_2/maxflags_10/viewers_0/labels_0/pageviews_1/flags_0/percent_0/"
+              src="https://s11.flagcounter.com/count2/0UwV/bg_FFFFFF/txt_5F5951/border_FFFFFF/columns_2/maxflags_10/viewers_0/labels_0/pageviews_1/flags_0/percent_0/"
               alt="Flag Counter"
             />
           </a>
