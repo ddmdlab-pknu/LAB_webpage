@@ -119,7 +119,7 @@ function LabStage() {
         </div>
         <div>
           <p className="body">
-            시뮬레이션과 AI 모델이 조직 변화를 먼저 계산하고, 실험실의 EBSD와 3D CT가 그 결과를 확인합니다. 측정값은 다시 모델의
+            시뮬레이션과 AI 모델이 조직 변화를 먼저 계산하고, 실험실의 SEM과 3D CT가 그 결과를 확인합니다. 측정값은 다시 모델의
             학습 데이터가 됩니다.
           </p>
           <div className="btns">
@@ -142,10 +142,10 @@ function LabStage() {
       <p className="cap">{s.cap}</p>
       <div className="kit" aria-label="실험실 장비">
         {[
-          ["/images/EBSD.jpg", "EBSD", "결정 방위 지도"],
           ["/images/mini SEM.jpg", "Mini SEM", "미세조직 관찰"],
           ["/images/OM.jpg", "Optical Microscope", "조직 관찰"],
           ["/images/3D_CT.jpg", "3D CT", "내부 3차원 구조"],
+          ["/images/열처리.jpg", "Gas Furnace", "탈탄·확산 열처리"],
         ].map(([img, name, role]) => (
           <figure key={name}>
             <img src={img} alt={name} loading="lazy" />

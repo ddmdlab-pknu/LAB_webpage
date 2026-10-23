@@ -5,7 +5,6 @@ const GROUPS: { title: string; ko: string; items: { img: string; name: string; i
     title: "Microstructure and Texture",
     ko: "미세조직과 집합조직",
     items: [
-      { img: "/images/EBSD.jpg", name: "EBSD" },
       { img: "/images/mini SEM.jpg", name: "Mini SEM" },
       { img: "/images/electro polish.jpg", name: "Electrolytic Polisher" },
       { img: "/images/auto polisher.jpg", name: "Auto Polishing Machine" },
