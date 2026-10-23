@@ -1,0 +1,97 @@
+// 새 디자인(copper) 전체 틀. src/siteDesign.ts 에서 "copper"를 고르면 이 화면이 나온다.
+import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import "./copper.css";
+import Nav from "./Nav";
+import Footer from "./Footer";
+import Home from "./Home";
+import Overview from "./pages/Overview";
+import Leader from "./pages/Leader";
+import Members from "./pages/Members";
+import Location from "./pages/Location";
+import ResearchAreas from "./pages/ResearchAreas";
+import Projects from "./pages/Projects";
+import Papers from "./pages/Papers";
+import PaperDetail from "./pages/PaperDetail";
+import MustRead from "./pages/MustRead";
+import Facilities from "./pages/Facilities";
+import News from "./pages/News";
+import Gallery from "./pages/Gallery";
+import LabGame from "./pages/LabGame";
+import JoinUs from "./pages/JoinUs";
+
+const FONT_URL =
+  "https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@300;400;500;600&display=swap";
+
+function useCopperDocument() {
+  useEffect(() => {
+    if (!document.querySelector(`link[href="${FONT_URL}"]`)) {
+      const l = document.createElement("link");
+      l.rel = "stylesheet";
+      l.href = FONT_URL;
+      document.head.appendChild(l);
+    }
+    const body = document.body.style;
+    const html = document.documentElement.style;
+    const prev = [body.background, html.colorScheme, html.scrollBehavior];
+    body.background = "#030303";
+    html.colorScheme = "dark";
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) html.scrollBehavior = "smooth";
+    const meta = document.querySelector('meta[name="theme-color"]');
+    meta?.setAttribute("content", "#030303");
+    return () => {
+      body.background = prev[0];
+      html.colorScheme = prev[1];
+      html.scrollBehavior = prev[2];
+    };
+  }, []);
+}
+
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) {
+      const el = document.getElementById(hash.slice(1));
+      if (el) {
+        el.scrollIntoView();
+        return;
+      }
+    }
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [pathname, hash]);
+  return null;
+}
+
+function CopperApp() {
+  useCopperDocument();
+  return (
+    <div className="cu">
+      <div className="safe-top" />
+      <ScrollToTop />
+      <Nav />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about/Overview" element={<Overview />} />
+          <Route path="/about/Pi" element={<Leader />} />
+          <Route path="/about/Members" element={<Members />} />
+          <Route path="/about/Location" element={<Location />} />
+          <Route path="/project/ResearchAreas" element={<ResearchAreas />} />
+          <Route path="/project/Project" element={<Projects />} />
+          <Route path="/project/PublishedPapers" element={<Papers />} />
+          <Route path="/project/PublishedPapers/:paperId" element={<PaperDetail />} />
+          <Route path="/project/MustReadPapers" element={<MustRead />} />
+          <Route path="/facilities/Facilities" element={<Facilities />} />
+          <Route path="/activities/News" element={<News />} />
+          <Route path="/activities/Gallery" element={<Gallery />} />
+          <Route path="/activities/LabGame" element={<LabGame />} />
+          <Route path="/join_us/Join_us" element={<JoinUs />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+export default CopperApp;

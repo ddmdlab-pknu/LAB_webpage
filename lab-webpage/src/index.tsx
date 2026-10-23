@@ -1,11 +1,13 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import Header from "./components/layout/Header";
-import Footer from "./components/layout/Footer";
+import { SITE_DESIGN } from "./siteDesign";
+
+// 디자인은 src/siteDesign.ts 한 곳에서 고른다. 고르지 않은 쪽 코드는 내려받지 않는다.
+const ClassicSite = React.lazy(() => import("./ClassicSite"));
+const CopperApp = React.lazy(() => import("./copper/CopperApp"));
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,9 +15,15 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Header />
-      <App />
-      <Footer />
+      {SITE_DESIGN === "copper" ? (
+        <Suspense fallback={<div style={{ minHeight: "100vh", background: "#030303" }} />}>
+          <CopperApp />
+        </Suspense>
+      ) : (
+        <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
+          <ClassicSite />
+        </Suspense>
+      )}
     </BrowserRouter>
   </React.StrictMode>
 );

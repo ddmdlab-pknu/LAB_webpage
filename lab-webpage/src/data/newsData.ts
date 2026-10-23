@@ -2,6 +2,8 @@ export interface NewsItem {
   date: string;
   comments: string;
   category?: "Award" | "Conference" | "Publication" | "Event" | "News";
+  // (선택) 새 디자인 첫 화면 뉴스 카드에 쓸 사진. public/images/ 경로. 없으면 무늬 카드로 표시
+  img?: string;
 }
 
 export const newsData: NewsItem[] = [
@@ -18,30 +20,35 @@ export const newsData: NewsItem[] = [
     comments:
       "2026년도 한국열처리공학회 추계학술대회에서 유민상 학생의 '멀티모달 파운데이션 모델을 이용한 무방향성 전기강판 자속밀도의 예측, 생성, 교차 검증' 논문이 우수논문상(정인상 상)을 수상하였습니다. 축하합니다!",
     category: "Award",
+    img: "/images/2026_KSHT_award.jpg",
   },
   {
     date: "2026.10.01",
     comments:
       "2026년도 한국열처리공학회 추계학술대회에 참가하여 고은수, 성민수, 유민상 학생이 포스터 발표를 하였습니다.",
     category: "Conference",
+    img: "/images/2026_KSHT_group.jpg",
   },
   {
     date: "2026.08.24",
     comments:
       "유민상 학생의 'A role-separated multimodal foundation-model framework for cross-modal verification of process-microstructure-B50 relations in non-oriented electrical steel' 논문이 MTC에 게재되었습니다. 축하합니다!",
     category: "Publication",
+    img: "/images/papers/2026-yu-mtc-first-page.jpg",
   },
   {
     date: "2026.06.13",
     comments:
       "하준서 학생의 'Self-supervised learning for grain size prediction in Fe-Si alloy steel sheets: A TabNet-based approach with explainable AI validation' 논문이 MTC에 게재되었습니다. 축하합니다!",
     category: "Publication",
+    img: "/images/papers/2026-ha-mtc-first-page.jpg",
   },
   {
     date: "2026.06.11",
     comments:
       "'규소 6.5%급 광폭 전기강판 및 xEV 전비 향상 모터 개발' 국책사업 Kick-Off 미팅에 참석하였습니다.",
     category: "Event",
+    img: "/images/2026_kickoff_meeting.jpg",
   },
   {
     date: "2026.06.08",
