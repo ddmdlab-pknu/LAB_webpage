@@ -8,7 +8,7 @@ export const galleryData: GalleryItem[] = [
   {
     img: "/images/2026_RISE_1차년도_통합성과공유회.jpg",
     comments:
-      "(Fev 2026)_2026 RISE Business Group 1st Integration Performance Sharing Meeting",
+      "(Feb 2026)_2026 RISE Business Group 1st Integration Performance Sharing Meeting",
   },
   {
     img: "/images/2025_magnetic.jpg",
@@ -30,16 +30,16 @@ export const galleryData: GalleryItem[] = [
   },
   {
     img: "/images/pomia.jpg",
-    comments: "(Fev 2025)_Technology Exchange Meeting with POMIA",
+    comments: "(Feb 2025)_Technology Exchange Meeting with POMIA",
   },
   {
     img: "/images/CALPAD_PANDAT_seminar.jpg",
-    comments: "(Jan 2025)_CALPAD Pandat Seminar",
+    comments: "(Jan 2025)_CALPHAD Pandat Seminar",
   },
   {
     img: "/images/2024_magnetic.jpg",
     comments:
-      "(Nov 2024)_2024 KMS Winter Conference_Soft Magentics Symposium",
+      "(Nov 2024)_2024 KMS Winter Conference_Soft Magnetics Symposium",
   },
   {
     img: "/images/2024_openlab.jpg",

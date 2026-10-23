@@ -9,7 +9,7 @@ export interface Publication {
 export const publicationsData: Publication[] = [
   {
     title:
-      "Ultra-thin Fe-Si alloy sheet with excellent high frequency magnetic properties fabricated by partial decarburizatino combined with multi-stage cold rolling",
+      "Ultra-thin Fe-Si alloy sheet with excellent high frequency magnetic properties fabricated by partial decarburization combined with multi-stage cold rolling",
     journal: "SCRIPTA MATERIALIA",
     year: "2022",
     metrics: "JCR: 8.2%, IF: 6.3",
@@ -37,7 +37,7 @@ export const publicationsData: Publication[] = [
   },
   {
     title:
-      "Thin Fe-Si-Al alloy sheet fabricated using Al gradient diffusion through physical vapor depositon for excellent high-frequency magnetic properties",
+      "Thin Fe-Si-Al alloy sheet fabricated using Al gradient diffusion through physical vapor deposition for excellent high-frequency magnetic properties",
     journal: "Materials Today Communication",
     year: "2023",
     metrics: "JCR:52%, IF: 3.4",

@@ -4,7 +4,7 @@ interface InfoProps {
     profileImg: string;
     edu: string;
     major: string;
-    email: string;
+    email?: string;
   };
 }
 
@@ -38,7 +38,7 @@ const MembersProfile = (info: InfoProps) => {
         </div>
         <div className="mb-2">{info.info.edu}</div>
         <div className="mb-2 text-start">{info.info.major}</div>
-        <div className="">{info.info.email}</div>
+        {info.info.email && <div className="">{info.info.email}</div>}
       </div>
     </div>
   );

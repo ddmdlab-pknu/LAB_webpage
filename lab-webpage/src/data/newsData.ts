@@ -8,10 +8,22 @@ export const newsData: NewsItem[] = [
   // 2026
 
   {
+    date: "2026.10.22",
+    comments:
+      "규소 6.5%급 광폭 전기강판 및 xEV 전비 향상 기술개발 과제 1차년도 진도 점검 워크숍(울산, 10.21~22)에 참석하여 소재팀 연구 진행 현황을 발표하였습니다.",
+    category: "Conference",
+  },
+  {
+    date: "2026.08.24",
+    comments:
+      "유민상 학생의 'A role-separated multimodal foundation-model framework for cross-modal verification of process-microstructure-B50 relations in non-oriented electrical steel' 논문이 MTC에 게재되었습니다. 축하합니다!",
+    category: "Publication",
+  },
+  {
     date: "2026.06.13",
     comments:
       "하준서 학생의 'Self-supervised learning for grain size prediction in Fe-Si alloy steel sheets: A TabNet-based approach with explainable AI validation' 논문이 MTC에 게재되었습니다. 축하합니다!",
-    category: "News",
+    category: "Publication",
   },
   {
     date: "2026.06.08",
@@ -23,7 +35,7 @@ export const newsData: NewsItem[] = [
     date: "2026.05.27",
     comments:
       "성민수 학생의 'DDPM 기반 데이터 증강과 AutoML을 활용한 극박 무방향성 전기강판의 자기 특성 예측 및 열처리 공정 최적화' 논문이 KJMM에 게재되었습니다. 축하합니다!",
-    category: "News",
+    category: "Publication",
   },
   {
     date: "2026.04.01",
@@ -111,7 +123,7 @@ export const newsData: NewsItem[] = [
   {
     date: "2024.11.27",
     comments:
-      "2024 KMS Winter Conference_Soft Magentics Symposium 에 참가하여 구두발표를 하였습니다.",
+      "2024 KMS Winter Conference_Soft Magnetics Symposium 에 참가하여 구두발표를 하였습니다.",
     category: "Conference",
   },
   {
