@@ -5,7 +5,7 @@ export default function ProfilePage() {
   return (
     <div className="w-full min-h-screen bg-gray-50 py-12">
       {/* Header Section */}
-      <span className="text-title text-[60px] flex justify-center items-center mb-28 animate-[gotoDown_0.7s_ease-in-out_both]">
+      <span className="sr-only">
         <div>LEADER</div>
       </span>
       <div className="max-w-6xl mx-auto px-4">

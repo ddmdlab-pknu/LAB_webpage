@@ -2,6 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
-
+/* 리뉴얼(A형) 공통 스타일 */
+html {
+  scroll-behavior: smooth;
+}
 body {
+  font-family: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic",
+    system-ui, sans-serif;
+  color: #14202b;
+  background: #ffffff;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 결정립 성장 캔버스 */
+canvas.grains {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+/* 결정 방위(IPF) 3색 그라데이션 글씨 */
+.ipf-text {
+  background: linear-gradient(90deg, #e2445c, #b54bd8 45%, #3a63d8);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 섹션 제목 밑 IPF 3색 선 */
+.ipf-underline {
+  position: relative;
+  padding-bottom: 10px;
+}
+.ipf-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 3px;
+  background: linear-gradient(90deg, #e2445c, #2fae6b, #3a63d8);
+}
+
+/* 흐르는 띠 */
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: inline-flex;
+  gap: 48px;
+  padding-right: 48px;
+  animation: marquee 38s linear infinite;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* 시뮬레이션 카드: 살짝 기울어져 떠 있음 */
+.sim-card {
+  transform: perspective(1200px) rotateY(-6deg) rotateX(2deg);
+  transition: transform 0.6s;
+  animation: floaty 7s ease-in-out infinite;
+}
+.sim-card:hover {
+  transform: perspective(1200px) rotateY(0) rotateX(0);
+  animation-play-state: paused;
+}
+@keyframes floaty {
+  50% {
+    translate: 0 -8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .marquee-track,
+  .sim-card {
+    animation: none;
+  }
 }

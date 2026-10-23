@@ -7,7 +7,7 @@ function ResearchAreas() {
       <div className="flex justify-center">
         <div className="w-full">
           {/* Page Title */}
-          <div className="flex justify-center text-[40px] md:text-[60px] lg:mb-28 mb-16 text-title animate-[gotoDown_0.7s_ease-in-out_both] font-bold">
+          <div className="sr-only">
             <span className="mb-5 uppercase tracking-wider">Research Areas</span>
           </div>
 

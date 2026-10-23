@@ -18,7 +18,7 @@ function Members() {
         <div className="flex justify-center">
           <div>
             <div className="text-center lg:mb-28 mb-16 flex justify-center items-center flex-col">
-              <span className="text-title text-[60px] mb-28 animate-[gotoDown_0.7s_ease-in-out_both]">
+              <span className="sr-only">
                 MEMBERS
               </span>
               <div

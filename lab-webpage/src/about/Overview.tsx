@@ -4,7 +4,7 @@ function Overview() {
       <div className="mx-[10%] mt-10">
         <div className="flex justify-center">
           <div>
-            <div className="flex justify-center text-[60px] lg:mb-28 mb-16 text-title animate-[gotoDown_0.7s_ease-in-out_both]">
+            <div className="sr-only">
               <span className="mb-5">OVERVIEW</span>
             </div>
             <div className="flex justify-center items-start flex-col lg:flex-row">

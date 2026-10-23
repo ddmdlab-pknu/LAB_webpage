@@ -3,6 +3,25 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      colors: {
+        white: "rgb(255, 255, 255)",
+        dark: "rgb(5, 5, 5)",
+        border: "#d9dfe5",
+        borderA: "rgb(5, 5, 5, 0.3)",
+        title: "#1f3a56",
+        my_name: "rgb(120 132 146)",
+        participate: "#bf9000",
+        steel: "#1f3a56",
+        ink: "#14202b",
+        paper: "#f4f6f8",
+        ipfr: "#e2445c",
+        ipfg: "#2fae6b",
+        ipfb: "#3a63d8",
+      },
+      fontFamily: {
+        sans: ['"IBM Plex Sans KR"', '"Apple SD Gothic Neo"', '"Malgun Gothic"', "system-ui", "sans-serif"],
+        mono: ['"IBM Plex Mono"', "ui-monospace", "Menlo", "Consolas", "monospace"],
+      },
       backgroundImage: {
         "first-bg": "url('/public/images/main_img(1).jpg')",
         "second-bg": "url('/public/images/second_img(2).jpg')",
@@ -62,15 +81,6 @@ module.exports = {
         "fade-in": "appear 0.2s ease-out",
         "modal-in": "modalIn 0.3s ease-out",
       },
-    },
-    colors: {
-      white: "rgb(255, 255, 255)",
-      dark: "rgb(5, 5, 5)",
-      border: "#b6b6b6",
-      borderA: "rgb(5, 5, 5, 0.3)",
-      title: "#00305b",
-      my_name: "rgb(156 163 175)",
-      participate: "#bf9000",
     },
   },
   plugins: [],

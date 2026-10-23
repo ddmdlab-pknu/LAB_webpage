@@ -38,7 +38,7 @@ function MustReadPapers() {
     <div>
       <div className="w-full flex justify-center items-center">
         <div className="flex flex-col w-full min-h-[30vh] md:min-h-[70vh]">
-          <span className="text-title text-[60px] text-center mb-28 animate-[gotoDown_0.7s_ease-in-out_both]">
+          <span className="sr-only">
             Must Read Papers
           </span>
           {/* Swiper 슬라이드 구현 - 100vh 높이 적용 */}

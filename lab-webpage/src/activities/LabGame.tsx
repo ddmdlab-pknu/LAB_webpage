@@ -62,7 +62,7 @@ function LabGame() {
   return (
     <div className="mx-[10%] my-20 font-sans">
       <div className="text-center mb-20">
-        <h1 className="text-5xl font-bold text-title mb-40 animate-[gotoDown_0.7s_ease-in-out_both]">
+        <h1 className="sr-only">
           LAB EXPERIENCE
         </h1>
         <p className="text-gray-500 text-xl max-w-2xl mx-auto leading-relaxed">

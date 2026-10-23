@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import PageHero from "./components/layout/PageHero";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -14,6 +15,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Header />
+      <PageHero />
       <App />
       <Footer />
     </BrowserRouter>
