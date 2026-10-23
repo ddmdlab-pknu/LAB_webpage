@@ -68,6 +68,15 @@ export const honors: HonorItem[] = [
   { date: "2024.07", title: "Pandat 공인 트레이너", detail: "CompuTherm 인증 · 국내 교육 트레이너" },
 ];
 
+// Leader 페이지 "대표 논문"에 보일 논문 (src/data/papersData.ts 의 id, 보일 순서대로)
+export const piSelectedPapers = [
+  "2023-park-jmrt",
+  "2023-na-matchar",
+  "2023-na-scripta",
+  "2023-na-mtc",
+  "2023-na-mmi",
+];
+
 // 특허 건수와 대표 목록 (Leader 페이지에 목록으로 표시)
 export const patents = {
   pctRep: {

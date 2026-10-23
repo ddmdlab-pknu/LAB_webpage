@@ -66,6 +66,11 @@
 .cu .chip { display: inline-block; padding: 4px 8px; border-radius: 4px; background: var(--panel-2); border: 1px solid var(--line); font: 500 11px/1.3 var(--f-mono); letter-spacing: 0.02em; color: var(--fg); white-space: nowrap; }
 .cu .chip.s { color: var(--sage); }
 .cu .chip.c { color: var(--copper); }
+.cu .chip.q { font-weight: 600; }
+.cu .chip.q1 { background: var(--sage); border-color: var(--sage); color: #ffffff; }
+.cu .chip.q2 { background: rgba(var(--sage-rgb), 0.1); border-color: rgba(var(--sage-rgb), 0.45); color: var(--sage); }
+.cu .chip.q3, .cu .chip.q4 { color: var(--mute); }
+.cu .chip.kci { color: var(--copper); border-color: rgba(var(--copper-rgb), 0.4); }
 .cu .ulink { text-decoration: underline; text-underline-offset: 4px; color: var(--mute); font-size: 14.5px; }
 .cu .ulink:hover { color: var(--fg); }
 .cu .head-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
@@ -246,7 +251,8 @@
 .cu .pubs time { font: 13px var(--f-mono); color: var(--mute); }
 .cu .pubs b { font-weight: 400; font-size: 16px; line-height: 1.45; }
 .cu .pubs .j { display: block; margin-top: 4px; font-size: 13px; color: var(--mute); }
-.cu .pubs .m { font: 12px var(--f-mono); color: var(--sage); white-space: nowrap; }
+.cu .pubs .m { display: flex; gap: 6px; white-space: nowrap; }
+.cu .pubs a:hover b { color: var(--sage); }
 .cu .pi-more { margin-top: clamp(32px, 4vw, 48px); }
 @media (max-width: 860px) { .cu .pi-panel, .cu .career { grid-template-columns: 1fr; } }
 @media (max-width: 640px) {
@@ -461,3 +467,7 @@
 .cu .ideal { display: grid; gap: 10px; margin: 28px 0 0; padding: 0; list-style: none; }
 .cu .ideal li { display: flex; gap: 14px; align-items: baseline; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); font-size: 17px; }
 .cu .ideal li i { font: normal 12px var(--f-mono); color: var(--sage); }
+.cu .paper-tile { transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s; }
+.cu .paper-tile:hover { border-color: rgba(40, 32, 24, 0.28); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(40, 32, 24, 0.08); }
+.cu .paper-tile .tagrow { margin-top: 0; }
+.cu .paper-tile .go { margin-top: auto; }

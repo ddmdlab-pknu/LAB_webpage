@@ -2,10 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import PaperAuthors from "../components/PaperAuthors";
-import { PublicationItem } from "../data/papersData";
+import { PublicationItem, journalImpactFactors, journalQuartiles, publicationsData as papers } from "../data/papersData";
 import { NewsItem } from "../data/newsData";
-import { career, honors, patents, piProfile } from "../data/piData";
-import { publicationsData as piPubs } from "../data/publicationsData";
+import { career, honors, patents, piProfile, piSelectedPapers } from "../data/piData";
 import {
   ChartData,
   computeChart,
@@ -428,18 +427,25 @@ export function PIBlock({ full = false }: { full?: boolean }) {
 
       {full ? (
         <div className="pi-more">
-          <h3 className="sub">대표 논문 · 최근 5년</h3>
+          <h3 className="sub">대표 논문</h3>
           <ol className="pubs">
-            {piPubs.map((p) => (
-              <li key={p.title}>
-                <time>{p.year}</time>
-                <div>
-                  <b>{p.title}</b>
-                  <span className="j">{p.journal}</span>
-                </div>
-                <span className="m">{p.metrics}</span>
-              </li>
-            ))}
+            {piSelectedPapers
+              .map((id) => papers.find((p) => p.id === id))
+              .filter((p): p is PublicationItem => !!p)
+              .map((p) => (
+                <li key={p.id}>
+                  <time>{p.year}</time>
+                  <div>
+                    <Link to={`/project/PublishedPapers/${p.id}`}>
+                      <b>{p.title}</b>
+                    </Link>
+                    <span className="j">{p.journal}</span>
+                  </div>
+                  <span className="m">
+                    <JournalChips journal={p.journal} only />
+                  </span>
+                </li>
+              ))}
           </ol>
         </div>
       ) : (
@@ -469,6 +475,7 @@ export function PaperCard({ paper, short }: { paper: PublicationItem; short?: st
       <div className="meta">
         <span className="chip">{short || paper.journal}</span>
         <span className="chip">{paper.year}</span>
+        <JournalChips journal={paper.journal} only />
       </div>
       <b>{paper.title}</b>
       {paper.authors && (
@@ -483,7 +490,32 @@ export function PaperCard({ paper, short }: { paper: PublicationItem; short?: st
   );
 }
 
+/* ---------- 학술지 분위(Q1~Q4)와 IF 표시 ---------- */
+export function JournalChips({ journal, only }: { journal: string; only?: boolean }) {
+  const q = journalQuartiles[journal];
+  const f = journalImpactFactors[journal];
+  return (
+    <>
+      {!only && <span className="chip">{journal}</span>}
+      {q && <span className={"chip q " + q.toLowerCase()}>{q}</span>}
+      {f && <span className="chip">IF {f}</span>}
+    </>
+  );
+}
+
+// IF가 높은 순 (같으면 최근 논문 먼저)
+export function papersByIF() {
+  return papers
+    .map((p, i) => ({ p, i, f: parseFloat(journalImpactFactors[p.journal] || "0") }))
+    .sort((a, b) => b.f - a.f || Number(b.p.year) - Number(a.p.year) || a.i - b.i)
+    .map((x) => x.p);
+}
+
 const JOURNAL_SHORT: Record<string, string> = {
+  "Journal of Materials Research and Technology": "JMR&T",
+  "Materials Characterization": "Mater. Charact.",
+  "Scripta Materialia": "Scripta Mater.",
+  "Metals and Materials International": "MMI",
   "Materials Today Communications": "MTC",
   "Korean Journal of Metals and Materials": "KJMM",
   "Journal of the Korean Magnetics Society": "JKMS",

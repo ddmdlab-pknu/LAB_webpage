@@ -2,19 +2,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PageHead, groupOf } from "../ui";
 import PaperAuthors from "../../components/PaperAuthors";
-import { journalImpactFactors, publicationsData } from "../../data/papersData";
-
-// 탭을 보여줄 첫 연도. 논문이 없는 연도도 탭으로 보여준다
-const START_YEAR = 2025;
+import { publicationsData } from "../../data/papersData";
+import { JournalChips } from "../sections";
 
 function Papers() {
-  const currentYear = new Date().getFullYear();
-  const dataYears = publicationsData.map((p) => Number(p.year));
-  const lastYear = Math.max(currentYear, ...dataYears);
-  const firstYear = Math.min(START_YEAR, ...dataYears);
-  const years: string[] = [];
-  for (let y = lastYear; y >= firstYear; y--) years.push(String(y));
-  const [year, setYear] = useState(years.find((y) => publicationsData.some((p) => p.year === y)) ?? years[0]);
+  // 논문이 있는 연도만 탭으로 보여준다 (최신 연도가 왼쪽)
+  const years = Array.from(new Set(publicationsData.map((p) => p.year))).sort((a, b) => Number(b) - Number(a));
+  const [year, setYear] = useState(years[0]);
   const list = publicationsData.filter((p) => p.year === year);
 
   return (
@@ -41,9 +35,8 @@ function Papers() {
                   </p>
                 )}
                 <div className="jn">
-                  <span className="chip">{p.journal}</span>
+                  <JournalChips journal={p.journal} />
                   <span className="chip">{p.year}</span>
-                  {journalImpactFactors[p.journal] && <span className="chip s">IF {journalImpactFactors[p.journal]}</span>}
                 </div>
               </div>
               <i aria-hidden="true">→</i>

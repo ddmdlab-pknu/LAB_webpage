@@ -1,7 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { Label } from "../ui";
 import PaperAuthors from "../../components/PaperAuthors";
-import { journalImpactFactors, publicationsData } from "../../data/papersData";
+import { publicationsData } from "../../data/papersData";
+import { JournalChips } from "../sections";
 
 function PaperDetail() {
   const { paperId } = useParams();
@@ -18,7 +19,6 @@ function PaperDetail() {
           <div style={{ marginTop: 28 }}>
             <Label>
               {paper.journal} · {paper.year}
-              {journalImpactFactors[paper.journal] && ` · IF ${journalImpactFactors[paper.journal]}`}
             </Label>
           </div>
           <h1>{paper.title}</h1>
@@ -27,6 +27,14 @@ function PaperDetail() {
               <PaperAuthors authors={paper.authors} />
             </p>
           )}
+          <div className="tagrow" style={{ marginTop: 16 }}>
+            <JournalChips journal={paper.journal} only />
+            {paper.keywords?.map((k) => (
+              <span key={k} className="chip">
+                {k}
+              </span>
+            ))}
+          </div>
           {paper.link && (
             <div className="btns">
               <a className="btn" href={paper.link} target="_blank" rel="noreferrer">

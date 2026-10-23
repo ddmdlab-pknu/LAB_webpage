@@ -9,6 +9,7 @@ export interface PublicationItem {
   figure?: string; // Graphical abstract 또는 대표 figure 이미지 경로 (예: "/images/papers/xxx.png")
   figureCaption?: string; // figure 아래 설명. 없으면 생략
   firstPage?: string; // 논문 첫 페이지 이미지 경로. 상세 페이지 맨 아래에 표시
+  keywords?: string[]; // 논문에 적힌 키워드. 필독 논문 카드와 상세 페이지에 표시
 }
 
 // 연구실 구성원 이름 (논문에 적힌 표기 그대로). authors에 있는 이름이 여기 있으면 밑줄로 표시됨
@@ -33,9 +34,28 @@ export const labMemberNames: string[] = [
 // 학술지별 Impact Factor. 값을 넣으면 논문 목록의 학술지 이름 옆에 "IF x.x"로 표시됨
 // 키는 아래 논문 항목의 journal 값과 정확히 같아야 함
 export const journalImpactFactors: Record<string, string> = {
+  "Journal of Materials Research and Technology": "6.6",
+  "Materials Characterization": "6.2",
+  "Scripta Materialia": "5.9",
   "Materials Today Communications": "4.9",
+  "Metals and Materials International": "4.5",
   "Korean Journal of Metals and Materials": "1.4",
   "Journal of Magnetics": "0.6",
+};
+
+// 학술지별 JCR 분위(Q1~Q4). 여러 분야에 걸친 학술지는 가장 높은 분위를 적는다.
+// SCIE가 아닌 국내 학술지는 "KCI"로 적는다. 값을 넣으면 논문 목록에 표시됨
+// (2026년 10월 확인. 매년 6월 JCR이 새로 나오면 IF와 함께 고친다)
+export const journalQuartiles: Record<string, string> = {
+  "Journal of Materials Research and Technology": "Q1",
+  "Materials Characterization": "Q1",
+  "Scripta Materialia": "Q1",
+  "Metals and Materials International": "Q1",
+  "Materials Today Communications": "Q2",
+  "Korean Journal of Metals and Materials": "Q3",
+  "Journal of Magnetics": "Q4",
+  "Journal of the Korean Magnetics Society": "KCI",
+  "Journal of the Korean Society for Heat Treatment": "KCI",
 };
 
 // 같은 연도 안에서는 배열 순서대로 표시됨 (최신 논문을 위에)
@@ -137,5 +157,72 @@ export const publicationsData: PublicationItem[] = [
     abstract:
       "In this study, electrical steel was additively manufactured using the Laser Powder Bed Fusion (L-PBF) process with 3.3% Si powder. The effects of varying laser power, scanning speed, and Y-axis scanning angle on the microstructure, density, surface roughness, and hardness were investigated. Machine learning and explainable artificial intelligence (XAI) techniques were employed to model and optimize processing conditions to achieve desirable density, surface roughness, and hardness, and the results were compared with those of commercial electrical steel. Microstructural observations revealed melt pools with cellular structures, dendrites, and porosity along the solidification heat flow direction. As the number of layers increased, primary pores formed and extended continuously along the build direction (BD). Stable values of porosity, surface roughness, and hardness were achieved when the laser power exceeded 250W and the scan speed ranged from 300 to 1000 mm/s. Increasing the Y-axis scanning angle led to a stepped layer structure due to variations in deposition thickness, which negatively affected surface roughness and porosity, although the impact on hardness was minimal—indicating the feasibility of thin-layer fabrication. Optimization using machine learning and XAI reduced porosity to 5.49%, surface roughness to 4.6 μm, and increased hardness to 305.9 HV. The predicted and experimental values showed deviations within 5%, validating the effectiveness of the machine learning approach. By prioritizing high density and low roughness, the optimal processing conditions were suggested to be 260 W, 30°, and 700 mm/s. Compared with commercial electrical steel, the additively manufactured samples showed a 2% lower density, fourfold higher roughness, and 10% higher hardness, suggesting that with improved roughness control, L-PBF-based additive manufacturing could become a viable production route for electrical steel.",
     firstPage: "/images/papers/2025-kim-kjmm-first-page.jpg",
+  },
+
+  // 2023
+  {
+    id: "2023-na-matchar",
+    year: "2023",
+    title:
+      "Formation mechanism of texture in ultra-thin Fe–Si alloy sheet with excellent medium frequency magnetic properties fabricated by multi-stage decarburizing and cold rolling",
+    journal: "Materials Characterization",
+    authors: ["Jung Kyun Na", "Yang Mo Koo", "Se Min Park*"],
+    link: "https://doi.org/10.1016/j.matchar.2023.112821",
+    keywords: ["Ultra-thin Fe–Si alloy sheet", "Partial decarburization", "Multistage cold rolling method", "Magnetic property"],
+    abstract:
+      "In the eco-friendly energy industry, transformers with operating frequencies of over 400 Hz are highly advantageous owing to their energy efficiency and compact sizes. In this study, ultra-thin Fe–Si alloy sheets with excellent magnetic properties at 400 Hz were manufactured using a novel partial decarburization and multistage cold rolling method. The sheets of 0.05 mm have a high volume fraction of {110}〈001〉 texture (42%) and small grain (approximately 50 μm). The key factors affecting the excellent 400 Hz magnetic properties include the effect on core loss by the high volume fraction of {110}〈001〉 grains, small grain size, and optimal reduction ratio. The formation of {110}〈001〉 appears to be inhibited by evolution of texture from {111}〈112〉 to {111}〈110〉 during cold rolling and ring-shaped 〈111〉 // ND grains at the boundary of {111}〈112〉 deformed grains during early stage of annealing. This phenomenon increased with increasing rolling reduction ratio. However, in particular at rolling reduction ratio of 73% or less, the ring-shaped 〈111〉 // ND grains disappeared during annealing. Furthermore, stored energy, which is indirectly measured by kernel average misorientation value, of the grain boundaries at the ring-shaped 〈111〉 // ND grains was higher than that of other regions. It can be inferred that a high rolling reduction ratio results in a higher amount of stored energy, which induces the remaining 〈111〉 // ND grains. Our 0.05 mm thick specimen achieved a core loss (P10/400) (6.01 W/kg) improvement of approximately 18% and one of the highest magnetic flux densities (1.8 T) compared to that of commercial Fe–Si alloy sheets with same thickness.",
+    firstPage: "/images/papers/2023-na-matchar-first-page.jpg",
+  },
+  {
+    id: "2023-na-mtc",
+    year: "2023",
+    title:
+      "Thin Fe–Si–Al alloy sheet fabricated by Al gradient diffusion through PVD for excellent high-frequency magnetic properties",
+    journal: "Materials Today Communications",
+    authors: ["Jung Kyun Na", "Se Min Park*", "Yang Mo Koo"],
+    link: "https://doi.org/10.1016/j.mtcomm.2023.105708",
+    keywords: ["Magnetic property", "Diffusion", "Aluminum", "Soft magnetic material", "Texture"],
+    abstract:
+      "In recent years, research on environmentally friendly methods to reduce energy loss of high-frequency transformers has gained momentum. In this study, an Fe–Si–Al alloy sheet with excellent magnetic properties at high frequencies was fabricated by an environment-friendly method involving Al diffusion through physical vapor deposition for high-frequency transformer applications. To improve the magnetic properties of the alloy, the effects of Al diffusion patterns and frequency on the magnetic properties of the Fe–Si alloy sheet were theoretically and experimentally investigated. Up to 12-µm-thick Al was deposited via physical sputtering on a 0.2-mm Fe–Si alloy sheet, which was subsequently annealed for 10–90 min under 10⁻⁴ Torr without changing the grain size and texture or forming an intermetallic phase. At 50 Hz, the eddy current loss reached a minimum, when the Al diffusion into the surface and interior was uniform with a deviation of approximately 10 %. In contrast, the high-frequency (above 400 Hz) eddy current loss was minimized, when more than 70 % of the total Al was concentrated on the surface to a depth of 1/4 area. Tension effect occurred owing to the difference between the thermal expansion coefficients of the surface Al-diffused part and the that in the interior. This tension effect minimized the eddy current loss by reducing the domain width. The core loss of our specimen at 20 kHz (8.36 W/kg) was approximately 15 % superior to that of a commercial Si steel sheet of the same thickness. These results indicate the potential of the proposed method in high-frequency transformer eco-technology.",
+    firstPage: "/images/papers/2023-na-mtc-first-page.jpg",
+  },
+  {
+    id: "2023-na-scripta",
+    year: "2023",
+    title:
+      "Ultra-thin Fe–Si alloy sheet with excellent high frequency magnetic properties fabricated by partial decarburization combined with multi-stage cold rolling",
+    journal: "Scripta Materialia",
+    authors: ["Jungkyun Na", "Hyun-seok Ko", "Yangmo Koo", "Semin Park*"],
+    link: "https://doi.org/10.1016/j.scriptamat.2022.115145",
+    keywords: ["Annealing", "Soft magnetic materials", "Electron backscattering diffraction", "Magnetic properties", "Texture"],
+    abstract:
+      "Transformers with high operating frequencies are highly advantageous owing to their compact sizes. To improve their performance, we successfully fabricated ultra-thin Fe–Si alloy sheets using a novel partial decarburization and multistage cold rolling method. The sheets comprised a high volume fraction of uniform grains under 50 μm with 〈001〉 // rolling direction (RD) texture (78%) and displayed excellent magnetic properties at 20 kHz. Importantly, it was verified that core loss could be controlled by the growth of 〈001〉 // RD grains, and grain size was affected by the sheet thickness and annealing time. The 〈001〉 // RD grains were well developed for sheet thicknesses of 0.05 mm–0.07 mm; however, under 0.05 mm, Goss grain growth was hindered by the thickness of the thin sheet. Our specimen achieved a core loss (P0.5/20,000) improvement of about 20% (4.54 W/kg) and one of the highest magnetic flux densities (1.80 T) compared with commercial Fe-Si alloy sheets.",
+    firstPage: "/images/papers/2023-na-scripta-first-page.jpg",
+  },
+  {
+    id: "2023-park-jmrt",
+    year: "2023",
+    title:
+      "Gaussian process regression-based Bayesian optimization of the insulation-coating process for Fe–Si alloy sheets",
+    journal: "Journal of Materials Research and Technology",
+    authors: ["Se Min Park", "Taekyung Lee", "Jeong Hun Lee*", "Ju Seok Kang", "Min Serk Kwon"],
+    link: "https://doi.org/10.1016/j.jmrt.2022.12.171",
+    keywords: ["Non-oriented electrical steel", "Insulation coating", "Zirconia coating", "Artificial intelligence", "Machine learning", "Probabilistic regression model"],
+    abstract:
+      "High-efficiency Fe–Si alloy sheets have recently gained increasing attention in the automobile industry, and these sheets must be coated with insulation to reduce energy loss. However, it is difficult to maintain the coating without peeling and to realize high electrical insulation in the high-temperature heat treatment process during coating. In this study, using an artificial intelligence algorithm—Gaussian process regression (GPR)-assisted Bayesian optimization (BO)—we successfully developed a zirconia-based coating material for Fe–Si alloy sheets, yielding high heat resistance and high-quality surface properties. The coating material developed through the optimized process exhibits a high-quality silvery-white surface, the absence of coating damage even after heat treatment at temperatures exceeding 1100 K, and a surface current value of 600 mA or less, which is a measure of insulation. Notably, compared to the existing trial-and-error method, the number of experiments required to simultaneously achieve the target characteristics was reduced to less than 0.1% using the GPR-assisted BO, demonstrating the feasibility of the approach. This result also validates the efficiency and effectiveness of the proposed method in achieving multidimensional nonlinear optimization in the actual mass production of steel.",
+    firstPage: "/images/papers/2023-park-jmrt-first-page.jpg",
+  },
+  {
+    id: "2023-na-mmi",
+    year: "2023",
+    title:
+      "Novel Process for the Formation of Goss Grains by Concentrated Shear Strain on Surface in Inhibitor-Free Silicon Steel",
+    journal: "Metals and Materials International",
+    authors: ["Jungkyun Na", "Semin Park", "Hyun-seok Ko", "Hyung-don Joo", "Yangmo Koo*"],
+    link: "https://doi.org/10.1007/s12540-022-01266-w",
+    keywords: ["Goss", "Grain-oriented electrical steel", "Shear strain", "Columnar grain growth", "Inhibitor-free"],
+    abstract:
+      "Recent interest in sustainable development increased demand for efficient transformer to reduce energy consumption. In order to meet the high demand for efficient transformer, inefficient batch annealing manufacture for grain-oriented silicon steel, which is core material of transformer, should be improved. Therefore, novel process for achieving about 90% columnar Goss grains without an inhibitor in continuous line, which differs from the conventional batch process, is herein described. Fe-2.0%Si–C alloys were cold rolled and subsequently partially decarburized in a wet hydrogen gas and these steps are repeated several times. In this process, the sheet is divided into surface layer (α ferrite) and interior (pearlite-like structure + α ferrite). When two-layer sheet is cold rolled, {111}<112> is formed by concentrated shear strain and it is developed into Goss seed. During decarburization, Goss grains within surface layer grow inward as columnar grain, retaining the Goss texture of about 90%. Concentrated shear strain on surface layer was formed by large difference of strength between the surface and interior. By this difference, large stored energy difference between Goss and {111}<112>, {411}<148> is acquired, and this lead to the growth of Goss grains. Driving force for forming the Goss grains is concentrated shear strain on the surface layer. It has been verified that this novel process has a vast potential for making grain-oriented silicon steel by continuous process.",
+    firstPage: "/images/papers/2023-na-mmi-first-page.jpg",
   },
 ];

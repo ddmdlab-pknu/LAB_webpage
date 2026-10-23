@@ -1,50 +1,53 @@
+import { Link } from "react-router-dom";
 import { PageHead, groupOf } from "../ui";
+import PaperAuthors from "../../components/PaperAuthors";
+import { JournalChips, papersByIF } from "../sections";
 
-const PAPERS = [
-  {
-    src: "/images/must_read_paper_1.png",
-    title: "Effect of annealing on the microstructure and magnetic properties of soft magnetic Fe-Si produced via laser additive manufacturing",
-    keywords: "Additive manufacturing, Annealing, Powder processing, Soft magnetic materials, Magnetic properties",
-  },
-  {
-    src: "/images/must_read_paper_2.png",
-    title: "Diffusion driven columnar grain growth induced in an Al–Si-coated steel substrate",
-    keywords: "Diffusion, Metallic coating, Grain growth, Phase transformation, Electrical steel",
-  },
-  {
-    src: "/images/must_read_paper_3.png",
-    title: "Development of (100) Texture in Silicon Steel Sheets by Removal of Manganese and Decarburization",
-    keywords: "(100) texture, Removal of manganese, Decarburization, Silicon steel sheets, Magnetic properties",
-  },
-  {
-    src: "/images/must_read_paper_4.png",
-    title: "COMBO: An efficient Bayesian optimization library for materials science",
-    keywords: "Bayesian optimization, Python library, Global optimization, Materials design",
-  },
-];
-
+// 연구실 논문 가운데 IF가 높은 4편을 자동으로 고른다 (src/data/papersData.ts 의 IF 표 기준)
 function MustRead() {
+  const top = papersByIF().slice(0, 4);
   return (
     <>
-      <PageHead label="Research" title="Must Read Papers" ko="연구실에 들어오면 먼저 읽는 논문" group={groupOf("Research")} />
+      <PageHead
+        label="Research"
+        title="Must Read Papers"
+        ko="연구실 논문 중 Impact Factor가 높은 4편 · 들어오면 먼저 읽습니다"
+        group={groupOf("Research")}
+      />
       <section className="wrap band-s">
         <div className="grid2">
-          {PAPERS.map((p) => (
-            <article key={p.title} className="tile">
-              <div className="pic" style={{ background: "#fff", aspectRatio: "4 / 3" }}>
-                <img src={p.src} alt={p.title} loading="lazy" style={{ objectFit: "cover", objectPosition: "top" }} />
+          {top.map((p) => (
+            <Link key={p.id} to={`/project/PublishedPapers/${p.id}`} className="tile paper-tile">
+              <div className="pic" style={{ background: "#fff", aspectRatio: "16 / 10" }}>
+                {p.firstPage && (
+                  <img src={p.firstPage} alt={`${p.title} 첫 페이지`} loading="lazy" style={{ objectFit: "cover", objectPosition: "top" }} />
+                )}
               </div>
               <div className="txt">
-                <h3>{p.title}</h3>
-                <div className="tagrow">
-                  {p.keywords.split(",").map((k) => (
-                    <span key={k} className="chip">
-                      {k.trim()}
-                    </span>
-                  ))}
+                <div className="tagrow" style={{ marginTop: 0, paddingTop: 0 }}>
+                  <JournalChips journal={p.journal} />
+                  <span className="chip">{p.year}</span>
                 </div>
+                <h3>{p.title}</h3>
+                {p.authors && (
+                  <p className="au">
+                    <PaperAuthors authors={p.authors} />
+                  </p>
+                )}
+                {p.keywords && (
+                  <div className="tagrow">
+                    {p.keywords.map((k) => (
+                      <span key={k} className="chip">
+                        {k}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <span className="go">
+                  논문 보기 <i>→</i>
+                </span>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
