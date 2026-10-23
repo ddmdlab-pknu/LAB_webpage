@@ -23,7 +23,7 @@ export const piProfile = {
   phone: "+82-51-629-6378",
   office: "공학1관 1001호",
   summary:
-    "POSCO 기술연구원에서 방향성 전기강판의 자구미세화 기술을 개발해 양산까지 이었습니다. 2023년 국립부경대학교에 부임해, 현장에서 다룬 공정 데이터에 AI와 시뮬레이션을 결합하는 연구실을 운영하고 있습니다.",
+    "2023년 국립부경대학교에 부임해, 현장에서 다룬 공정 데이터에 AI와 시뮬레이션을 결합하는 연구실을 운영하고 있습니다.",
   interests: [
     "Data-driven metallurgy",
     "Meta-optimization",
@@ -44,7 +44,7 @@ export const career: CareerItem[] = [
   {
     period: "9년 · ~2023.08",
     org: "POSCO 기술연구원",
-    role: "수석연구원. 방향성 전기강판 자구미세화 기술 개발과 양산 적용, 특허 출원",
+    role: "수석연구원",
   },
   {
     period: "2010.09 — 2015.02",
