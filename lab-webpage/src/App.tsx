@@ -13,6 +13,8 @@ import LabGame from "./activities/LabGame";
 import ResearchAreas from "./project/ResearchArea";
 import MustReadPapers from "./project/MustReadPapers";
 import JoinUs from "./join_us/Join_us";
+import PublishedPapers from "./project/PublishedPapers";
+import PaperDetail from "./project/PaperDetail";
 
 function App() {
   return (
@@ -24,6 +26,11 @@ function App() {
         <Route path="/about/Location" element={<Location />} />
         <Route path="/about/Members" element={<Members />} />
         <Route path="/project/MustReadPapers" element={<MustReadPapers />} />
+        <Route path="/project/PublishedPapers" element={<PublishedPapers />} />
+        <Route
+          path="/project/PublishedPapers/:paperId"
+          element={<PaperDetail />}
+        />
         <Route path="/project/ResearchAreas" element={<ResearchAreas />} />
         <Route path="/project/Project" element={<Project />} />
         <Route path="/facilities/Facilities" element={<Facilities />} />

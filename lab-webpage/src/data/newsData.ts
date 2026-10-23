@@ -14,6 +14,18 @@ export const newsData: NewsItem[] = [
     category: "Conference",
   },
   {
+    date: "2026.10.01",
+    comments:
+      "2026년도 한국열처리공학회 추계학술대회에서 유민상 학생의 '멀티모달 파운데이션 모델을 이용한 무방향성 전기강판 자속밀도의 예측, 생성, 교차 검증' 논문이 우수논문상(정인상 상)을 수상하였습니다. 축하합니다!",
+    category: "Award",
+  },
+  {
+    date: "2026.10.01",
+    comments:
+      "2026년도 한국열처리공학회 추계학술대회에 참가하여 고은수, 성민수, 유민상 학생이 포스터 발표를 하였습니다.",
+    category: "Conference",
+  },
+  {
     date: "2026.08.24",
     comments:
       "유민상 학생의 'A role-separated multimodal foundation-model framework for cross-modal verification of process-microstructure-B50 relations in non-oriented electrical steel' 논문이 MTC에 게재되었습니다. 축하합니다!",
@@ -24,6 +36,12 @@ export const newsData: NewsItem[] = [
     comments:
       "하준서 학생의 'Self-supervised learning for grain size prediction in Fe-Si alloy steel sheets: A TabNet-based approach with explainable AI validation' 논문이 MTC에 게재되었습니다. 축하합니다!",
     category: "Publication",
+  },
+  {
+    date: "2026.06.11",
+    comments:
+      "'규소 6.5%급 광폭 전기강판 및 xEV 전비 향상 모터 개발' 국책사업 Kick-Off 미팅에 참석하였습니다.",
+    category: "Event",
   },
   {
     date: "2026.06.08",
@@ -57,6 +75,12 @@ export const newsData: NewsItem[] = [
   },
   // 2025
   {
+    date: "2025.12.01",
+    comments:
+      "오지은 학생의 'GAN 기반 데이터 증강과 머신러닝을 활용한 극박 무방향성 전기강판 히스테리시스 곡선 및 철손 예측 연구' 논문이 한국자기학회지(JKMS)에 게재되었습니다. 축하합니다!",
+    category: "Publication",
+  },
+  {
     date: "2025.11.26",
     comments:
       "2025 KMS Winter Conference_Post Discussion에 참가하여 김현아, 오지은, 하준서 학생이 포스터 발표를 하였습니다.",
@@ -83,7 +107,7 @@ export const newsData: NewsItem[] = [
   {
     date: "2025.09.08",
     comments:
-      "하준서 학생의 'Predicting Grain Size of Fe Si Alloy Steel Sheet through Magnetic Properties and Machine Learning with XAI' 논문이 JOM에 게재되었습니다. 축하합니다!",
+      "하준서 학생의 'Predicting Grain Size of Fe Si Alloy Steel Sheet through Magnetic Properties and Machine Learning with XAI' 논문이 Journal of Magnetics에 게재되었습니다. 축하합니다!",
     category: "Publication",
   },
   {

@@ -92,6 +92,9 @@ function Header() {
                       <a href="/project/MustReadPapers">MUST READ PAPERS</a>
                     </li>
                     <li className="flex justify-center items-center h-[54px] text-center">
+                      <a href="/project/PublishedPapers">PUBLISHED PAPERS</a>
+                    </li>
+                    <li className="flex justify-center items-center h-[54px] text-center">
                       <a href="/project/ResearchAreas">RESEARCH AREAS</a>
                     </li>
                     <li className="flex justify-center items-center h-[54px]">
@@ -198,6 +201,11 @@ function Header() {
                   <ul className="ml-8">
                     <li className="mt-3">
                       <a href="/project/MustReadPapers">Must Read Papers</a>
+                    </li>
+                  </ul>
+                  <ul className="ml-8">
+                    <li className="mt-3">
+                      <a href="/project/PublishedPapers">Published Papers</a>
                     </li>
                   </ul>
                   <ul className="ml-8">

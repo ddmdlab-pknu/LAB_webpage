@@ -11,7 +11,7 @@ interface InfoProps {
 const MembersProfile = (info: InfoProps) => {
   return (
     <div className="w-full h-full bg-white my-8 p-4 lg:mr-10 flex flex-col min-[500px]:flex-row items-center min-[500px]:items-start">
-      <div className="w-48 h-48 mb-5">
+      <div className="w-48 aspect-[3/4] shrink-0 mb-5">
         <img
           className="w-full h-full object-cover rounded-md"
           src={info.info.profileImg}
@@ -36,7 +36,7 @@ const MembersProfile = (info: InfoProps) => {
           </svg>
           {info.info.name}
         </div>
-        <div className="mb-2">{info.info.edu}</div>
+        {info.info.edu && <div className="mb-2">{info.info.edu}</div>}
         <div className="mb-2 text-start">{info.info.major}</div>
         {info.info.email && <div className="">{info.info.email}</div>}
       </div>
