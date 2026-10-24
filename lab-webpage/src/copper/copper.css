@@ -175,10 +175,14 @@
 .cu .tabs button { border: 0; padding: 10px 14px; background: var(--surface); color: var(--ink); font-size: var(--t-small); font-weight: 600; cursor: pointer; transition: background-color 180ms ease, color 180ms ease; }
 .cu .tabs button[aria-selected="true"] { background: var(--ink); color: var(--white); }
 @media (hover: hover) and (pointer: fine) { .cu .tabs button[aria-selected="false"]:hover { background: var(--surface-2); } }
-.cu .kit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; margin: 32px 0 0; padding: 0; list-style: none; }
-.cu .kit li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 16px; align-items: center; }
-.cu .kit img { width: 64px; height: 64px; object-fit: cover; background: var(--surface); }
-.cu .kit b { display: block; font-size: var(--t-body); font-weight: 600; line-height: 1.3; }
+.cu .kit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 32px 0 0; padding: 0; list-style: none; }
+/* 사진 | 입체 모형 을 나란히, 이름은 아래 */
+.cu .kit li { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; align-items: start; }
+.cu .kit img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--surface); }
+.cu .kit .eq3d { aspect-ratio: 1; }
+.cu .kit li > span { grid-column: 1 / -1; margin-top: 6px; }
+.cu .kit b { display: block; color: var(--ink); font-size: var(--t-body); font-weight: 600; line-height: 1.3; }
+.cu .kit .eq3d-chip { left: 6px; bottom: 6px; padding: 2px 5px; font-size: 11px; }
 .cu .kit span { font-size: var(--t-small); color: var(--muted); line-height: 1.4; }
 .cu .cells { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 36px; }
 .cu .cell { display: flex; align-items: center; justify-content: space-between; min-height: 72px; padding: 0 20px; font-weight: 600; transition: background-color 180ms ease, transform 140ms var(--ease-out); }
@@ -192,7 +196,11 @@
   .cu .cells { grid-template-columns: 1fr; }
   .cu .cell { min-height: 60px; }
 }
-@media (max-width: 480px) { .cu .kit { grid-template-columns: 1fr; } }
+@media (max-width: 480px) {
+  .cu .kit { grid-template-columns: 1fr; gap: 14px; }
+  .cu .kit li { grid-template-columns: 104px 104px minmax(0, 1fr); gap: 6px; align-items: center; }
+  .cu .kit li > span { grid-column: auto; margin: 0 0 0 10px; }
+}
 
 /* 연구 분야: 이름 목록 + 미리보기 창 */
 .cu .ix-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--gutter); align-items: end; }
@@ -231,6 +239,23 @@
   .cu .ix-desc { grid-column: 2; margin-top: 4px; }
 }
 @keyframes cuFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* 장비 입체 모형 창 */
+.cu .eq3d { position: relative; min-width: 0; background: var(--surface); overflow: hidden; }
+.cu .eq3d canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.cu .eq3d-chip { position: absolute; left: 8px; bottom: 8px; z-index: 1; padding: 3px 7px; background: var(--white); color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.3; pointer-events: none; }
+.cu .eq3d-note { position: absolute; inset: 0; display: grid; place-items: center; padding: 12px; color: var(--muted); font-size: var(--t-small); text-align: center; }
+.cu .eq3d[data-state="fail"] canvas { display: none; }
+.cu .eq-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px var(--gutter); margin-top: 24px; }
+.cu .eq-card { margin: 0; min-width: 0; }
+.cu .eq-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.cu .eq-pic { display: flex; gap: 2px; aspect-ratio: 1; background: var(--surface-2); overflow: hidden; }
+.cu .eq-pic img { flex: 1; min-width: 0; width: 100%; height: 100%; object-fit: cover; }
+.cu .eq-pair .eq3d { aspect-ratio: 1; }
+.cu .eq-card figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-top: 14px; }
+.cu .eq-card figcaption b { font-size: var(--t-body); font-weight: 600; line-height: 1.35; }
+.cu .eq-card figcaption span { font-size: var(--t-body); color: var(--muted); }
+@media (max-width: 860px) { .cu .eq-grid { grid-template-columns: 1fr; gap: 32px; margin-bottom: 48px; } }
 
 /* 실험실 입체 모형 */
 .cu .rm-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--gutter); align-items: end; }

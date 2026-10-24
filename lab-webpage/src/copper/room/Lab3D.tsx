@@ -1,7 +1,8 @@
 // 실험실 입체 모형을 그리는 캔버스. 이 파일은 따로 묶여서, 구역이 화면 가까이 올 때만 내려받는다.
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { build, Built, Kit, View } from "./scene";
+import { build, Built, View } from "./scene";
+import { Kit } from "./kit";
 import { roomById, RoomId } from "./data";
 
 type Cb = { sel: (id: string | null) => void; fail: () => void };

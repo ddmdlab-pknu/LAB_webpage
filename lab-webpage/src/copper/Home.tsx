@@ -19,6 +19,8 @@ import {
   Thumb,
 } from "./sections";
 import RoomSection from "./room/RoomSection";
+import Equip3D from "./equip/Equip3D";
+import type { EquipId } from "./equip/models";
 
 const SIMS = {
   dual: {
@@ -135,14 +137,17 @@ function LabStage() {
           </div>
           <p className="cap">{s.cap}</p>
           <ul className="kit" aria-label="실험실 장비">
-            {[
-              ["/images/mini SEM.jpg", "Mini SEM", "미세조직 관찰"],
-              ["/images/OM.jpg", "광학 현미경", "조직 관찰"],
-              ["/images/3D_CT.jpg", "3D CT", "내부 3차원 구조"],
-              ["/images/열처리.jpg", "가스 열처리로", "탈탄·확산 열처리"],
-            ].map(([img, name, role]) => (
+            {(
+              [
+                ["/images/mini SEM.jpg", "Mini SEM", "미세조직 관찰", "sem"],
+                ["/images/OM.jpg", "광학 현미경", "조직 관찰", "om"],
+                ["/images/3D_CT.jpg", "3D CT", "내부 3차원 구조", "ct"],
+                ["/images/열처리.jpg", "가스 열처리로", "탈탄·확산 열처리", "gas"],
+              ] as [string, string, string, EquipId][]
+            ).map(([img, name, role, eq]) => (
               <li key={name}>
                 <img src={img} alt={name} loading="lazy" />
+                <Equip3D id={eq} name={name} />
                 <span>
                   <b>{name}</b>
                   {role}
