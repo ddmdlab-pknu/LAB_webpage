@@ -18,6 +18,7 @@ import {
   Statement,
   Thumb,
 } from "./sections";
+import RoomSection from "./room/RoomSection";
 
 const SIMS = {
   dual: {
@@ -287,6 +288,7 @@ function Home() {
 
       <ChartSection />
       <LabStage />
+      <RoomSection />
       <ResearchIndex />
       <LoopSection />
 

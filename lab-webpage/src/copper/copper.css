@@ -232,6 +232,32 @@
 }
 @keyframes cuFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* 실험실 입체 모형 */
+.cu .rm-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--gutter); align-items: end; }
+.cu .rm-head .body { margin: 0; }
+.cu .rm { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--gutter); margin-top: 56px; align-items: start; }
+.cu .rm-stage { position: relative; aspect-ratio: 16 / 10; background: var(--surface); overflow: hidden; }
+.cu .rm-gl, .cu .rm-gl canvas, .cu .rm-poster { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.cu .rm-poster { object-fit: cover; }
+.cu .rm-tag { position: absolute; left: 0; top: -8px; z-index: 1; padding: 6px 10px; background: var(--white); color: var(--ink); font-size: var(--t-small); font-weight: 600; line-height: 1.3; white-space: nowrap; pointer-events: none; }
+.cu .rm-all { position: absolute; left: 12px; top: 12px; z-index: 2; }
+.cu .rm-side .tabs { margin-top: 0; }
+.cu .rm-list { margin: 20px 0 0; padding: 0; list-style: none; }
+.cu .rm-list button { display: block; width: 100%; padding: 10px 12px; border: 0; background: transparent; color: var(--ink); font: inherit; font-size: var(--t-body); font-weight: 600; line-height: 1.3; text-align: left; cursor: pointer; transition: background-color 180ms ease; }
+.cu .rm-list button[aria-pressed="true"] { background: var(--mint); }
+@media (hover: hover) and (pointer: fine) { .cu .rm-list button[aria-pressed="false"]:hover { background: var(--surface); } }
+.cu .rm-side .cap b { margin-right: 6px; color: var(--ink); font-weight: 600; }
+@media (max-width: 860px) {
+  .cu .rm-head, .cu .rm { grid-template-columns: 1fr; }
+  .cu .rm-head .body { margin-top: 20px; }
+  .cu .rm { margin-top: 40px; }
+  .cu .rm-stage { aspect-ratio: 4 / 3; }
+  .cu .rm-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .cu .rm-list button { width: auto; padding: 8px 12px; font-size: var(--t-small); background: var(--surface); }
+  .cu .rm-list button[aria-pressed="true"] { background: var(--mint); }
+}
+@media (max-width: 560px) { .cu .rm-stage { aspect-ratio: 1; } }
+
 /* 연구 순환: 진한 초록에서 민트로 이어지는 네 단계 */
 .cu .acc-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--gutter); align-items: end; }
 .cu .acc-head .body { margin: 0; }
