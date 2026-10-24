@@ -26,21 +26,9 @@ export function Mark({ size }: { size?: number }) {
   return <i className="mark" aria-hidden="true" style={size ? ({ "--mk": size + "px" } as CSSProperties) : undefined} />;
 }
 
-// 반복 재생 영상. 움직임 줄이기 설정이면 멈춘 첫 장면만 보인다
-export function Loop({ src, poster, label }: { src: string; poster: string; label: string }) {
-  const ref = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    const v = ref.current;
-    if (!v) return;
-    if (prefersReduced()) {
-      v.removeAttribute("autoplay");
-      v.pause();
-      return;
-    }
-    v.muted = true;
-    v.play().catch(() => undefined);
-  }, [src]);
-  return <video ref={ref} key={src} src={src} poster={poster} autoPlay muted loop playsInline preload="metadata" aria-label={label} />;
+// 시뮬레이션 움직이는 그림(GIF). 계산 결과 자체가 내용이라 기기 설정과 상관없이 늘 움직인다
+export function Loop({ gif, label }: { gif: string; label: string }) {
+  return <img key={gif} src={gif} alt={label} />;
 }
 
 /* ---------- 스크롤하면 단어가 차례로 진해지는 문장 (사진 조각을 사이에 끼울 수 있음) ---------- */
@@ -250,8 +238,7 @@ const R_ITEMS: RItem[] = [
     white: true,
     media: () => (
       <Loop
-        src="/images/copper/sim3d_ipf.mp4"
-        poster="/images/copper/sim3d_ipf-poster.jpg"
+        gif="/images/copper/sim3d_ipf.gif"
         label="Fe-Si 판재에서 결정립이 자라는 3차원 시뮬레이션. 결정 방위를 색으로 표시"
       />
     ),

@@ -113,7 +113,7 @@ function LabStage() {
     <section className="band" id="lab">
       <div className="wrap showcase">
         <figure className="plate">
-          <Loop src={s.src + ".mp4"} poster={s.src + "-poster.jpg"} label={s.alt} />
+          <Loop gif={s.src + ".gif"} label={s.alt} />
         </figure>
         <div className="sc-copy">
           <h2 className="h">

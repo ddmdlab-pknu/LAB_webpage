@@ -169,7 +169,7 @@
 /* 계산 + 실험: 정사각 판 하나와 오른쪽 글 */
 .cu .showcase { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
 .cu .plate { position: relative; margin: 0; aspect-ratio: 1; background: var(--surface); overflow: hidden; }
-.cu .plate video { position: absolute; inset: 6%; width: 88%; height: 88%; object-fit: contain; mix-blend-mode: multiply; }
+.cu .plate video, .cu .plate img { position: absolute; inset: 6%; width: 88%; height: 88%; object-fit: contain; mix-blend-mode: multiply; }
 .cu .sc-copy { min-width: 0; }
 .cu .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 36px; }
 .cu .tabs button { border: 0; padding: 10px 14px; background: var(--surface); color: var(--ink); font-size: var(--t-small); font-weight: 600; cursor: pointer; transition: background-color 180ms ease, color 180ms ease; }
