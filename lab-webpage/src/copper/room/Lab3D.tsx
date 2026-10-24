@@ -128,6 +128,7 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
     }
     return null;
   };
+  let tickN = 0;
   let clock = 0,
     lastInput = -10,
     dirty = true,
@@ -216,7 +217,8 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
     }
     if (cur.tick && !still) {
       cur.tick(clock);
-      renderer.shadowMap.needsUpdate = true;
+      // 움직이는 그림자는 두 프레임에 한 번만 다시 계산 (휴대폰 부담 줄이기)
+      if ((tickN++ & 1) === 0) renderer.shadowMap.needsUpdate = true;
       dirty = true;
     }
     if (dirty) {
@@ -260,7 +262,7 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
 
   return {
     setRoom(id) {
-      if (id === roomId) return;
+      if (built[id] === cur) return;
       scene.remove(cur.group);
       roomId = id;
       cur = built[id] || (built[id] = build(kit, id));

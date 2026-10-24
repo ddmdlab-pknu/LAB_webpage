@@ -251,7 +251,7 @@ function materials(k: Kit): Built {
   }
   for (const zz of [-0.8, 0.8]) k.box(tube, [0.06, 0.2, 0.06], "#8f9498", [tx, 0.88, tc + zz]);
   for (const s of [-1, 1]) k.cyl(tube, 0.012, 0.7, "#c4c7ca", [tx + s * 0.07, ty, 1.05], "z");
-  k.box(tube, [0.2, 0.07, 0.09], "#8f9498", [tx, ty - 0.035, 1.12]);
+  k.box(tube, [0.2, 0.07, 0.09], "#8f9498", [tx, ty - 0.035, 1.0]);
   k.box(tube, [0.22, 0.05, 0.05], "#8f9498", [tx, ty - 0.03, 1.4]);
   k.box(tube, [0.05, ty - 0.03, 0.05], C.steel, [tx, 0, 1.4]);
 
@@ -298,23 +298,70 @@ function materials(k: Kit): Built {
   k.box(prof, [0.12, 0.03, 0.005], "#33373b", [2.3, PT + 0.03, pz - 0.152]);
 
   // 가운데 탁자와 아크릴 상자
-  table(k, g, -0.4, 0.15, 1.8, 0.85, 0.75, "#e3e3e0");
+  table(k, g, 0, 0.15, 1.8, 0.85, 0.75, "#e3e3e0");
   for (const [x, z, w, h, d] of [
-    [-0.95, 0.12, 0.34, 0.22, 0.26],
-    [-0.5, 0.25, 0.28, 0.18, 0.22],
-    [0.05, 0.05, 0.3, 0.26, 0.3],
+    [-0.55, 0.12, 0.34, 0.22, 0.26],
+    [-0.1, 0.25, 0.28, 0.18, 0.22],
+    [0.4, 0.05, 0.3, 0.26, 0.3],
   ]) {
     k.box(g, [w, h, d], "#dfeef2", [x, 0.75, z], { opacity: 0.35 });
     k.box(g, [w * 0.4, 0.04, d * 0.4], "#6b7075", [x, 0.75, z]);
   }
 
+  // 한가운데 협동 로봇: 가운데 탁자와 가스 열처리로 사이를 오간다
+  const arm = item(g, items, "arm");
+  const RX = 1.85,
+    RZ = 0.45;
+  const bot = cobot(k, arm, RX, RZ);
+  const sample = k.box(arm, [0.05, 0.03, 0.05], "#7d8287", [0, 0, 0]);
+
   chair(k, g, -2.35, -0.4, -Math.PI / 2);
-  chair(k, g, -0.55, 0.95, Math.PI);
-  chair(k, g, 1.7, 1.25, 0);
+  chair(k, g, -0.15, 0.95, Math.PI);
+  chair(k, g, 1.12, 1.2, 0);
+
+  // 탁자 오른쪽 끝에서 시편을 집어 열처리로 로드락 받침에 놓는다. 12초에 한 번 돈다
+  const T = bot.reach([0.8, 0.765, 0.2]),
+    F = bot.reach([tx, ty + 0.05, 1.0]);
+  const home: Pose = [(T[0] + F[0]) / 2, 0.55, 0.5, 0];
+  const keys: [number, Pose][] = [
+    [0, home],
+    [1.6, [T[0], T[1], T[2] + 0.3, 0]],
+    [2.6, [T[0], T[1], T[2], 0]],
+    [3.2, [T[0], T[1], T[2], 1]],
+    [4.2, [T[0], T[1], T[2] + 0.3, 1]],
+    [6.4, [F[0], F[1], F[2] + 0.22, 1]],
+    [7.4, [F[0], F[1], F[2], 1]],
+    [8.0, [F[0], F[1], F[2], 0]],
+    [9.0, [F[0], F[1], F[2] + 0.22, 0]],
+    [12, home],
+  ];
+  const tmpV = new THREE.Vector3();
+  const tick = (t: number) => {
+    const c = t % 12;
+    let j = 0;
+    while (j < keys.length - 2 && c > keys[j + 1][0]) j++;
+    const [t0, a] = keys[j],
+      [t1, b] = keys[j + 1];
+    const u = Math.min(1, Math.max(0, (c - t0) / (t1 - t0)));
+    const e = u * u * (3 - 2 * u);
+    const q = a.map((v, n) => v + (b[n] - v) * e) as Pose;
+    bot.pose(q);
+    // 쥔 동안에는 시편이 그리퍼 끝을 따라간다
+    const held = q[3] > 0.5;
+    if (held) {
+      arm.updateMatrixWorld(true);
+      bot.tip.getWorldPosition(tmpV);
+      arm.worldToLocal(tmpV);
+      sample.position.copy(tmpV);
+    } else if (c >= 8) sample.position.set(tx, ty + 0.05, 1.0);
+    else sample.position.set(0.8, 0.765, 0.2);
+  };
+  tick(0);
 
   return finish(g, items, {
     overview: { t: [0, 0.5, 0], az: 0.62, el: 0.62, dist: 14 },
     views: {
+      arm: { t: [RX - 0.45, 1.0, RZ - 0.05], az: 0.78, el: 0.55, dist: 4.4 },
       box: { t: [-3.1, 1.1, -1.35], az: 1.15, el: 0.42, dist: 3.4 },
       polish: { t: [-3.1, 1.15, -0.38], az: 1.2, el: 0.45, dist: 2.9 },
       press: { t: [-3.1, 1.1, 0.18], az: 1.15, el: 0.42, dist: 2.7 },
@@ -326,158 +373,98 @@ function materials(k: Kit): Built {
       prof: { t: [1.65, 1.0, 1.95], az: 0.35, el: 0.5, dist: 3.6 },
     },
     azRange: [-0.1, 1.55],
+    tick,
   });
 }
 
-// ── 로봇 작업대 ─────────────────────────────────────────────
-function robot(k: Kit): Built {
-  const g = new THREE.Group();
-  const items: Record<string, THREE.Group> = {};
-  const W = 4.4,
-    D = 3.6,
-    H = 2.5,
-    x0 = -2.2,
-    z0 = -1.8;
-  room(k, g, W, D, H, "#6f7684");
-  // 줄무늬 벽지
-  for (let x = x0 + 0.25; x < W / 2; x += 0.5) k.box(g, [0.16, H - 0.1, 0.004], "#e3e3e1", [x, 0.08, z0 + 0.002], { noShadow: true });
-  for (let z = z0 + 0.25; z < D / 2; z += 0.5) k.box(g, [0.004, H - 0.1, 0.16], "#e3e3e1", [x0 + 0.002, 0.08, z], { noShadow: true });
-  // 카펫 타일 이음
-  for (let x = x0 + 0.6; x < W / 2; x += 0.6) k.box(g, [0.006, 0.002, D], "#656c79", [x, 0, 0], { noShadow: true });
-  for (let z = z0 + 0.6; z < D / 2; z += 0.6) k.box(g, [W, 0.002, 0.006], "#656c79", [0, 0, z], { noShadow: true });
-
-  // 알루미늄 프레임 작업대
-  const bench = item(g, items, "bench");
-  const cx = -0.2,
-    cz = -0.45,
-    TW = 1.3,
-    TD = 0.85,
-    TT = 0.8,
-    P = 0.045;
-  for (const sx of [-1, 1])
-    for (const sz of [-1, 1]) {
-      k.box(bench, [P, TT - 0.02, P], C.alu, [cx + sx * (TW / 2 - P / 2), 0, cz + sz * (TD / 2 - P / 2)], { rough: 0.5 });
-      k.cyl(bench, 0.025, 0.03, C.dark, [cx + sx * (TW / 2 - P / 2), -0.0, cz + sz * (TD / 2 - P / 2)]);
-    }
-  for (const y of [0.12, TT - 0.065]) {
-    for (const sz of [-1, 1]) k.box(bench, [TW, P, P], C.alu, [cx, y, cz + sz * (TD / 2 - P / 2)], { rough: 0.5 });
-    for (const sx of [-1, 1]) k.box(bench, [P, P, TD], C.alu, [cx + sx * (TW / 2 - P / 2), y, cz], { rough: 0.5 });
-  }
-  k.box(bench, [TW - 0.04, 0.02, TD - 0.04], C.black, [cx, TT - 0.02, cz]);
-  k.box(bench, [TW - 0.08, 0.015, TD - 0.08], C.black, [cx, 0.165, cz]);
-  for (const sx of [-1, 1]) k.box(bench, [0.01, 0.5, TD - 0.1], "#2a2b2d", [cx + sx * (TW / 2 - 0.03), 0.18, cz]);
-  k.box(bench, [0.09, 0.07, 0.09], "#f2c230", [cx + 0.52, TT, cz + 0.32]);
-  k.cyl(bench, 0.03, 0.03, "#d23b3b", [cx + 0.52, TT + 0.07, cz + 0.32]);
-
-  // 협동 로봇 팔: 받침 → 어깨 → 위팔 → 팔꿈치 → 아래팔 → 손목 → 그리퍼
-  const arm = item(g, items, "arm");
+// ── 협동 로봇: 받침대 → 어깨 → 위팔 → 팔꿈치 → 아래팔 → 손목 → 그리퍼 ──
+// 자세는 [방위각, 어깨에서 손목까지 수평 거리, 높이, 쥐기 0~1] 로 주고, 두 관절 각도는 역기구학으로 푼다
+type Pose = [number, number, number, number];
+function cobot(k: Kit, p: THREE.Object3D, x: number, z: number) {
+  const L1 = 0.68,
+    L2 = 0.62,
+    DROP = 0.245; // 손목에서 두 손가락 사이(쥐는 점)까지
   const W1 = "#f4f4f2",
     RING = "#3a3c3f";
+  // 알루미늄 받침대 (검은 판, 노란 비상 정지)
+  const stand = new THREE.Group();
+  stand.name = "foot";
+  p.add(stand);
+  const S = 0.6,
+    SH = 0.72,
+    P = 0.045;
+  for (const sx of [-1, 1])
+    for (const sz of [-1, 1]) k.box(stand, [P, SH, P], C.alu, [x + sx * (S / 2 - P / 2), 0, z + sz * (S / 2 - P / 2)], { rough: 0.5 });
+  for (const y of [0.1, SH - P]) {
+    for (const sz of [-1, 1]) k.box(stand, [S, P, P], C.alu, [x, y, z + sz * (S / 2 - P / 2)], { rough: 0.5 });
+    for (const sx of [-1, 1]) k.box(stand, [P, P, S], C.alu, [x + sx * (S / 2 - P / 2), y, z], { rough: 0.5 });
+  }
+  k.box(stand, [S - 0.02, 0.02, S - 0.02], C.black, [x, SH, z]);
+  for (const sx of [-1, 1]) k.box(stand, [0.01, SH - 0.2, S - 0.08], "#2a2b2d", [x + sx * (S / 2 - 0.025), 0.14, z]);
+  k.box(stand, [S - 0.08, SH - 0.2, 0.01], "#2a2b2d", [x, 0.14, z - S / 2 + 0.025]);
+  k.box(stand, [0.09, 0.07, 0.09], "#f2c230", [x + 0.22, SH + 0.02, z + 0.22]);
+  k.cyl(stand, 0.03, 0.03, "#d23b3b", [x + 0.22, SH + 0.09, z + 0.22]);
+
   const base = new THREE.Group();
-  base.position.set(cx - 0.25, TT, cz - 0.2);
-  arm.add(base);
-  k.cyl(base, 0.08, 0.06, W1, [0, 0, 0]).name = "foot";
-  k.cyl(base, 0.081, 0.012, RING, [0, 0.06, 0]);
+  base.position.set(x, SH + 0.02, z);
+  p.add(base);
+  k.cyl(base, 0.095, 0.07, W1, [0, 0, 0]);
+  k.cyl(base, 0.097, 0.014, RING, [0, 0.07, 0]);
   const j0 = new THREE.Group();
-  j0.position.y = 0.072;
+  j0.position.y = 0.084;
   base.add(j0);
-  k.cyl(j0, 0.062, 0.13, W1, [0, 0, 0]);
+  k.cyl(j0, 0.075, 0.15, W1, [0, 0, 0]);
   const j1 = new THREE.Group();
-  j1.position.y = 0.19;
+  j1.position.y = 0.22;
   j0.add(j1);
-  k.cyl(j1, 0.065, 0.16, W1, [0, 0, 0], "x");
-  for (const s of [-1, 1]) k.cyl(j1, 0.05, 0.012, RING, [s * 0.082, 0, 0], "x");
-  k.cyl(j1, 0.043, 0.42, W1, [0, 0, 0]);
+  k.cyl(j1, 0.078, 0.19, W1, [0, 0, 0], "x");
+  for (const s of [-1, 1]) k.cyl(j1, 0.06, 0.014, RING, [s * 0.098, 0, 0], "x");
+  k.cyl(j1, 0.052, L1, W1, [0, 0, 0]);
   const j2 = new THREE.Group();
-  j2.position.y = 0.42;
+  j2.position.y = L1;
   j1.add(j2);
-  k.cyl(j2, 0.052, 0.13, W1, [0, 0, 0], "x");
-  for (const s of [-1, 1]) k.cyl(j2, 0.04, 0.012, RING, [s * 0.068, 0, 0], "x");
-  k.cyl(j2, 0.036, 0.38, W1, [0, 0, 0]);
+  k.cyl(j2, 0.062, 0.15, W1, [0, 0, 0], "x");
+  for (const s of [-1, 1]) k.cyl(j2, 0.048, 0.014, RING, [s * 0.078, 0, 0], "x");
+  k.cyl(j2, 0.043, L2, W1, [0, 0, 0]);
   const j3 = new THREE.Group();
-  j3.position.y = 0.38;
+  j3.position.y = L2;
   j2.add(j3);
-  k.cyl(j3, 0.042, 0.11, W1, [0, 0, 0], "x");
-  k.cyl(j3, 0.035, 0.1, W1, [0, 0, 0]);
-  k.cyl(j3, 0.036, 0.012, RING, [0, 0.1, 0]);
+  k.cyl(j3, 0.05, 0.12, W1, [0, 0, 0], "x");
+  k.cyl(j3, 0.042, 0.13, W1, [0, 0, 0]);
+  k.cyl(j3, 0.043, 0.014, RING, [0, 0.13, 0]);
   const grip = new THREE.Group();
-  grip.position.y = 0.11;
+  grip.position.y = 0.145;
   j3.add(grip);
-  k.box(grip, [0.09, 0.06, 0.07], C.black, [0, 0, 0]);
-  const fingers = [-1, 1].map((s) => k.box(grip, [0.016, 0.075, 0.035], C.black, [s * 0.032, 0.06, 0]));
+  k.box(grip, [0.11, 0.07, 0.08], C.black, [0, 0, 0]);
+  const fingers = [-1, 1].map((s) => k.box(grip, [0.018, 0.085, 0.04], C.black, [s * 0.04, 0.07, 0]));
+  const tip = new THREE.Object3D();
+  tip.position.y = DROP - 0.145;
+  grip.add(tip);
 
-  // 작업대 위 물체: 블록, 바구니, 고기·생선 인형
-  const obj = item(g, items, "obj");
-  const bk = [cx + 0.35, TT, cz - 0.15];
-  k.box(obj, [0.34, 0.012, 0.25], "#efe5cc", [bk[0], bk[1], bk[2]]);
-  for (const s of [-1, 1]) {
-    k.box(obj, [0.34, 0.13, 0.012], "#efe5cc", [bk[0], bk[1], bk[2] + s * 0.119]);
-    k.box(obj, [0.012, 0.13, 0.25], "#efe5cc", [bk[0] + s * 0.164, bk[1], bk[2]]);
-  }
-  const blocks: [number, number, string][] = [
-    [-0.55, 0.05, "#3c6fd1"],
-    [-0.45, 0.12, "#3da66b"],
-    [-0.36, 0.02, "#3c6fd1"],
-    [-0.5, -0.06, "#3da66b"],
-    [-0.28, 0.16, "#3c6fd1"],
-  ];
-  for (const [bx2, bz2, col] of blocks) {
-    const b = k.box(obj, [0.05, 0.05, 0.05], col, [cx + bx2 + 0.3, TT, cz + bz2 + 0.1]);
-    b.rotation.y = bx2 * 7;
-  }
-  const meat = k.mesh(obj, k.keep(new THREE.CapsuleGeometry(0.04, 0.08, 6, 14)), "#c95b5f");
-  meat.rotation.z = Math.PI / 2;
-  meat.scale.set(1, 1, 0.55);
-  meat.position.set(cx + 0.05, TT + 0.025, cz + 0.22);
-  const fish = k.mesh(obj, k.keep(new THREE.CapsuleGeometry(0.035, 0.12, 6, 14)), "#6f9fcc");
-  fish.rotation.z = Math.PI / 2;
-  fish.rotation.y = 0.5;
-  fish.scale.set(1, 1, 0.6);
-  fish.position.set(cx + 0.3, TT + 0.022, cz + 0.27);
-  const tail = k.mesh(obj, k.keep(new THREE.ConeGeometry(0.04, 0.06, 4)), "#6f9fcc");
-  tail.rotation.z = Math.PI / 2;
-  tail.position.set(cx + 0.21, TT + 0.022, cz + 0.32);
-
-  // 옆 책상의 노트북 · 태블릿
-  const pc = item(g, items, "pc");
-  const dx = 1.35,
-    dz = 0.35,
-    DT = 0.74;
-  table(k, pc, dx, dz, 1.0, 0.6, DT, "#e8e8e6");
-  k.box(pc, [0.34, 0.02, 0.24], "#3b3e42", [dx - 0.15, DT, dz + 0.04]);
-  const lid = new THREE.Group();
-  lid.position.set(dx - 0.15, DT + 0.02, dz - 0.08);
-  lid.rotation.x = -0.28;
-  pc.add(lid);
-  k.box(lid, [0.34, 0.23, 0.012], "#3b3e42", [0, 0, 0]);
-  k.box(lid, [0.31, 0.2, 0.004], "#4a6f95", [0, 0.015, 0.008], { noShadow: true });
-  k.box(pc, [0.25, 0.012, 0.17], "#1c1d1f", [dx + 0.27, DT, dz + 0.05]);
-  chair(k, g, dx - 0.1, dz + 0.65, Math.PI);
-
-  // 팔이 블록과 바구니 사이를 천천히 오간다
-  const tick = (t: number) => {
-    const s = Math.sin(t * 0.55);
-    j0.rotation.y = 0.35 + 0.75 * s;
-    j1.rotation.x = 0.55 + 0.12 * Math.sin(t * 1.1);
-    j2.rotation.x = 1.5 + 0.22 * Math.sin(t * 1.1 + 0.6);
-    j3.rotation.x = Math.PI - j1.rotation.x - j2.rotation.x;
-    const open = 0.012 * (1 + Math.sin(t * 1.1 + 1.2));
-    fingers[0].position.x = -0.026 - open;
-    fingers[1].position.x = 0.026 + open;
-  };
-  tick(0);
-
-  return finish(g, items, {
-    overview: { t: [0, 0.5, -0.1], az: 0.6, el: 0.6, dist: 9.4 },
-    views: {
-      arm: { t: [cx - 0.1, 1.15, cz - 0.1], az: 0.55, el: 0.35, dist: 2.7 },
-      bench: { t: [cx, 0.6, cz], az: 0.5, el: 0.42, dist: 3.6 },
-      obj: { t: [cx + 0.05, TT + 0.05, cz + 0.05], az: 0.35, el: 0.75, dist: 2.1 },
-      pc: { t: [dx, 0.85, dz], az: 0.75, el: 0.6, dist: 2.6 },
+  const shoulder = SH + 0.02 + 0.084 + 0.22;
+  const clamp1 = (v: number) => Math.max(-1, Math.min(1, v));
+  return {
+    tip,
+    // 그리퍼 끝을 놓을 점(월드 좌표) → [방위각, 수평 거리, 손목 높이]
+    reach(at: [number, number, number]): [number, number, number] {
+      const dx = at[0] - x,
+        dz = at[2] - z;
+      return [Math.atan2(dx, dz), Math.hypot(dx, dz), at[1] + DROP - shoulder];
     },
-    azRange: [-0.1, 1.55],
-    tick,
-  });
+    pose([yaw, r, h, g]: Pose) {
+      const d = Math.min(Math.hypot(r, h), L1 + L2 - 0.005);
+      const phi = Math.atan2(r, h);
+      const a = Math.acos(clamp1((L1 * L1 + d * d - L2 * L2) / (2 * L1 * d)));
+      const b = Math.acos(clamp1((d * d - L1 * L1 - L2 * L2) / (2 * L1 * L2)));
+      j0.rotation.y = yaw;
+      j1.rotation.x = phi - a;
+      j2.rotation.x = b;
+      j3.rotation.x = Math.PI - j1.rotation.x - b;
+      const open = 0.018 * (1 - g);
+      fingers[0].position.x = -0.03 - open;
+      fingers[1].position.x = 0.03 + open;
+    },
+  };
 }
 
 function finish(
@@ -490,7 +477,7 @@ function finish(
     feet: Record<string, THREE.Box3> = {};
   for (const id in items) {
     boxes[id] = new THREE.Box3().setFromObject(items[id]);
-    // 바닥 표시는 "foot" 이름이 붙은 부분만 감싼다 (로봇 팔처럼 팔이 넓게 뻗은 장비)
+    // 바닥 표시는 "foot" 이름이 붙은 부분만 감싼다 (로봇처럼 팔이 넓게 뻗은 장비)
     const f = items[id].getObjectByName("foot");
     feet[id] = f ? new THREE.Box3().setFromObject(f) : boxes[id];
     items[id].traverse((o) => (o.userData.item = id));
@@ -498,6 +485,7 @@ function finish(
   return { group: g, boxes, feet, ...v };
 }
 
+const BUILDERS: Record<RoomId, (k: Kit) => Built> = { materials };
 export function build(k: Kit, id: RoomId): Built {
-  return id === "robot" ? robot(k) : materials(k);
+  return BUILDERS[id](k);
 }

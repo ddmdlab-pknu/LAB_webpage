@@ -23,7 +23,7 @@ export default function RoomSection() {
           io.disconnect();
         }
       },
-      { rootMargin: "600px 0px" }
+      { rootMargin: "600px 0px" },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -43,8 +43,7 @@ export default function RoomSection() {
             돌려 보세요.
           </h2>
           <p className="body">
-            사진을 보고 대략 만든 입체 모형입니다. {touch ? "옆으로 밀어" : "끌어서"} 돌려 보고, 장비 이름을 누르면 그 자리로
-            다가갑니다.
+            사진을 보고 대략 만든 입체 모형입니다. {touch ? "옆으로 밀어" : "끌어서"} 돌려 보고, 장비 이름을 누르면 그 자리로 다가갑니다.
           </p>
         </div>
         <div className="rm">
@@ -63,22 +62,24 @@ export default function RoomSection() {
             )}
           </div>
           <div className="rm-side">
-            <div className="tabs" role="tablist" aria-label="방 고르기">
-              {ROOMS.map((r) => (
-                <button
-                  key={r.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={r.id === room}
-                  onClick={() => {
-                    setRoom(r.id);
-                    setSel(null);
-                  }}
-                >
-                  {r.label}
-                </button>
-              ))}
-            </div>
+            {ROOMS.length > 1 && (
+              <div className="tabs" role="tablist" aria-label="방 고르기">
+                {ROOMS.map((r) => (
+                  <button
+                    key={r.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={r.id === room}
+                    onClick={() => {
+                      setRoom(r.id);
+                      setSel(null);
+                    }}
+                  >
+                    {r.label}
+                  </button>
+                ))}
+              </div>
+            )}
             <ul className="rm-list" aria-label={R.label + " 장비"}>
               {R.items.map((i) => (
                 <li key={i.id}>
