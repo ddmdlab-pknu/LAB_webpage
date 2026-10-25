@@ -1,8 +1,10 @@
-// 결정립 크기 재기 창: 사진 올리기 → 분석 서버 → 결과 리포트.
-import { useEffect, useRef, useState } from "react";
-import { analyzeImage, GRAIN_API, GrainResult, health, loadSample } from "./api";
+// 결정립 크기 재기 창: 사진 올리기 → 스케일바 확인·값 입력 → 분석 서버 → 결과 리포트.
+import { PointerEvent as RPointerEvent, useEffect, useRef, useState } from "react";
+import { analyzeImage, GRAIN_API, GrainResult, health, Inspect, inspectImage, loadSample, Uploaded, uploadImage } from "./api";
 
 type Phase = "pick" | "run" | "done" | "error";
+type Box = [number, number, number, number]; // 원본 픽셀 [y1, y2, x1, x2]
+type Line = { x1: number; y1: number; x2: number; y2: number };
 type Server = "none" | "checking" | "up" | "down";
 
 const f = (v: number | null | undefined, n = 2, unit = "") => (v === null || v === undefined || isNaN(v) ? "-" : v.toFixed(n) + unit);
@@ -199,34 +201,121 @@ function Report({ r, sample }: { r: GrainResult; sample: boolean }) {
   );
 }
 
+// ── 스케일바 확인 ─────────────────────────────────────
+const COLOR_KO: Record<string, string> = { blue: "파란", red: "빨간", black: "검은", white: "흰" };
+const CHIPS = [10, 20, 50, 100, 200, 500];
+
+// 사진 위에 찾은(또는 그린) 스케일바를 표시하고, 그리기 모드에서는 끌어서 막대를 표시한다
+function ScaleFig({ insp, box, line, draw, onDraw }: { insp: Inspect; box: Box | null; line: Line | null; draw: boolean; onDraw: (l: Line) => void }) {
+  const { width: W, height: H } = insp;
+  const svg = useRef<SVGSVGElement>(null);
+  const [cur, setCur] = useState<Line | null>(null);
+  const pt = (e: RPointerEvent) => {
+    const r = svg.current!.getBoundingClientRect();
+    return { x: ((e.clientX - r.left) / r.width) * W, y: ((e.clientY - r.top) / r.height) * H };
+  };
+  const snap = (l: Line): Line => (Math.abs(l.y2 - l.y1) < 0.12 * Math.abs(l.x2 - l.x1) ? { ...l, y2: l.y1 } : l);
+  const shown = cur || line;
+  const sw = Math.max(W, H) / 400; // 화면에서 2px 안팎
+  return (
+    <svg
+      ref={svg}
+      className={"gt-pv" + (draw ? " draw" : "")}
+      viewBox={`0 0 ${W} ${H}`}
+      role="img"
+      aria-label={draw ? "사진 위에서 스케일바 양 끝을 끌어 표시하세요" : "올린 사진과 찾은 스케일바"}
+      onPointerDown={(e) => {
+        if (!draw) return;
+        (e.target as Element).setPointerCapture?.(e.pointerId);
+        const p = pt(e);
+        setCur({ x1: p.x, y1: p.y, x2: p.x, y2: p.y });
+      }}
+      onPointerMove={(e) => {
+        if (!draw || !cur) return;
+        const p = pt(e);
+        setCur(snap({ ...cur, x2: p.x, y2: p.y }));
+      }}
+      onPointerUp={() => {
+        if (cur && Math.hypot(cur.x2 - cur.x1, cur.y2 - cur.y1) >= 5) onDraw(cur);
+        setCur(null);
+      }}
+    >
+      <image href={insp.preview} x={0} y={0} width={W} height={H} preserveAspectRatio="none" />
+      {box && !shown && (
+        <rect x={box[2] - 2 * sw} y={box[0] - 2 * sw} width={box[3] - box[2] + 4 * sw} height={box[1] - box[0] + 4 * sw} fill="none" stroke="#1fc46b" strokeWidth={sw * 1.5} />
+      )}
+      {shown && (
+        <g stroke="#1fc46b" strokeWidth={sw * 1.5} strokeLinecap="round">
+          <line x1={shown.x1} y1={shown.y1} x2={shown.x2} y2={shown.y2} />
+          {[0, 1].map((k) => {
+            const x = k ? shown.x2 : shown.x1, y = k ? shown.y2 : shown.y1;
+            return <line key={k} x1={x} x2={x} y1={y - 5 * sw} y2={y + 5 * sw} />;
+          })}
+        </g>
+      )}
+    </svg>
+  );
+}
+
+// 스케일바 부분만 크게 (숫자를 읽고 길이를 확인하는 용도)
+function ScaleZoom({ insp, box }: { insp: Inspect; box: Box }) {
+  const { width: W, height: H } = insp;
+  const bw = box[3] - box[2];
+  // 막대와 그 위 숫자가 들어오게 자르되, 너무 높지 않게 가로:세로를 3:1 이상으로
+  const y0 = Math.max(0, box[0] - Math.max(4 * (box[1] - box[0]), 0.09 * H)), y1 = Math.min(H, box[1] + 0.03 * H);
+  const span = Math.min(W, Math.max(1.4 * bw, 3 * (y1 - y0)));
+  const x0 = Math.max(0, Math.min(W - span, (box[2] + box[3]) / 2 - span / 2)), x1 = x0 + span;
+  const sw = (x1 - x0) / 300;
+  return (
+    <svg className="gt-zoom" viewBox={`${x0} ${y0} ${x1 - x0} ${y1 - y0}`} role="img" aria-label="스케일바 부분 확대">
+      <image href={insp.preview} x={0} y={0} width={W} height={H} preserveAspectRatio="none" />
+      <rect x={box[2]} y={box[0] - sw} width={bw} height={box[1] - box[0] + 2 * sw} fill="none" stroke="#1fc46b" strokeWidth={sw * 1.5} />
+    </svg>
+  );
+}
+
+const lineToBox = (l: Line, H: number): Box => {
+  const t = Math.max(3, Math.round(0.004 * H));
+  return [Math.round(Math.min(l.y1, l.y2) - t), Math.round(Math.max(l.y1, l.y2) + t), Math.round(Math.min(l.x1, l.x2)), Math.round(Math.max(l.x1, l.x2))];
+};
+
 // ── 창 ─────────────────────────────────────────────────
 export default function GrainDialog({ onClose, startWithSample }: { onClose: () => void; startWithSample?: boolean }) {
   const [phase, setPhase] = useState<Phase>("pick");
   const [server, setServer] = useState<Server>(GRAIN_API ? "checking" : "none");
+  const [engine, setEngine] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [bar, setBar] = useState("100");
-  const [barTouched, setBarTouched] = useState(false);
-  const [mag, setMag] = useState("");
-  const [umpx, setUmpx] = useState("");
+  const [insp, setInsp] = useState<Inspect | null>(null);
+  const [reading, setReading] = useState(false);
+  const [px, setPx] = useState("");
+  const [box, setBox] = useState<Box | null>(null);
+  const [line, setLine] = useState<Line | null>(null);
+  const [draw, setDraw] = useState(false);
+  const [um, setUm] = useState("");
   const [result, setResult] = useState<GrainResult | null>(null);
   const [isSample, setIsSample] = useState(false);
   const [error, setError] = useState("");
   const [elapsed, setElapsed] = useState(0);
   const [drag, setDrag] = useState(false);
-  const box = useRef<HTMLDivElement>(null);
+  const box0 = useRef<HTMLDivElement>(null);
+  const umIn = useRef<HTMLInputElement>(null);
   const abort = useRef<AbortController | null>(null);
+  const up = useRef<Uploaded | null>(null);
 
   // 열릴 때: 스크롤 잠금, Esc 로 닫기, 서버 깨우기
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const back = document.activeElement as HTMLElement | null;
-    box.current?.focus();
+    box0.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     const ac = new AbortController();
-    if (GRAIN_API) health(ac.signal).then((h) => setServer(h.ok ? "up" : "down"));
+    if (GRAIN_API)
+      health(ac.signal).then((h) => {
+        setServer(h.ok ? "up" : "down");
+        setEngine(h.engine || "");
+      });
     if (startWithSample) showSample();
     return () => {
       document.body.style.overflow = prev;
@@ -238,9 +327,38 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => () => {
-    if (preview) URL.revokeObjectURL(preview);
-  }, [preview]);
+  // 사진을 고르고 서버가 깨어 있으면 스케일바를 찾는다
+  useEffect(() => {
+    if (!file || server !== "up") return;
+    const ac = new AbortController();
+    setReading(true);
+    setError("");
+    uploadImage(file, ac.signal)
+      .then((u) => {
+        up.current = u;
+        return inspectImage(u, ac.signal);
+      })
+      .then((r) => {
+        setInsp(r);
+        if (r.engine) setEngine(r.engine);
+        setLine(null);
+        if (r.bar) {
+          setPx(String(r.bar.length_px));
+          setBox(r.bar.box);
+          setDraw(false);
+          window.setTimeout(() => umIn.current?.focus(), 50);
+        } else {
+          setPx("");
+          setBox(null);
+          setDraw(true);
+        }
+      })
+      .catch((e) => {
+        if (!ac.signal.aborted) setError(e instanceof Error && e.message !== "Failed to fetch" ? e.message : "사진을 서버로 보내지 못했습니다. 잠시 뒤 다시 골라 주세요.");
+      })
+      .finally(() => !ac.signal.aborted && setReading(false));
+    return () => ac.abort();
+  }, [file, server]);
 
   const pick = (fl: FileList | null) => {
     const f0 = fl && fl[0];
@@ -250,19 +368,43 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
       return;
     }
     setError("");
+    setInsp(null);
+    up.current = null;
     setFile(f0);
-    setPreview(/image\/(jpeg|png|bmp|webp|gif)/.test(f0.type) ? URL.createObjectURL(f0) : null);
   };
 
+  const onDraw = (l: Line) => {
+    if (!insp) return;
+    setLine(l);
+    setBox(lineToBox(l, insp.height));
+    setPx(String(Math.round(Math.hypot(l.x2 - l.x1, l.y2 - l.y1))));
+    setDraw(false);
+    window.setTimeout(() => umIn.current?.focus(), 50);
+  };
+
+  const backToAuto = () => {
+    if (!insp || !insp.bar) return;
+    setLine(null);
+    setBox(insp.bar.box);
+    setPx(String(insp.bar.length_px));
+    setDraw(false);
+  };
+
+  const pxN = parseFloat(px), umN = parseFloat(um);
+  const pxOk = pxN >= 5 && pxN < 1e5, umOk = umN > 0 && umN < 1e5;
+  const manual = !!insp && (!insp.bar || line !== null || pxN !== insp.bar.length_px);
+
   const run = async () => {
-    if (!file) return;
+    if (!file || !pxOk || !umOk) return;
     setPhase("run");
     setElapsed(0);
     const t0 = Date.now();
     const timer = window.setInterval(() => setElapsed(Math.round((Date.now() - t0) / 1000)), 1000);
     abort.current = new AbortController();
     try {
-      const r = await analyzeImage(file, { scalebarUm: umpx || !barTouched ? "" : bar, umPerPx: umpx, magnification: mag }, abort.current.signal);
+      // 서버는 올린 사진을 15분 뒤 지우므로, 오래됐으면 다시 올린다
+      if (!up.current || Date.now() - up.current.at > 10 * 60 * 1000) up.current = await uploadImage(file, abort.current.signal);
+      const r = await analyzeImage(up.current, { scalebarUm: String(umN), scalebarPx: manual ? pxN : undefined, barBox: box || undefined }, abort.current.signal);
       setResult(r);
       setIsSample(false);
       setPhase("done");
@@ -286,11 +428,12 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
     }
   }
 
-  const canRun = !!file && server === "up";
+  const canRun = !!file && !!insp && server === "up" && pxOk && umOk && !draw;
+  const barWord = insp && insp.bar ? `${COLOR_KO[insp.bar.color] || ""} 스케일바`.trim() : "스케일바";
 
   return (
     <div className="gt-back" onMouseDown={(e) => e.target === e.currentTarget && phase !== "run" && onClose()}>
-      <div className="gt" role="dialog" aria-modal="true" aria-labelledby="gt-h" ref={box} tabIndex={-1}>
+      <div className="gt" role="dialog" aria-modal="true" aria-labelledby="gt-h" ref={box0} tabIndex={-1}>
         <div className="gt-top">
           <h2 id="gt-h">결정립 크기 재기</h2>
           <button type="button" className="gt-x" onClick={onClose} aria-label="닫기">×</button>
@@ -299,7 +442,7 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
         {phase === "pick" && (
           <div className="gt-body">
             <p className="gt-lead">
-              광학 현미경 사진을 올리면 결정립을 나누고 ASTM E112 방식으로 결정립도 G 와 크기 분포를 계산합니다. 사진은 분석에만 쓰고 저장하지 않습니다.
+              광학 현미경 사진을 올리면 결정립을 나누고 ASTM E112 방식으로 결정립도 G 와 크기 분포를 계산합니다. 크기는 사진 속 스케일바로 맞추므로 <b>스케일바가 있는 사진</b>만 잴 수 있습니다. 사진은 분석에만 쓰고 15분 안에 서버에서 지웁니다.
             </p>
             {server === "none" && <p className="gt-status warn">분석 서버를 준비하고 있습니다. 지금은 예시 결과만 볼 수 있습니다.</p>}
             {server === "checking" && <p className="gt-status">분석 서버를 깨우는 중입니다. 오래 쉬었다면 1~2분 걸릴 수 있습니다.</p>}
@@ -318,37 +461,69 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
               }}
             >
               <input type="file" accept="image/*,.tif,.tiff" onChange={(e) => pick(e.target.files)} />
-              {preview ? <img src={preview} alt="올린 사진 미리보기" /> : null}
               <span>
                 {file ? <b>{file.name}</b> : <b>사진을 끌어다 놓거나 눌러서 고르기</b>}
                 {file ? ` · ${(file.size / 1024 / 1024).toFixed(1)} MB · 다른 사진을 고르려면 누르세요` : " jpg, png, tif, bmp · 15 MB 이하"}
               </span>
             </label>
-            <div className="gt-opts">
-              <label>
-                <span>스케일바 길이</span>
-                <span className="gt-in">
-                  <input type="number" inputMode="decimal" min="0" step="any" value={bar} onChange={(e) => { setBar(e.target.value); setBarTouched(true); }} disabled={!!umpx} />
-                  μm
-                </span>
-              </label>
-              <label>
-                <span>배율 (스케일바가 없을 때)</span>
-                <select value={mag} onChange={(e) => setMag(e.target.value)}>
-                  <option value="">자동</option>
-                  <option value="100x">100배</option>
-                  <option value="400x">400배</option>
-                </select>
-              </label>
-              <label>
-                <span>1 픽셀 길이 (알면)</span>
-                <span className="gt-in">
-                  <input type="number" inputMode="decimal" min="0" step="any" placeholder="예: 1.0638" value={umpx} onChange={(e) => setUmpx(e.target.value)} />
-                  μm
-                </span>
-              </label>
-            </div>
-            <p className="gt-hint">사진 속 파랑·빨강·검정·흰색 스케일바를 자동으로 찾아 크기를 맞춥니다. 스케일바 숫자가 100 μm 가 아니면 위에 고쳐 주세요.</p>
+
+            {file && reading && (
+              <div className="gt-reading" aria-live="polite">
+                <div className="gt-bar" />
+                <p className="gt-hint">사진에서 스케일바를 찾는 중입니다.</p>
+              </div>
+            )}
+
+            {insp && !reading && (
+              <div className="gt-sc">
+                <figure className="gt-sc-fig">
+                  {draw && <p className="gt-draw-tip">사진 위에서 스케일바의 한쪽 끝부터 다른 쪽 끝까지 끌어 주세요.</p>}
+                  <ScaleFig insp={insp} box={box} line={line} draw={draw} onDraw={onDraw} />
+                  {box && !draw && <ScaleZoom insp={insp} box={box} />}
+                  {box && !draw && <figcaption>초록 선이 길이를 잰 스케일바입니다. 막대 끝과 맞는지 확인해 주세요.</figcaption>}
+                </figure>
+                <div className="gt-sc-side">
+                  <p className={"gt-status" + (insp.bar || line ? " ok" : " warn")}>
+                    {line
+                      ? "직접 표시한 스케일바로 잽니다."
+                      : insp.bar
+                      ? `${barWord}를 찾았습니다: ${insp.bar.length_px} px`
+                      : "사진에서 스케일바를 찾지 못했습니다. 사진 위에서 스케일바를 끌어 표시해 주세요."}
+                  </p>
+                  <label className="gt-field">
+                    <span>스케일바 길이 (사진 픽셀)</span>
+                    <span className="gt-in">
+                      <input type="number" inputMode="decimal" min="5" step="any" value={px} onChange={(e) => setPx(e.target.value)} />
+                      px
+                    </span>
+                  </label>
+                  <label className="gt-field need">
+                    <span>스케일바 값 (사진 속 숫자) · 필수</span>
+                    <span className="gt-in">
+                      <input ref={umIn} type="number" inputMode="decimal" min="0" step="any" placeholder="예: 100" value={um} onChange={(e) => setUm(e.target.value)} aria-required="true" />
+                      μm
+                    </span>
+                  </label>
+                  <div className="gt-chips" role="group" aria-label="자주 쓰는 스케일바 값">
+                    {CHIPS.map((v) => (
+                      <button key={v} type="button" aria-pressed={umN === v} onClick={() => setUm(String(v))}>{v}</button>
+                    ))}
+                  </div>
+                  <p className="gt-eq">
+                    {pxOk && umOk ? (
+                      <>1 px = {umN} μm ÷ {pxN} px = <b>{(umN / pxN).toFixed(4)} μm</b></>
+                    ) : (
+                      "스케일바 값(μm)을 넣어야 측정할 수 있습니다."
+                    )}
+                  </p>
+                  <div className="gt-sc-acts">
+                    <button type="button" className="ulink" onClick={() => setDraw(!draw)}>{draw ? "표시 그만두기" : "스케일바 다시 표시"}</button>
+                    {insp.bar && line && <button type="button" className="ulink" onClick={backToAuto}>자동 인식으로 되돌리기</button>}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {error && <p className="gt-status warn">{error}</p>}
             <div className="btns">
               <button type="button" className="btn" onClick={run} disabled={!canRun}>
@@ -363,7 +538,7 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
           <div className="gt-body gt-run" aria-live="polite">
             <div className="gt-bar" />
             <p className="gt-lead">결정립을 나누는 중입니다 · {elapsed}초</p>
-            <p className="gt-hint">학습한 AI 모델이 CPU 에서 사진 한 장을 보는 데 30초~1분쯤 걸립니다.</p>
+            <p className="gt-hint">{engine === "cellpose" ? "학습한 AI 모델이 GPU 를 빌려 사진을 봅니다. 기다리는 사람이 있으면 조금 더 걸립니다." : "보통 몇 초면 끝납니다."}</p>
             <div className="btns">
               <button type="button" className="btn tone" onClick={() => abort.current?.abort()}>멈추기</button>
             </div>
@@ -385,7 +560,7 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
           <div className="gt-body">
             <p className="gt-status warn">{error}</p>
             <div className="btns">
-              <button type="button" className="btn ink" onClick={() => setPhase("pick")}>돌아가기</button>
+              <button type="button" className="btn ink" onClick={() => { setError(""); setPhase("pick"); }}>돌아가기</button>
             </div>
           </div>
         )}

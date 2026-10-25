@@ -51,7 +51,7 @@ export default function GrainSection() {
               예시 결과 보기
             </button>
           </div>
-          <p className="cap">사진은 분석에만 쓰고 저장하지 않습니다. 사진 속 스케일바를 찾아 크기를 자동으로 맞춥니다.</p>
+          <p className="cap">사진 속 스케일바(파란 선)의 길이를 찾고, 입력한 스케일바 값(μm)으로 크기를 맞춥니다. 사진은 분석에만 쓰고 15분 안에 서버에서 지웁니다.</p>
         </div>
         <figure className="gs-fig">
           <Compare />
