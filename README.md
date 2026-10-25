@@ -5,7 +5,7 @@ colorFrom: green
 colorTo: gray
 sdk: gradio
 sdk_version: 5.50.0
-python_version: "3.10"
+python_version: "3.12"
 app_file: app.py
 pinned: false
 short_description: ASTM E112 grain size from a micrograph with a scale bar

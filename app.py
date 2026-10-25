@@ -63,14 +63,16 @@ _fetch_model()
 engine, engine_note = load_engine(cfg, ROOT, os.environ.get("GRAIN_ENGINE", "auto"))
 print(f"engine: {engine.name}" + (f" ({engine_note})" if engine_note else ""))
 
-if engine.name == "cellpose" and spaces is not None:
+if spaces is not None:
+    # ZeroGPU 는 시작할 때 @spaces.GPU 함수가 하나는 있어야 한다. 학습 모델(cellpose)일 때만 GPU 로 보낸다
     _segment = engine.segment
 
     @spaces.GPU(duration=20)
     def _gpu_segment(gray, clahe, um_per_px, diameter=None):
         return _segment(gray, clahe, um_per_px, diameter=diameter)
 
-    engine.segment = _gpu_segment
+    if engine.name == "cellpose":
+        engine.segment = _gpu_segment
 
 
 def _load(file):
