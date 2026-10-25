@@ -1,9 +1,9 @@
-// 결정립 크기 분석 서버와 주고받기. 서버는 Hugging Face Space(Gradio + ZeroGPU)의 ddmd_grain/app.py,
-// 응답 형식은 ddmd-grain/1. Gradio API 순서: 사진 올리기(/gradio_api/upload) → 호출(/gradio_api/call/이름)
-// → 결과 받기(server-sent events).
+// 결정립 크기 분석 서버와 주고받기. 서버는 연구실 GPU PC 에서 도는 ddmd_grain/web/server.py (FastAPI),
+// 외부에서는 Tailscale Funnel 주소로 들어온다. 응답 형식은 ddmd-grain/1.
+//   GET  /health   POST /inspect (사진 → 스케일바)   POST /analyze (사진 + 스케일바 값 → 결과)
 
 // 분석 서버 주소. 빌드 환경 변수 REACT_APP_GRAIN_API 로 바꿀 수 있다.
-const DEFAULT_API = "https://semin84-ddmd-grain.hf.space";
+const DEFAULT_API = "";
 export const GRAIN_API = (process.env.REACT_APP_GRAIN_API || DEFAULT_API).replace(/\/+$/, "");
 
 export type Note = { level: "ok" | "info" | "warn"; text: string };
@@ -37,8 +37,6 @@ export type GrainResult = {
 export type Bar = { box: [number, number, number, number]; length_px: number; color: string };
 export type Inspect = { width: number; height: number; preview: string; preview_scale: number; engine?: string; bar: Bar | null };
 export type Options = { scalebarUm: string; scalebarPx?: number; barBox?: [number, number, number, number] };
-// 서버에 올려 둔 사진 (서버는 15분 뒤 지운다)
-export type Uploaded = { path: string; name: string; at: number };
 
 function withTimeout(ms: number, outer?: AbortSignal) {
   const c = new AbortController();
@@ -47,34 +45,21 @@ function withTimeout(ms: number, outer?: AbortSignal) {
   return { signal: c.signal, done: () => window.clearTimeout(t) };
 }
 
-const SERVER_ERR = "분석 서버에서 오류가 났습니다. 잠시 뒤 다시 시도해 주세요.";
-
-// Gradio 함수 하나를 부르고 결과를 기다린다. 서버가 {"error": "..."} 를 주면 그 문장으로 오류를 낸다.
-async function call<T>(name: string, data: unknown[], ms: number, outer?: AbortSignal): Promise<T> {
+async function post<T>(path: string, fd: FormData, ms: number, outer?: AbortSignal): Promise<T> {
   const t = withTimeout(ms, outer);
   try {
-    const r = await fetch(`${GRAIN_API}/gradio_api/call/${name}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data }),
-      signal: t.signal,
-    });
-    if (!r.ok) throw new Error(r.status === 429 ? "지금 기다리는 사람이 많습니다. 잠시 뒤 다시 시도해 주세요." : `${SERVER_ERR} (${r.status})`);
-    const { event_id } = await r.json();
-    const text = await (await fetch(`${GRAIN_API}/gradio_api/call/${name}/${event_id}`, { signal: t.signal })).text();
-    let out: unknown;
-    for (const block of text.split(/\r?\n\r?\n/)) {
-      let ev = "", dat = "";
-      for (const line of block.split(/\r?\n/)) {
-        if (line.startsWith("event:")) ev = line.slice(6).trim();
-        else if (line.startsWith("data:")) dat += line.slice(5).trim();
+    const r = await fetch(GRAIN_API + path, { method: "POST", body: fd, signal: t.signal });
+    if (!r.ok) {
+      let msg = r.status === 503 ? "지금 다른 사진을 분석하고 있습니다. 잠시 뒤 다시 시도해 주세요." : `분석 서버 오류 (${r.status})`;
+      try {
+        const j = await r.json();
+        if (j && j.detail) msg = String(j.detail);
+      } catch (e) {
+        /* 본문이 JSON 이 아님 */
       }
-      if (ev === "complete" && dat) out = JSON.parse(dat);
+      throw new Error(msg);
     }
-    const v = (Array.isArray(out) ? out[0] : out) as (T & { error?: string }) | undefined;
-    if (!v) throw new Error(SERVER_ERR);
-    if (v.error) throw new Error(v.error);
-    return v;
+    return (await r.json()) as T;
   } finally {
     t.done();
   }
@@ -84,37 +69,31 @@ export type Health = { ok: boolean; engine?: string; device?: string };
 
 export async function health(outer?: AbortSignal): Promise<Health> {
   if (!GRAIN_API) return { ok: false };
-  // 무료 서버는 잠들어 있다가 깨는 데 1~2분 걸릴 수 있다
+  const t = withTimeout(15000, outer);
   try {
-    return await call<Health>("health", [], 150000, outer);
+    const r = await fetch(GRAIN_API + "/health", { signal: t.signal });
+    return r.ok ? await r.json() : { ok: false };
   } catch (e) {
     return { ok: false };
-  }
-}
-
-export async function uploadImage(file: File, outer?: AbortSignal): Promise<Uploaded> {
-  const t = withTimeout(120000, outer);
-  try {
-    const fd = new FormData();
-    fd.append("files", file);
-    const r = await fetch(`${GRAIN_API}/gradio_api/upload`, { method: "POST", body: fd, signal: t.signal });
-    if (!r.ok) throw new Error(r.status === 413 ? "사진이 너무 큽니다. 15 MB 이하로 줄여 주세요." : `사진을 올리지 못했습니다 (${r.status}).`);
-    const paths = (await r.json()) as string[];
-    return { path: paths[0], name: file.name, at: Date.now() };
   } finally {
     t.done();
   }
 }
 
-const fileRef = (u: Uploaded) => ({ path: u.path, orig_name: u.name, meta: { _type: "gradio.FileData" } });
-
-// 사진의 미리보기와 스케일바 위치를 받는다 (모델을 쓰지 않아 몇 초)
-export function inspectImage(u: Uploaded, outer?: AbortSignal): Promise<Inspect> {
-  return call<Inspect>("inspect", [fileRef(u)], 120000, outer);
+// 사진을 읽어 미리보기와 스케일바 위치를 받는다 (모델을 쓰지 않아 금방 끝난다)
+export function inspectImage(file: File, outer?: AbortSignal): Promise<Inspect> {
+  const fd = new FormData();
+  fd.append("file", file);
+  return post<Inspect>("/inspect", fd, 120000, outer);
 }
 
-export function analyzeImage(u: Uploaded, o: Options, outer?: AbortSignal): Promise<GrainResult> {
-  return call<GrainResult>("analyze", [fileRef(u), o.scalebarUm, o.scalebarPx ? String(o.scalebarPx) : "", o.barBox ? o.barBox.join(",") : ""], 300000, outer);
+export function analyzeImage(file: File, o: Options, outer?: AbortSignal): Promise<GrainResult> {
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("scalebar_um", o.scalebarUm);
+  if (o.scalebarPx) fd.append("scalebar_px", String(o.scalebarPx));
+  if (o.barBox) fd.append("bar_box", o.barBox.join(","));
+  return post<GrainResult>("/analyze", fd, 300000, outer);
 }
 
 // 미리 계산해 둔 예시 결과 (public/grain/sample.json)

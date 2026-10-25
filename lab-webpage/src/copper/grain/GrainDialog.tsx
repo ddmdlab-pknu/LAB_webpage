@@ -1,6 +1,6 @@
 // 결정립 크기 재기 창: 사진 올리기 → 스케일바 확인·값 입력 → 분석 서버 → 결과 리포트.
 import { PointerEvent as RPointerEvent, useEffect, useRef, useState } from "react";
-import { analyzeImage, GRAIN_API, GrainResult, health, Inspect, inspectImage, loadSample, Uploaded, uploadImage } from "./api";
+import { analyzeImage, GRAIN_API, GrainResult, health, Inspect, inspectImage, loadSample } from "./api";
 
 type Phase = "pick" | "run" | "done" | "error";
 type Box = [number, number, number, number]; // 원본 픽셀 [y1, y2, x1, x2]
@@ -300,7 +300,6 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
   const box0 = useRef<HTMLDivElement>(null);
   const umIn = useRef<HTMLInputElement>(null);
   const abort = useRef<AbortController | null>(null);
-  const up = useRef<Uploaded | null>(null);
 
   // 열릴 때: 스크롤 잠금, Esc 로 닫기, 서버 깨우기
   useEffect(() => {
@@ -333,11 +332,7 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
     const ac = new AbortController();
     setReading(true);
     setError("");
-    uploadImage(file, ac.signal)
-      .then((u) => {
-        up.current = u;
-        return inspectImage(u, ac.signal);
-      })
+    inspectImage(file, ac.signal)
       .then((r) => {
         setInsp(r);
         if (r.engine) setEngine(r.engine);
@@ -354,7 +349,7 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
         }
       })
       .catch((e) => {
-        if (!ac.signal.aborted) setError(e instanceof Error && e.message !== "Failed to fetch" ? e.message : "사진을 서버로 보내지 못했습니다. 잠시 뒤 다시 골라 주세요.");
+        if (!ac.signal.aborted) setError(e instanceof Error && e.message !== "Failed to fetch" ? e.message : "사진을 분석 서버로 보내지 못했습니다. 잠시 뒤 다시 골라 주세요.");
       })
       .finally(() => !ac.signal.aborted && setReading(false));
     return () => ac.abort();
@@ -369,7 +364,6 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
     }
     setError("");
     setInsp(null);
-    up.current = null;
     setFile(f0);
   };
 
@@ -402,9 +396,7 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
     const timer = window.setInterval(() => setElapsed(Math.round((Date.now() - t0) / 1000)), 1000);
     abort.current = new AbortController();
     try {
-      // 서버는 올린 사진을 15분 뒤 지우므로, 오래됐으면 다시 올린다
-      if (!up.current || Date.now() - up.current.at > 10 * 60 * 1000) up.current = await uploadImage(file, abort.current.signal);
-      const r = await analyzeImage(up.current, { scalebarUm: String(umN), scalebarPx: manual ? pxN : undefined, barBox: box || undefined }, abort.current.signal);
+      const r = await analyzeImage(file, { scalebarUm: String(umN), scalebarPx: manual ? pxN : undefined, barBox: box || undefined }, abort.current.signal);
       setResult(r);
       setIsSample(false);
       setPhase("done");
@@ -442,11 +434,11 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
         {phase === "pick" && (
           <div className="gt-body">
             <p className="gt-lead">
-              광학 현미경 사진을 올리면 결정립을 나누고 ASTM E112 방식으로 결정립도 G 와 크기 분포를 계산합니다. 크기는 사진 속 스케일바로 맞추므로 <b>스케일바가 있는 사진</b>만 잴 수 있습니다. 사진은 분석에만 쓰고 15분 안에 서버에서 지웁니다.
+              광학 현미경 사진을 올리면 결정립을 나누고 ASTM E112 방식으로 결정립도 G 와 크기 분포를 계산합니다. 크기는 사진 속 스케일바로 맞추므로 <b>스케일바가 있는 사진</b>만 잴 수 있습니다. 사진은 분석에만 쓰고 저장하지 않습니다.
             </p>
             {server === "none" && <p className="gt-status warn">분석 서버를 준비하고 있습니다. 지금은 예시 결과만 볼 수 있습니다.</p>}
-            {server === "checking" && <p className="gt-status">분석 서버를 깨우는 중입니다. 오래 쉬었다면 1~2분 걸릴 수 있습니다.</p>}
-            {server === "down" && <p className="gt-status warn">분석 서버에 연결하지 못했습니다. 잠시 뒤 다시 열어 주세요.</p>}
+            {server === "checking" && <p className="gt-status">연구실 분석 서버에 연결하는 중입니다.</p>}
+            {server === "down" && <p className="gt-status warn">연구실 분석 서버가 꺼져 있거나 연결이 끊겨 지금은 잴 수 없습니다. 예시 결과는 볼 수 있습니다.</p>}
             <label
               className={"gt-drop" + (drag ? " on" : "") + (file ? " has" : "")}
               onDragOver={(e) => {
@@ -538,7 +530,7 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
           <div className="gt-body gt-run" aria-live="polite">
             <div className="gt-bar" />
             <p className="gt-lead">결정립을 나누는 중입니다 · {elapsed}초</p>
-            <p className="gt-hint">{engine === "cellpose" ? "학습한 AI 모델이 GPU 를 빌려 사진을 봅니다. 기다리는 사람이 있으면 조금 더 걸립니다." : "보통 몇 초면 끝납니다."}</p>
+            <p className="gt-hint">{engine === "cellpose" ? "연구실 GPU 에서 학습한 AI 모델이 사진을 보고 있습니다. 보통 몇 초면 끝납니다." : "보통 몇 초면 끝납니다."}</p>
             <div className="btns">
               <button type="button" className="btn tone" onClick={() => abort.current?.abort()}>멈추기</button>
             </div>
