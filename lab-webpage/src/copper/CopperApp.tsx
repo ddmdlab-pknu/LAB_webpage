@@ -50,7 +50,7 @@ function useCopperDocument() {
 // 구역이 화면에 들어오면 제목 → 글 → 그림 순서로 한 번씩 떠오른다.
 // 숨김 상태는 CSS 의 prefers-reduced-motion: no-preference 안에만 있어서, 움직임 줄이기 설정이면 처음부터 다 보인다.
 const PARTS =
-  "h2:not(.sr), h3.h3, .body, .statement, .chart, .plate, .tabs, .kit, .rm-stage, .rm-list, .cells, .ix-list, .ix-frame, .acc, .pi-left, .pi-right, .career > *, .ptile, .st-head, .photos, .team-copy, .roster, .nl-item, .tile, .eq-card, .prow, .mcard, .gitem, .proj, .nrow, .joinbox, .map, .info";
+  "h2:not(.sr), h3.h3, .body, .statement, .chart, .plate, .tabs, .kit, .rm-stage, .rm-list, .gs-fig, .cells, .ix-list, .ix-frame, .acc, .pi-left, .pi-right, .career > *, .ptile, .st-head, .photos, .team-copy, .roster, .nl-item, .tile, .eq-card, .prow, .mcard, .gitem, .proj, .nrow, .joinbox, .map, .info";
 function useReveal() {
   const { pathname } = useLocation();
   useEffect(() => {

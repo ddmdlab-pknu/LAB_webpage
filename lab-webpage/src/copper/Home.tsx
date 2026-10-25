@@ -19,6 +19,7 @@ import {
   Thumb,
 } from "./sections";
 import RoomSection from "./room/RoomSection";
+import GrainSection from "./grain/GrainSection";
 import Equip3D from "./equip/Equip3D";
 import type { EquipId } from "./equip/models";
 
@@ -296,6 +297,7 @@ function Home() {
       <RoomSection />
       <ResearchIndex />
       <LoopSection />
+      <GrainSection />
 
       <svg className="split-band" viewBox="0 0 2 1" preserveAspectRatio="none" aria-hidden="true">
         <rect x="0" y="0" width="1" height="1" className="n" />
