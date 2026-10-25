@@ -21,6 +21,28 @@ export function useMedia(q: string) {
   return m;
 }
 
+// 요소가 화면에 보이고 탭이 앞에 있을 때만 true. 가만히 있어도 도는 움직임은 이때만 돈다
+export function useActive<T extends Element>(ref: { current: T | null }, threshold = 0.2) {
+  const [seen, setSeen] = useState(false);
+  const [shown, setShown] = useState(() => typeof document === "undefined" || !document.hidden);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !("IntersectionObserver" in window)) {
+      setSeen(true);
+      return;
+    }
+    const io = new IntersectionObserver(([e]) => setSeen(e.isIntersecting), { threshold });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref, threshold]);
+  useEffect(() => {
+    const on = () => setShown(!document.hidden);
+    document.addEventListener("visibilitychange", on);
+    return () => document.removeEventListener("visibilitychange", on);
+  }, []);
+  return seen && shown;
+}
+
 // 자석 무늬: 위 분홍(N), 아래 민트(S). 사진이 없는 자리의 표시와 목록 머리표로 쓴다
 export function Mark({ size }: { size?: number }) {
   return <i className="mark" aria-hidden="true" style={size ? ({ "--mk": size + "px" } as CSSProperties) : undefined} />;
@@ -78,15 +100,19 @@ export function Statement({ parts, className = "statement" }: { parts: Part[]; c
 }
 
 // 문장 속 사진 조각
-export function Thumb({ src, pos, zoom }: { src: string; pos?: string; zoom?: number }) {
+// still: 움직이는 그림(GIF)일 때, 움직임 줄이기 설정이면 대신 보여 줄 멈춘 그림
+export function Thumb({ src, pos, zoom, still }: { src: string; pos?: string; zoom?: number; still?: string }) {
   return (
     <span className="tn" aria-hidden="true">
-      <img
-        src={src}
-        alt=""
-        loading="lazy"
-        style={{ objectPosition: pos, transform: zoom ? `scale(${zoom})` : undefined, transformOrigin: pos }}
-      />
+      <picture>
+        {still && <source srcSet={still} media="(prefers-reduced-motion: reduce)" />}
+        <img
+          src={src}
+          alt=""
+          loading="lazy"
+          style={{ objectPosition: pos, transform: zoom ? `scale(${zoom})` : undefined, transformOrigin: pos }}
+        />
+      </picture>
     </span>
   );
 }
@@ -94,10 +120,14 @@ export function Thumb({ src, pos, zoom }: { src: string; pos?: string; zoom?: nu
 /* ---------- 실험 횟수 비교 그래프 (페이지를 열 때마다 새로 계산) ---------- */
 export function ChartSection() {
   const [data, setData] = useState<ChartData | null>(null);
+  const [manual, setManual] = useState(false);
   const dataRef = useRef<ChartData | null>(null);
   const start = useRef<{ t: number | null }>({ t: null });
+  const sec = useRef<HTMLElement>(null);
+  const active = useActive(sec, 0.35);
   dataRef.current = data;
-  const run = () => {
+  const run = (byHand: boolean) => {
+    setManual(byHand);
     setData(null);
     setTimeout(() => {
       start.current.t = null;
@@ -108,9 +138,15 @@ export function ChartSection() {
     const id = setTimeout(() => setData(computeChart()), 80);
     return () => clearTimeout(id);
   }, []);
+  // 화면에 떠 있는 동안 곡선이 다 그려지고 몇 초 뒤 새 시험 함수로 다시 계산한다 (매번 결과가 조금씩 다르다)
+  useEffect(() => {
+    if (!data || !active || prefersReduced()) return;
+    const id = window.setTimeout(() => run(false), 2400 + 7000);
+    return () => window.clearTimeout(id);
+  }, [data, active]);
   const ref = useCanvas((f) => drawChart(f, dataRef.current, start.current), { fps: 40 });
   return (
-    <section className="band" id="how">
+    <section className="band" id="how" ref={sec}>
       <div className="wrap how-grid">
         <div>
           <h2 className="h">
@@ -122,7 +158,7 @@ export function ChartSection() {
             성분과 공정 조건을 고를 때 가우스 과정 기반 베이지안 최적화를 씁니다. 앞선 결과를 보고 다음 실험을 고르기 때문에,
             조건을 무작위로 시도할 때보다 적은 횟수로 최적점에 가까워집니다.
           </p>
-          <div className="reach" aria-live="polite">
+          <div className="reach" aria-live={manual ? "polite" : "off"}>
             <div>
               <b>{data ? (data.rBO ? data.rBO + "회" : "20회+") : "–"}</b>
               <span>AI가 최적값의 95%에 닿기까지</span>
@@ -136,7 +172,7 @@ export function ChartSection() {
         <figure className="chart">
           <div className="chart-top">
             <span>실험 횟수별로 찾은 최적값 (%)</span>
-            <button type="button" className="chip-btn" onClick={run}>
+            <button type="button" className="chip-btn" onClick={() => run(true)}>
               다시 계산
             </button>
           </div>
@@ -159,7 +195,7 @@ export function ChartSection() {
               순차 탐색
             </li>
           </ul>
-          <figcaption>가로는 실험 횟수, 세로는 시험 함수 최댓값 대비 %. 이 브라우저에서 방금 계산했고, AI 선은 24번 돌린 평균입니다.</figcaption>
+          <figcaption>가로는 실험 횟수, 세로는 시험 함수 최댓값 대비 %. 이 브라우저에서 몇 초마다 새 시험 함수로 다시 계산하고, AI 선은 24번 돌린 평균입니다.</figcaption>
         </figure>
       </div>
     </section>
@@ -439,8 +475,27 @@ const STAGES = [
 ];
 export function LoopSection() {
   const [open, setOpen] = useState(0);
+  const [mine, setMine] = useState(false); // 한 번 직접 고르면 저절로 넘어가지 않는다
+  const [hold, setHold] = useState(false); // 마우스가 올라가 있거나 포커스가 안에 있으면 잠시 멈춤
+  const sec = useRef<HTMLElement>(null);
+  const active = useActive(sec, 0.45);
+  const wide = useMedia("(min-width: 901px)");
+  // 계산 → 학습 → 설계 → 검증 고리가 저절로 돈다 (넓은 화면, 화면에 보일 때만)
+  useEffect(() => {
+    if (mine || hold || !active || !wide || prefersReduced()) return;
+    const id = window.setInterval(() => setOpen((o) => (o + 1) % STAGES.length), 5200);
+    return () => window.clearInterval(id);
+  }, [mine, hold, active, wide]);
   return (
-    <section className="band" id="approach">
+    <section
+      className="band"
+      id="approach"
+      ref={sec}
+      onPointerEnter={(e) => e.pointerType === "mouse" && setHold(true)}
+      onPointerLeave={() => setHold(false)}
+      onFocus={() => setHold(true)}
+      onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node | null) && setHold(false)}
+    >
       <div className="wrap">
         <div className="acc-head">
           <h2 className="h">
@@ -456,7 +511,15 @@ export function LoopSection() {
         <ol className="acc">
           {STAGES.map((s, i) => (
             <li key={s.ko} className={"st" + i + (i === open ? " open" : "")}>
-              <button type="button" className="acc-tab" aria-expanded={i === open} onClick={() => setOpen(i)}>
+              <button
+                type="button"
+                className="acc-tab"
+                aria-expanded={i === open}
+                onClick={() => {
+                  setMine(true);
+                  setOpen(i);
+                }}
+              >
                 <span>{s.ko}</span>
               </button>
               <div className="acc-body" hidden={i !== open}>
@@ -473,6 +536,22 @@ export function LoopSection() {
         </ol>
       </div>
     </section>
+  );
+}
+
+/* ---------- 논문을 실은 학술지 이름이 분홍(N)·민트(S) 띠 위로 천천히 흐른다 ---------- */
+export function JournalBand() {
+  const ref = useRef<HTMLDivElement>(null);
+  const active = useActive(ref, 0);
+  const names = Array.from(new Set(papersByIF().map((p) => p.journal)));
+  const line = names.join("  ·  ") + "  ·  ";
+  return (
+    <div className={"jband" + (active ? " play" : "")} ref={ref} aria-hidden="true">
+      <div className="jb-track">
+        <span>{line}</span>
+        <span>{line}</span>
+      </div>
+    </div>
   );
 }
 

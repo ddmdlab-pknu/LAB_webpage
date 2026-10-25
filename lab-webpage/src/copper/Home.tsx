@@ -9,6 +9,7 @@ import { krName } from "./ui";
 import {
   ChartSection,
   JoinField,
+  JournalBand,
   LoopSection,
   Loop,
   NewsLine,
@@ -17,6 +18,7 @@ import {
   ResearchIndex,
   Statement,
   Thumb,
+  useActive,
 } from "./sections";
 import RoomSection from "./room/RoomSection";
 import Equip3D from "./equip/Equip3D";
@@ -200,13 +202,20 @@ function Team() {
     ...undergraduates.map((m) => ({ name: krName(m.name), role: "학부연구생", img: m.profileImg, to: "/about/Members" })),
   ];
   const alumniNames = alumni.map((x) => krName(x.name)).join("·");
+  // 단체 사진은 화면에 보이는 동안 아주 천천히 다가갔다 물러난다
+  const photos = useRef<HTMLDivElement>(null);
+  const photosOn = useActive(photos, 0.1);
   return (
     <section className="band" id="people">
       <div className="wrap">
         <div className="team">
-          <div className="photos">
-            <img src="/images/2026_KSHT_group.jpg" alt="2026 한국열처리공학회 추계학술대회 단체 사진" loading="lazy" />
-            <img src="/images/2026_kickoff_meeting.jpg" alt="국책과제 Kick-Off 미팅 단체 사진" loading="lazy" />
+          <div className={"photos" + (photosOn ? " play" : "")} ref={photos}>
+            <span className="pf">
+              <img src="/images/2026_KSHT_group.jpg" alt="2026 한국열처리공학회 추계학술대회 단체 사진" loading="lazy" />
+            </span>
+            <span className="pf">
+              <img src="/images/2026_kickoff_meeting.jpg" alt="국책과제 Kick-Off 미팅 단체 사진" loading="lazy" />
+            </span>
           </div>
           <div className="team-copy">
             <h2 className="h">
@@ -282,7 +291,7 @@ function Home() {
               "전기강판",
               <Thumb src="/images/our_work(2).jpg" pos="40% 50%" />,
               "의 결정 방위",
-              <Thumb src="/images/copper/sim3d_ipf-poster.jpg" pos="45% 52%" zoom={2.4} />,
+              <Thumb src="/images/copper/sim3d_ipf.gif" still="/images/copper/sim3d_ipf-poster.jpg" pos="45% 52%" zoom={2.4} />,
               "와 미세조직",
               <Thumb src="/images/copper/grain.jpg" />,
               "에서 자기 특성까지 계산하고 학습해, 더 적은 실험으로 원하는 자성 소재에 닿습니다.",
@@ -297,10 +306,7 @@ function Home() {
       <ResearchIndex />
       <LoopSection />
 
-      <svg className="split-band" viewBox="0 0 2 1" preserveAspectRatio="none" aria-hidden="true">
-        <rect x="0" y="0" width="1" height="1" className="n" />
-        <rect x="1" y="0" width="1" height="1" className="s" />
-      </svg>
+      <JournalBand />
 
       <section className="band" id="leader">
         <div className="wrap">
