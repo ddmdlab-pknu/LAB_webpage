@@ -1,6 +1,7 @@
 // 홈 "사진 한 장으로 결정립 크기를" 구역. 업로드 창은 누를 때만 내려받는다.
 import { lazy, Suspense, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { GRAIN_API } from "./api";
 
 const GrainDialog = lazy(() => import("./GrainDialog"));
 
@@ -30,6 +31,7 @@ function Compare() {
 
 export default function GrainSection() {
   const [open, setOpen] = useState<null | "upload" | "sample">(null);
+  const ready = !!GRAIN_API; // 분석 서버 주소가 정해지기 전에는 "수정 중"으로 두고 예시 결과만 보여 준다
   return (
     <section className="band" id="grain">
       <div className="wrap gs">
@@ -40,17 +42,26 @@ export default function GrainSection() {
             결정립 크기를.
           </h2>
           <p className="body">
-            연구실이 전기강판 사진 67장으로 학습시킨 Cellpose 모델이 결정립을 나누고, ASTM E112 방식으로 결정립도 G 와 크기 분포를 계산합니다. 갖고 있는 광학 현미경 사진을 올려
-            보세요.
+            연구실이 전기강판 사진 67장으로 학습시킨 Cellpose 모델이 결정립을 나누고, ASTM E112 방식으로 결정립도 G 와 크기 분포를 계산합니다.
+            {ready ? " 갖고 있는 광학 현미경 사진을 올려 보세요." : " 사진을 올려 재는 기능은 지금 수정 중이고, 예시 결과는 바로 볼 수 있습니다."}
           </p>
-          <div className="btns">
-            <button type="button" className="btn" onClick={() => setOpen("upload")}>
-              사진 올려 재기 <i>↗</i>
-            </button>
-            <button type="button" className="ulink" onClick={() => setOpen("sample")}>
-              예시 결과 보기
-            </button>
-          </div>
+          {ready ? (
+            <div className="btns">
+              <button type="button" className="btn" onClick={() => setOpen("upload")}>
+                사진 올려 재기 <i>↗</i>
+              </button>
+              <button type="button" className="ulink" onClick={() => setOpen("sample")}>
+                예시 결과 보기
+              </button>
+            </div>
+          ) : (
+            <div className="btns">
+              <button type="button" className="btn" onClick={() => setOpen("sample")}>
+                예시 결과 보기 <i>↗</i>
+              </button>
+              <span className="gs-wip">사진 올려 재기 · 수정 중</span>
+            </div>
+          )}
           <p className="cap">사진 속 스케일바(파란 선)의 길이를 찾고, 입력한 스케일바 값(μm)으로 크기를 맞춥니다. 사진은 분석에만 쓰고 저장하지 않습니다.</p>
         </div>
         <figure className="gs-fig">

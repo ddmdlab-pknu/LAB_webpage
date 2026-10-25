@@ -258,6 +258,7 @@
 @media (max-width: 860px) { .cu .eq-grid { grid-template-columns: 1fr; gap: 32px; margin-bottom: 48px; } }
 
 /* 사진 한 장으로 결정립 크기 재기 */
+.cu .gs-wip { font-size: var(--t-small); color: var(--muted); }
 .cu .gs { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--gutter); align-items: center; }
 .cu .gs-fig { margin: 0; }
 .cu .gs-fig .cap { margin-top: 12px; }

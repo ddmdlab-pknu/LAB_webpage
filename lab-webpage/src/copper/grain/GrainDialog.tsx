@@ -436,7 +436,7 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
             <p className="gt-lead">
               광학 현미경 사진을 올리면 결정립을 나누고 ASTM E112 방식으로 결정립도 G 와 크기 분포를 계산합니다. 크기는 사진 속 스케일바로 맞추므로 <b>스케일바가 있는 사진</b>만 잴 수 있습니다. 사진은 분석에만 쓰고 저장하지 않습니다.
             </p>
-            {server === "none" && <p className="gt-status warn">분석 서버를 준비하고 있습니다. 지금은 예시 결과만 볼 수 있습니다.</p>}
+            {server === "none" && <p className="gt-status warn">사진 올려 재기는 지금 수정 중입니다. 예시 결과는 볼 수 있습니다.</p>}
             {server === "checking" && <p className="gt-status">연구실 분석 서버에 연결하는 중입니다.</p>}
             {server === "down" && <p className="gt-status warn">연구실 분석 서버가 꺼져 있거나 연결이 끊겨 지금은 잴 수 없습니다. 예시 결과는 볼 수 있습니다.</p>}
             <label
@@ -540,11 +540,15 @@ export default function GrainDialog({ onClose, startWithSample }: { onClose: () 
         {phase === "done" && result && (
           <div className="gt-body">
             <Report r={result} sample={isSample} />
-            <div className="btns">
-              <button type="button" className="btn ink" onClick={() => { setPhase("pick"); setResult(null); }}>
-                {isSample ? "내 사진 올리기" : "다른 사진 재기"} <i>↺</i>
-              </button>
-            </div>
+            {GRAIN_API ? (
+              <div className="btns">
+                <button type="button" className="btn ink" onClick={() => { setPhase("pick"); setResult(null); }}>
+                  {isSample ? "내 사진 올리기" : "다른 사진 재기"} <i>↺</i>
+                </button>
+              </div>
+            ) : (
+              <p className="gt-hint">사진을 올려 재는 기능은 지금 수정 중입니다.</p>
+            )}
           </div>
         )}
 
