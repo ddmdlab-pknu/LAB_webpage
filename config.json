@@ -1,0 +1,38 @@
+{
+  "_설명": "측정 설정. 보통은 model.path 만 확인하면 됩니다. 스케일은 사진 속 스케일바와 사람이 입력한 막대 값(μm)으로만 정합니다.",
+  "engine": "auto",
+  "model": {
+    "_설명": "연구실 학습 모델(cellpose_v3_final.pth, 67장 학습, Val |ΔG|=0.20)을 models 폴더에 넣으세요.",
+    "path": "models/cellpose_v3_final.pth",
+    "label": "cellpose_v3_final (67장 fine-tuning, 20 epoch)",
+    "input": "raw",
+    "base_diameter": 25,
+    "learned_px_per_um": [
+      0.94,
+      3.51
+    ],
+    "gpu": "auto",
+    "eval": {}
+  },
+  "classic": {
+    "sigmas": [
+      1.0,
+      2.0,
+      3.0
+    ],
+    "merge_ratio": 0.55,
+    "min_area_um2": 120.0,
+    "min_area_px": 60
+  },
+  "preprocess": {
+    "clahe_clip": 2.0,
+    "clahe_grid": 8,
+    "scalebar_pad": 8,
+    "max_side": 2048
+  },
+  "stats": {
+    "min_grain_px": 30,
+    "heyn_lines": 8,
+    "hist_bins": 20
+  }
+}
