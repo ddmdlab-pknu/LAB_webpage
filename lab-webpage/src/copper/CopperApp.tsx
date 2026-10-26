@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import "./copper.css";
+import "./lila.css";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import Home from "./Home";
@@ -47,10 +48,47 @@ function useCopperDocument() {
   }, []);
 }
 
-// 구역이 화면에 들어오면 제목 → 글 → 그림 순서로 한 번씩 떠오른다.
+// 구역이 화면에 들어오면 제목은 단어마다 아래에서 떠오르고(0.6초, 단어 사이 0.05초), 글·그림·카드는 천천히 나타난다.
 // 숨김 상태는 CSS 의 prefers-reduced-motion: no-preference 안에만 있어서, 움직임 줄이기 설정이면 처음부터 다 보인다.
+const HEADS = "h2.h, h2.h3, h3.h3, .phead h1";
 const PARTS =
-  "h2:not(.sr), h3.h3, .body, .statement, .chart, .plate, .tabs, .kit, .rm-stage, .rm-list, .gs-fig, .cells, .ix-list, .ix-frame, .acc, .pi-left, .pi-right, .career > *, .ptile, .st-head, .photos, .team-copy, .roster, .nl-item, .tile, .eq-card, .prow, .mcard, .gitem, .proj, .nrow, .joinbox, .map, .info";
+  ".body, .statement, .chart, .plate, .tabs, .kit, .rm-stage, .rm-list, .gs-fig, .cells, .ix-list, .ix-frame, .rc-track, .rc-nav, .acc, .pi-left, .pi-right, .career > *, .ptile, .st-head > a, .photos, .team-copy .btns, .roster, .ncard, .nl-item, .tile, .eq-card, .prow, .mcard, .gitem, .proj, .nrow, .joinbox, .map, .info, .phead p, .crumbs, .gs-copy .btns, .cap";
+
+// 제목의 글자 마디를 단어마다 가리개(wm)와 단어(wd)로 감싼다. 줄바꿈(br)과 안쪽 요소는 그대로 둔다
+function splitWords(h: HTMLElement) {
+  if (h.hasAttribute("data-words") || h.querySelector(".wd")) return;
+  h.setAttribute("data-words", "");
+  let n = 0;
+  const walk = (node: Node) => {
+    Array.from(node.childNodes).forEach((ch) => {
+      if (ch.nodeType === Node.TEXT_NODE) {
+        const parts = (ch.textContent || "").split(/(\s+)/);
+        if (!parts.some((p) => p.trim())) return;
+        const frag = document.createDocumentFragment();
+        parts.forEach((p) => {
+          if (!p) return;
+          if (!p.trim()) {
+            frag.appendChild(document.createTextNode(p));
+            return;
+          }
+          const m = document.createElement("span");
+          m.className = "wm";
+          const w = document.createElement("span");
+          w.className = "wd";
+          w.style.setProperty("--w", String(Math.min(n++, 14)));
+          w.textContent = p;
+          m.appendChild(w);
+          frag.appendChild(m);
+        });
+        node.replaceChild(frag, ch);
+      } else if (ch.nodeType === Node.ELEMENT_NODE && !(ch as Element).matches("br, img, svg, canvas, .sr")) {
+        walk(ch);
+      }
+    });
+  };
+  walk(h);
+}
+
 function useReveal() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -67,18 +105,21 @@ function useReveal() {
           io.unobserve(sec);
           // 등장이 끝나면 표시를 지워 이후의 마우스 반응이 원래 속도로 돌아오게 한다
           timers.push(
-            window.setTimeout(() => sec.querySelectorAll("[data-part]").forEach((el) => el.removeAttribute("data-part")), 1800)
+            window.setTimeout(() => sec.querySelectorAll("[data-part]").forEach((el) => el.removeAttribute("data-part")), 3000)
           );
         }
       },
       { rootMargin: "0px 0px -10% 0px", threshold: 0.01 }
     );
     const prep = () =>
-      root.querySelectorAll<HTMLElement>("section:not([data-rv])").forEach((sec) => {
+      root.querySelectorAll<HTMLElement>("section:not([data-rv]), header.phead:not([data-rv])").forEach((sec) => {
         sec.setAttribute("data-rv", "");
+        sec.querySelectorAll<HTMLElement>(HEADS).forEach((h) => {
+          if (!h.closest(".doc, .gt")) splitWords(h);
+        });
         let i = 0;
         sec.querySelectorAll<HTMLElement>(PARTS).forEach((el) => {
-          if (el.parentElement?.closest("[data-part]")) return;
+          if (el.parentElement?.closest("[data-part]") || el.closest("[data-words]")) return;
           el.setAttribute("data-part", "");
           el.style.setProperty("--i", String(Math.min(i++, 5)));
         });

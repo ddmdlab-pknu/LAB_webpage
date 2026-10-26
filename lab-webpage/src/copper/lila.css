@@ -1,0 +1,103 @@
+/* Lila Sciences 식 글자 모양 · 글자 움직임 · 틀 (copper.css 위에 덮어쓴다. 이 파일을 빼면 예전 모습으로 돌아간다)
+   - 제목: 보통 굵기(400)의 큰 글자, 줄 간격 1.1 안팎, 자간은 조금만 좁힘
+   - 제목은 단어마다 가리개 아래에서 떠오른다 (0.6초, 단어 사이 0.05초, power1.out). 글·그림·카드는 1.6초에 걸쳐 천천히 나타난다
+   - 사진·패널·카드는 둥근 모서리 16px, 버튼·꼬리표는 8~10px, 메뉴는 화면 위에 떠 있는 둥근 막대 */
+.cu {
+  --r: 16px;
+  --r-m: 12px;
+  --r-s: 8px;
+  --ease-word: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ── 글자 모양 ───────────────────────────────────────── */
+.cu .display, .cu .phead h1 { font-weight: 400; line-height: 1.06; letter-spacing: -0.03em; }
+.cu .h { font-weight: 400; line-height: 1.12; letter-spacing: -0.025em; }
+.cu .h3, .cu .ix-g, .cu .ix-name, .cu .acc-tab span, .cu .acc-txt h3, .cu .year h2, .cu .proj summary h3, .cu .mcard b, .cu .who b, .cu .join-copy .fact, .cu .reach b, .cu .nums b, .cu .gt-cards b, .cu .statement { font-weight: 400; }
+.cu .kit b, .cu .roster b, .cu .tile h3, .cu .tile p.ttl, .cu .eq-card figcaption b, .cu .nl-item b, .cu .prow b, .cu .gitem .gtxt b, .cu .tl b, .cu .honors b, .cu .ritems b, .cu .pcap b, .cu .rm-list button, .cu .cell, .cu .tabs button, .cu .chip-btn, .cu .crumbs a, .cu .seg button, .cu .contact, .cu .menu, .cu .sub { font-weight: 500; }
+.cu .logo { font-weight: 600; }
+
+/* ── 버튼과 꼬리표: 작은 둥근 모서리 ─────────────────── */
+.cu .btn { gap: 32px; padding: 14px 18px 14px 20px; border-radius: 10px; font-weight: 500; }
+.cu .btn i { color: var(--mint); }
+.cu .btn.tone i, .cu .btn.ink i { color: inherit; }
+.cu .btn.small { border-radius: var(--r-s); }
+.cu .contact, .cu .menu, .cu .tabs button, .cu .chip-btn, .cu .crumbs a, .cu .seg button, .cu .cell, .cu .rm-list button, .cu .gt-chips button { border-radius: var(--r-s); }
+.cu .chip { border-radius: 6px; }
+
+/* ── 메뉴: 화면 위에 떠 있는 둥근 막대 ─────────────── */
+.cu .navwrap { padding: calc(env(safe-area-inset-top, 0px) + 10px) max(var(--margin), env(safe-area-inset-right, 0px)) 0 max(var(--margin), env(safe-area-inset-left, 0px)); background: transparent; pointer-events: none; }
+.cu .nav { max-width: calc(var(--maxw) - 2 * var(--margin)); height: 52px; padding: 0 8px 0 18px; background: var(--white); border-radius: var(--r-m); pointer-events: auto; }
+.cu .links > li > a { padding: 16px 12px; }
+.cu .drop { top: calc(100% + 6px); border-radius: var(--r-m); }
+.cu .drop a { border-radius: var(--r-s); }
+.cu .mnav { margin-top: 8px; border-radius: var(--r-m); pointer-events: auto; }
+.cu .safe-top { background: transparent; }
+
+/* ── 둥근 틀 ─────────────────────────────────────────── */
+.cu .magnet, .cu .plate, .cu .chart, .cu .rm-stage, .cu .acc, .cu .ix-pic, .cu .gs-cmp, .cu .pi-panel, .cu .tile, .cu .gitem, .cu .proj, .cu .mcard, .cu .joinbox, .cu .cream, .cu .gt { border-radius: var(--r); }
+.cu .acc, .cu .magnet, .cu .chart, .cu .pi-panel { overflow: clip; }
+.cu .photos img, .cu .roster .ph, .cu .pimg, .cu .portrait, .cu .ix-thumb, .cu .eq3d, .cu .eq-card img, .cu .nums div, .cu .ideal li, .cu .mcard .ph, .cu .tile .pic, .cu .gitem .gimg, .cu .acc-body img, .cu .gt-drop, .cu .gt-cards div, .cu .gt-status, .cu .gt-pv, .cu .gt-zoom, .cu .gt-notes li, .cu .rm-tag { border-radius: var(--r-m); }
+.cu .kit img, .cu .kit .eq3d, .cu .nl-pic, .cu .gitem .gnav button, .cu .gitem .gnav span, .cu .proj .plus { border-radius: var(--r-s); }
+.cu .tn { border-radius: 6px; }
+.cu .tile .pic, .cu .gitem .gimg { border-radius: 0; }
+
+/* 구성원 묶음: 둥근 면 안에 단체 사진과 소개 */
+.cu .team { padding: clamp(16px, 2.4vw, 32px); background: var(--surface); border-radius: var(--r); }
+.cu .team .btn.tone, .cu .team .chip { background: var(--white); }
+
+/* 지원 안내: 화면 끝까지 닿던 면을 둥근 패널로 */
+.cu .join-field { width: min(100% - 2 * var(--margin), var(--maxw) - 2 * var(--margin)); margin-inline: auto; border-radius: var(--r); }
+
+/* ── 연구 분야 카드 (사진 위 반투명 글 상자) ──────────── */
+.cu .rc-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 32px) / 3); gap: 16px; margin: 56px 0 0; padding: 0 0 4px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.cu .rc-track::-webkit-scrollbar { display: none; }
+.cu .rc { position: relative; display: block; aspect-ratio: 4 / 5; overflow: clip; scroll-snap-align: start; border-radius: var(--r); background: var(--surface); color: var(--white); isolation: isolate; }
+.cu .rc-media { position: absolute; inset: 0; z-index: -1; }
+.cu .rc-media > img, .cu .rc-media > canvas { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-out); }
+.cu .rc-media .readout { display: none; }
+.cu .rc.white { background: var(--white); }
+.cu .rc.white .rc-media > img { object-fit: contain; padding: 8% 8% 46%; }
+.cu .rc-panel { position: absolute; left: 12px; right: 12px; bottom: 12px; display: grid; gap: 8px; padding: 18px 18px 20px; border-radius: var(--r-m); background: rgba(14, 14, 14, 0.66); }
+.cu .rc-panel b { font-size: var(--t-lead); font-weight: 400; line-height: 1.2; letter-spacing: -0.02em; }
+.cu .rc-d { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: var(--t-small); line-height: 1.5; color: rgba(255, 255, 255, 0.86); }
+@media (hover: hover) and (pointer: fine) { .cu .rc:hover .rc-media > img, .cu .rc:hover .rc-media > canvas { transform: scale(1.04); } }
+.cu .rc-nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 20px; }
+.cu .rc-arrows { display: flex; gap: 6px; }
+.cu .rc-arrows button { width: 44px; height: 44px; border: 0; border-radius: var(--r-s); background: var(--surface); color: var(--ink); font-size: 18px; cursor: pointer; transition: background-color 180ms ease, transform 140ms var(--ease-out); }
+.cu .rc-arrows button:active { transform: scale(0.95); }
+@media (hover: hover) and (pointer: fine) { .cu .rc-arrows button:hover { background: var(--surface-2); } }
+@media (max-width: 1100px) { .cu .rc-track { grid-auto-columns: calc((100% - 16px) / 2); } }
+@media (max-width: 700px) { .cu .rc-track { grid-auto-columns: 78%; margin-top: 40px; } }
+
+/* ── 소식 카드 ───────────────────────────────────────── */
+.cu .ncards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 56px 0 0; padding: 0; list-style: none; }
+.cu .ncard > a { display: flex; flex-direction: column; height: 100%; padding: 12px 12px 18px; border-radius: var(--r); background: var(--white); transition: background-color 180ms ease; }
+.cu .nc-pic { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 10; overflow: clip; border-radius: var(--r-m); background: var(--surface); }
+.cu .nc-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-out); }
+.cu .nc-pic.paper { background: var(--surface); }
+.cu .nc-pic.paper img { object-position: top; }
+.cu .nc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 6px 0; }
+.cu .nc-tags .chip { background: var(--surface); font-variant-numeric: tabular-nums; }
+.cu .nc-t { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; margin: 12px 6px 0; font-size: var(--t-body); line-height: 1.55; }
+.cu .nc-more { display: flex; justify-content: space-between; align-items: center; margin: auto 6px 0; padding-top: 20px; font-size: var(--t-small); font-weight: 500; }
+.cu .nc-more i { font-style: normal; color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .cu .ncard > a:hover .nc-pic img { transform: scale(1.04); } .cu .ncard > a:hover { background: #fdfdfd; } }
+@media (max-width: 900px) { .cu .ncards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .cu .ncards { grid-template-columns: 1fr; margin-top: 40px; } }
+
+/* ── 글자 움직임: 단어 가리개 ──────────────────────────── */
+.cu .hl { display: block; }
+.cu .wm { display: inline-block; overflow: clip; vertical-align: top; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.cu .wd { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  /* 첫 화면: 제목 단어가 차례로 떠오르고, 문장·버튼·자석 그림은 천천히 나타난다 */
+  .js .cu .hero .wd { transform: translateY(100%); opacity: 0; animation: lilaWord 700ms var(--ease-word) forwards; animation-delay: calc(150ms + var(--w, 0) * 60ms); }
+  .js .cu .hero [data-load] { transform: none; animation: lilaFade 1400ms var(--ease-word) forwards; animation-delay: var(--d, 400ms); }
+  .js .cu .hero [data-open] { clip-path: none; opacity: 0; animation: lilaFade 1800ms var(--ease-word) 250ms forwards; }
+  /* 아래 구역: 제목 단어는 구역이 들어올 때, 나머지는 1.6초에 걸쳐 */
+  .js .cu [data-words] .wd { transform: translateY(100%); opacity: 0; transition: transform 600ms var(--ease-word), opacity 600ms var(--ease-word); transition-delay: calc(var(--w, 0) * 50ms); }
+  .js .cu .in [data-words] .wd, .js .cu .in[data-rv] [data-words] .wd { transform: none; opacity: 1; }
+  .js .cu [data-part] { transform: none; transition: opacity 1600ms var(--ease-word); transition-delay: calc(150ms + var(--i, 0) * 120ms); }
+}
+@keyframes lilaWord { to { transform: none; opacity: 1; } }
+@keyframes lilaFade { to { opacity: 1; } }

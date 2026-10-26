@@ -11,12 +11,13 @@ import {
   JoinField,
   LoopSection,
   Loop,
-  NewsLine,
+  NewsCard,
   PaperTile,
   PIBlock,
-  ResearchIndex,
+  ResearchCards,
   Statement,
   Thumb,
+  Words,
 } from "./sections";
 import RoomSection from "./room/RoomSection";
 import GrainSection from "./grain/GrainSection";
@@ -73,16 +74,12 @@ function Hero() {
     >
       <div className="wrap hero-grid">
         <div className="hero-copy">
-          <h1 className="display lines">
-            <span className="line">
-              <span data-line style={v(0)}>
-                데이터로 소재를
-              </span>
+          <h1 className="display">
+            <span className="hl">
+              <Words text="데이터로 소재를" />
             </span>
-            <span className="line">
-              <span data-line style={v(1)}>
-                설계하는 연구실
-              </span>
+            <span className="hl">
+              <Words text="설계하는 연구실" start={2} />
             </span>
           </h1>
           <p className="lede" data-load style={v("420ms", "--d")}>
@@ -258,9 +255,9 @@ function News() {
             소식 {newsData.length}건 모두 보기 →
           </Link>
         </div>
-        <ul className="nl">
+        <ul className="ncards">
           {items.map((n) => (
-            <NewsLine key={n.date + n.comments.slice(0, 12)} item={n} />
+            <NewsCard key={n.date + n.comments.slice(0, 12)} item={n} />
           ))}
         </ul>
       </div>
@@ -295,7 +292,7 @@ function Home() {
       <ChartSection />
       <LabStage />
       <RoomSection />
-      <ResearchIndex />
+      <ResearchCards />
       <LoopSection />
       <GrainSection />
 

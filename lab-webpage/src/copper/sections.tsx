@@ -21,6 +21,24 @@ export function useMedia(q: string) {
   return m;
 }
 
+// 단어마다 가리개(wm) 안에 넣어, 아래에서 차례로 떠오르게 한다. start: 앞 줄에서 이어지는 단어 번호
+export function Words({ text, start = 0 }: { text: string; start?: number }) {
+  return (
+    <>
+      {text.split(" ").map((w, i) => (
+        <span key={i}>
+          {i > 0 && " "}
+          <span className="wm">
+            <span className="wd" style={{ "--w": start + i } as CSSProperties}>
+              {w}
+            </span>
+          </span>
+        </span>
+      ))}
+    </>
+  );
+}
+
 // 자석 무늬: 위 분홍(N), 아래 민트(S). 사진이 없는 자리의 표시와 목록 머리표로 쓴다
 export function Mark({ size }: { size?: number }) {
   return <i className="mark" aria-hidden="true" style={size ? ({ "--mk": size + "px" } as CSSProperties) : undefined} />;
@@ -406,6 +424,60 @@ export function ResearchIndex({ heading = true }: { heading?: boolean }) {
   );
 }
 
+/* ---------- 연구 분야 카드: 사진 위에 반투명 글 상자를 얹은 카드가 가로로 늘어선다 ---------- */
+export function ResearchCards() {
+  const track = useRef<HTMLDivElement>(null);
+  const go = (dir: number) => {
+    const t = track.current;
+    if (!t) return;
+    const card = t.querySelector<HTMLElement>(".rc");
+    const step = card ? card.offsetWidth + 16 : t.clientWidth * 0.8;
+    t.scrollBy({ left: dir * step, behavior: prefersReduced() ? "auto" : "smooth" });
+  };
+  return (
+    <section className="band" id="research">
+      <div className="wrap">
+        <div className="ix-head">
+          <h2 className="h">
+            네 축이 하나의
+            <br />
+            설계로 이어집니다.
+          </h2>
+          <p className="body">
+            자성 재료, 집합조직, AI 소재 설계, 시뮬레이션. 그 결과는 전기차 모터와 항공기·선박 센서용 소재로 쓰입니다.
+          </p>
+        </div>
+        <div className="rc-track" ref={track}>
+          {R_ITEMS.map((it) => (
+            <Link key={it.ko} to={it.to} className={"rc" + (it.white ? " white" : "")}>
+              <span className="rc-media" aria-hidden="true">
+                {it.media()}
+              </span>
+              <span className="rc-panel">
+                <b>{it.ko}</b>
+                <span className="rc-d">{it.desc}</span>
+              </span>
+            </Link>
+          ))}
+        </div>
+        <div className="rc-nav">
+          <div className="rc-arrows">
+            <button type="button" onClick={() => go(-1)} aria-label="이전 분야 보기">
+              ←
+            </button>
+            <button type="button" onClick={() => go(1)} aria-label="다음 분야 보기">
+              →
+            </button>
+          </div>
+          <Link className="btn" to="/project/ResearchAreas">
+            연구 분야 자세히 <i>→</i>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------- 연구 순환: 단계가 진한 색에서 옅은 색으로 이어지는 펼침 띠 ---------- */
 const STAGES = [
   {
@@ -663,6 +735,28 @@ const JOURNAL_SHORT: Record<string, string> = {
   "Journal of Magnetics": "J. Magn.",
 };
 export const journalShort = (j: string) => JOURNAL_SHORT[j] || j;
+
+/* ---------- 소식 카드: 사진, 날짜·종류 꼬리표, 내용, 아래에 "자세히" ---------- */
+export function NewsCard({ item }: { item: NewsItem }) {
+  const isPaper = !!item.img && item.img.includes("/papers/");
+  return (
+    <li className="ncard">
+      <Link to="/activities/News">
+        <span className={"nc-pic" + (isPaper ? " paper" : "") + (item.img ? "" : " none")}>
+          {item.img ? <img src={item.img} alt="" loading="lazy" /> : <Mark size={56} />}
+        </span>
+        <span className="nc-tags">
+          <span className="chip">{item.date}</span>
+          <span className="chip">{catLabel(item.category)}</span>
+        </span>
+        <span className="nc-t">{item.comments}</span>
+        <span className="nc-more">
+          자세히 보기 <i>→</i>
+        </span>
+      </Link>
+    </li>
+  );
+}
 
 /* ---------- 소식 한 줄 (사진이 머리표 자리에) ---------- */
 export function NewsLine({ item }: { item: NewsItem }) {
