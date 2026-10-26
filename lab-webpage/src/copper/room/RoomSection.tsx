@@ -31,7 +31,9 @@ export default function RoomSection() {
 
   const R = roomById(room);
   const it = R.items.find((i) => i.id === sel);
-  const poster = <img className="rm-poster" src={R.poster} alt={R.alt} />;
+  const live = near && !failed;
+  // 사진은 늘 깔아 두고, 입체 모형이 첫 그림을 그리면 그 위로 서서히 덮는다
+  const poster = <img className="rm-poster" src={R.poster} alt={live ? "" : R.alt} />;
 
   return (
     <section className="band" id="room">
@@ -48,12 +50,11 @@ export default function RoomSection() {
         </div>
         <div className="rm">
           <div className="rm-stage" ref={stage}>
-            {near && !failed ? (
-              <Suspense fallback={poster}>
+            {poster}
+            {live && (
+              <Suspense fallback={null}>
                 <Lab3D room={room} sel={sel} onSel={setSel} onFail={() => setFailed(true)} label={R.alt} />
               </Suspense>
-            ) : (
-              poster
             )}
             {sel && !failed && (
               <button type="button" className="btn small rm-all" onClick={() => setSel(null)}>

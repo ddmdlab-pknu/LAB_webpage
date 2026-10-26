@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { build, Built, View } from "./scene";
 import { Kit } from "./kit";
 import { roomById, RoomId } from "./data";
+import { afterScroll, frameProbe, idleTask, scrolling, softwareGL } from "../idle";
 
 type Cb = { sel: (id: string | null) => void; fail: () => void };
 type Engine = { setRoom: (id: RoomId) => void; select: (id: string | null) => void; dispose: () => void };
@@ -26,6 +27,9 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
   renderer.setClearColor("#eeeeee");
   const el = renderer.domElement;
   el.style.touchAction = "pan-y";
+  // 첫 그림이 나올 때까지는 숨겨 두고 아래의 사진을 보여 준다
+  el.style.opacity = "0";
+  el.style.transition = "opacity 500ms ease";
   host.appendChild(el);
 
   const scene = new THREE.Scene();
@@ -196,13 +200,31 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
   let raf = 0,
     visible = false,
     last = 0;
+  let shown = false,
+    ready = false,
+    gone = false;
+  // 그래픽 성능이 낮은 기기(초당 20장 밑)면 저절로 도는 움직임을 끄고, 손댈 때만 그린다
+  const probe = frameProbe();
+  let lite = softwareGL(renderer.getContext()),
+    drew = false;
   const frame = (ts: number) => {
     raf = 0;
-    const dt = last ? Math.min(0.05, (ts - last) / 1000) : 0.016;
+    if (!ready) return;
+    // 스크롤하는 동안은 그리기를 멈추고, 멈추면 이어서 그린다
+    if (shown && scrolling()) {
+      last = 0;
+      afterScroll(start);
+      return;
+    }
+    const gap = last ? ts - last : 0;
+    const dt = last ? Math.min(0.05, gap / 1000) : 0.016;
     last = ts;
     clock += dt;
+    if (gap && drew && !lite) lite = probe(gap);
+    drew = false;
     const still = reduce.matches;
-    if (!still && !sel && !down && clock - lastInput > 3.5) {
+    const calm = still || lite;
+    if (!calm && !sel && !down && clock - lastInput > 3.5) {
       goal.az += dir * dt * 0.06;
       if (goal.az > 1.2) dir = -1;
       if (goal.az < 0.15) dir = 1;
@@ -216,7 +238,7 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
       now.dist += (goal.dist - now.dist) * k;
       dirty = true;
     }
-    if (cur.tick && !still) {
+    if (cur.tick && !calm) {
       cur.tick(clock);
       // 움직이는 그림자는 두 프레임에 한 번만 다시 계산 (휴대폰 부담 줄이기)
       if ((tickN++ & 1) === 0) renderer.shadowMap.needsUpdate = true;
@@ -227,6 +249,11 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
       renderer.render(scene, camera);
       placeTag();
       dirty = false;
+      drew = true;
+      if (!shown) {
+        shown = true;
+        el.style.opacity = "1";
+      }
     }
     if (visible && !document.hidden) raf = requestAnimationFrame(frame);
   };
@@ -260,6 +287,28 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
     start();
   });
   ro.observe(host);
+  // 처음 크기를 바로 재 두고, 셰이더는 화면을 멈추지 않고 미리 준비한다(지원하는 브라우저).
+  // 준비가 끝나고 스크롤이 멈춰 있을 때 첫 그림을 그리며 사진 위로 서서히 나타난다
+  W = Math.max(1, host.clientWidth);
+  H = Math.max(1, host.clientHeight);
+  if (W > 1 && H > 1) {
+    renderer.setSize(W, H, false);
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+    reaim();
+    jump();
+    sized = true;
+  }
+  placeCamera();
+  // 첫 그림은 모형이 아직 화면 밖이어도 스크롤이 멈춘 때 한 장 그려 둔다 (내려오면서 그리느라 멈추지 않게)
+  const go = () =>
+    afterScroll(() => {
+      if (gone) return;
+      ready = true;
+      dirty = true;
+      if (!raf) frame(performance.now());
+    });
+  renderer.compileAsync(scene, camera).then(go, go);
 
   return {
     setRoom(id) {
@@ -291,6 +340,7 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
       start();
     },
     dispose() {
+      gone = true;
       cancelAnimationFrame(raf);
       io.disconnect();
       ro.disconnect();
@@ -315,17 +365,28 @@ export default function Lab3D({ room, sel, onSel, onFail, label }: Props) {
   const eng = useRef<Engine | null>(null);
   const cb = useRef<Cb>({ sel: onSel, fail: onFail });
   cb.current = { sel: onSel, fail: onFail };
+  const roomRef = useRef(room);
+  roomRef.current = room;
+  const selRef = useRef(sel);
+  selRef.current = sel;
 
   useEffect(() => {
     if (!host.current || !tag.current) return;
-    const e = createEngine(host.current, tag.current, cb);
-    if (!e) {
-      cb.current.fail();
-      return;
-    }
-    eng.current = e;
+    let e: Engine | null = null;
+    let alive = true;
+    // 장면 만들기는 무거우므로 스크롤이 멈춘 한가한 때 한다
+    const cancel = idleTask(() => {
+      if (!alive || !host.current || !tag.current) return;
+      e = createEngine(host.current, tag.current, cb);
+      if (!e) return cb.current.fail();
+      eng.current = e;
+      e.setRoom(roomRef.current);
+      e.select(selRef.current);
+    });
     return () => {
-      e.dispose();
+      alive = false;
+      cancel();
+      e?.dispose();
       eng.current = null;
     };
   }, []);

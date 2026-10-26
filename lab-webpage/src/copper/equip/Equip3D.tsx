@@ -1,6 +1,7 @@
 // 장비 사진 옆에 붙는 입체 모형 창. three.js 묶음은 창이 화면 가까이 올 때 한 번만 내려받는다.
 import { useEffect, useRef, useState } from "react";
 import type { EquipId } from "./models";
+import { idleTask } from "../idle";
 
 export default function Equip3D({ id, name, className = "" }: { id: EquipId; name: string; className?: string }) {
   const box = useRef<HTMLDivElement>(null);
@@ -11,12 +12,17 @@ export default function Equip3D({ id, name, className = "" }: { id: EquipId; nam
     if (!el) return;
     let alive = true;
     let view: { dispose: () => void } | null = null;
+    let cancel = () => {};
+    // 모형 만들기와 첫 그림은 무거우므로, 스크롤이 멈춘 한가한 때 창 하나씩 한다
     const load = () =>
       import("./hub")
         .then((m) => {
           if (!alive) return;
-          view = m.mount(el, id);
-          setState(view ? "ready" : "fail");
+          cancel = idleTask(() => {
+            if (!alive) return;
+            view = m.mount(el, id);
+            setState(view ? "ready" : "fail");
+          });
         })
         .catch(() => alive && setState("fail"));
     if (!("IntersectionObserver" in window)) load();
@@ -35,6 +41,7 @@ export default function Equip3D({ id, name, className = "" }: { id: EquipId; nam
     io?.observe(el);
     return () => {
       alive = false;
+      cancel();
       io?.disconnect();
       view?.dispose();
     };

@@ -3,6 +3,7 @@
 import * as THREE from "three";
 import { Kit } from "../room/kit";
 import { buildEquip, EquipId } from "./models";
+import { afterScroll, frameProbe, scrolling, softwareGL } from "../idle";
 
 export type Mounted = { dispose: () => void };
 
@@ -17,12 +18,17 @@ class Hub {
   raf = 0;
   last = 0;
   clock = 0;
+  // 그래픽 성능이 낮은 기기(초당 20장 밑)면 저절로 돌기를 끄고, 끌 때만 그린다
+  probe = frameProbe();
+  lite = false;
+  drew = false;
   constructor() {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
     this.renderer.setPixelRatio(1);
     this.renderer.setClearColor(0x000000, 0);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.lite = softwareGL(this.renderer.getContext());
     this.renderer.domElement.addEventListener("webglcontextlost", (e) => {
       e.preventDefault();
       this.views.forEach((v) => v.fail());
@@ -43,13 +49,25 @@ class Hub {
   };
   frame = (ts: number) => {
     this.raf = 0;
-    const dt = this.last ? Math.min(0.05, (ts - this.last) / 1000) : 0.016;
+    // 스크롤하는 동안은 돌리기를 멈추고, 멈추면 이어서 돈다
+    if (scrolling()) {
+      this.last = 0;
+      afterScroll(this.kick);
+      return;
+    }
+    const gap = this.last ? ts - this.last : 0;
+    const dt = this.last ? Math.min(0.05, gap / 1000) : 0.016;
     this.last = ts;
     this.clock += dt;
+    if (gap && this.drew && !this.lite) this.lite = this.probe(gap);
+    this.drew = false;
     let busy = false;
     this.views.forEach((v) => {
-      if (!v.visible) return;
-      if (v.step(dt)) v.draw();
+      if (!v.visible || !v.ready) return;
+      if (v.step(dt)) {
+        v.draw();
+        this.drew = true;
+      }
       busy = busy || v.busy();
     });
     if (busy) this.kick();
@@ -73,6 +91,7 @@ class EView {
   w = 0;
   h = 0;
   visible = false;
+  ready = false;
   dirty = true;
   lastInput = -10;
   down: { x: number; y: number; lx: number; ly: number; moved: boolean; mouse: boolean } | null = null;
@@ -86,6 +105,8 @@ class EView {
     this.ctx = this.canvas.getContext("2d")!;
     this.canvas.style.touchAction = "pan-y";
     this.canvas.style.cursor = "grab";
+    this.canvas.style.opacity = "0";
+    this.canvas.style.transition = "opacity 500ms ease";
     el.appendChild(this.canvas);
 
     const model = buildEquip(hub.kit, id);
@@ -131,6 +152,17 @@ class EView {
     this.ro = new ResizeObserver(() => this.resize());
     this.ro.observe(el);
     this.resize();
+    // 셰이더는 화면을 멈추지 않고 미리 준비해 두고(지원하는 브라우저), 준비되면 첫 그림을 그린다
+    // 첫 그림은 창이 아직 화면 밖이어도 스크롤이 멈춘 때 바로 그려 둔다 (내려오면서 빈 칸이 보이지 않게)
+    const go = () =>
+      afterScroll(() => {
+        if (this.dead) return;
+        this.ready = true;
+        this.dirty = true;
+        if (this.w > 1 && this.h > 1 && this.step(0)) this.draw();
+        hub.kick();
+      });
+    hub.renderer.compileAsync(this.scene, this.camera).then(go, go);
   }
   resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -176,7 +208,7 @@ class EView {
     this.lastInput = this.hub.clock;
   };
   auto() {
-    return !this.hub.reduce.matches && !this.down && this.hub.clock - this.lastInput > 2.5;
+    return !this.hub.reduce.matches && !this.hub.lite && !this.down && this.hub.clock - this.lastInput > 2.5;
   }
   busy() {
     return this.auto() || Math.abs(this.goalAz - this.az) + Math.abs(this.goalEl - this.el0) > 1e-4 || !!this.down;
@@ -210,12 +242,15 @@ class EView {
     r.render(this.scene, camera);
     this.ctx.clearRect(0, 0, w, h);
     this.ctx.drawImage(r.domElement, 0, hub.H - h, w, h, 0, 0, w, h);
+    if (this.canvas.style.opacity === "0") this.canvas.style.opacity = "1";
   }
   fail() {
     this.dead = true;
+    this.ready = false;
     this.el.setAttribute("data-state", "fail");
   }
   dispose() {
+    this.dead = true;
     this.io.disconnect();
     this.ro.disconnect();
     this.canvas.remove();

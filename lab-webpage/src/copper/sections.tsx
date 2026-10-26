@@ -58,17 +58,27 @@ export function Statement({ parts, className = "statement" }: { parts: Part[]; c
     if (!el || prefersReduced()) return;
     const words = Array.from(el.querySelectorAll<HTMLElement>(".w"));
     words.forEach((w) => w.classList.remove("on"));
-    const upd = () => {
+    let n0 = -1,
+      raf = 0;
+    const draw = () => {
+      raf = 0;
       const r = el.getBoundingClientRect(),
         vh = window.innerHeight;
       const p = Math.max(0, Math.min(1, (vh * 0.9 - r.top) / (vh * 0.45)));
       const n = Math.round(p * words.length);
+      if (n === n0) return;
+      n0 = n;
       words.forEach((w, i) => w.classList.toggle("on", i < n));
     };
-    upd();
+    // 스크롤 한 번에 한 프레임만 계산하고, 진해진 단어 수가 바뀔 때만 손댄다
+    const upd = () => {
+      if (!raf) raf = requestAnimationFrame(draw);
+    };
+    draw();
     window.addEventListener("scroll", upd, { passive: true });
     window.addEventListener("resize", upd);
     return () => {
+      cancelAnimationFrame(raf);
       window.removeEventListener("scroll", upd);
       window.removeEventListener("resize", upd);
     };
@@ -237,7 +247,7 @@ const R_ITEMS: RItem[] = [
     en: "Texture",
     desc: "결정 방위 분포가 자기 특성을 정합니다. EBSD 방위 지도와 ODF로 집합조직이 생기는 원리를 찾고, 원하는 방위를 만드는 공정을 설계합니다.",
     to: "/project/ResearchAreas",
-    media: () => <img src="/images/copper/grain.jpg" alt="광학 현미경으로 본 결정립 조직" loading="lazy" />,
+    media: () => <img src="/images/copper/grain.jpg" alt="광학 현미경으로 본 결정립 조직" loading="lazy" decoding="async" />,
   },
   {
     group: "axis",
@@ -268,7 +278,7 @@ const R_ITEMS: RItem[] = [
     desc: "전기차·드론 모터용 자성 소재의 성능을 높입니다.",
     to: "/project/ResearchAreas",
     white: true,
-    media: () => <img src="/images/copper/ra1.jpg" alt="전기차와 드론 모터용 자성 소재 개념도" loading="lazy" />,
+    media: () => <img src="/images/copper/ra1.jpg" alt="전기차와 드론 모터용 자성 소재 개념도" loading="lazy" decoding="async" />,
   },
   {
     group: "app",
@@ -277,7 +287,7 @@ const R_ITEMS: RItem[] = [
     desc: "항공기·선박 센서용 고성능 합금을 연구합니다.",
     to: "/project/ResearchAreas",
     white: true,
-    media: () => <img src="/images/copper/ra2.jpg" alt="항공기와 선박 센서용 자왜 소재 개념도" loading="lazy" />,
+    media: () => <img src="/images/copper/ra2.jpg" alt="항공기와 선박 센서용 자왜 소재 개념도" loading="lazy" decoding="async" />,
   },
   {
     group: "app",
@@ -286,7 +296,7 @@ const R_ITEMS: RItem[] = [
     desc: "AI로 공정 조건과 성분 조건을 최적화합니다.",
     to: "/project/ResearchAreas",
     white: true,
-    media: () => <img src="/images/copper/ra3.jpg" alt="재료 인공지능 공정 및 성분 최적 설계 개념도" loading="lazy" />,
+    media: () => <img src="/images/copper/ra3.jpg" alt="재료 인공지능 공정 및 성분 최적 설계 개념도" loading="lazy" decoding="async" />,
   },
   {
     group: "app",
@@ -295,7 +305,7 @@ const R_ITEMS: RItem[] = [
     desc: "금속 확산과 자기적 특성의 상관관계를 밝힙니다.",
     to: "/project/ResearchAreas",
     white: true,
-    media: () => <img src="/images/copper/ra4.jpg" alt="3D CT와 XRD·EBSD 집합조직 분석 개념도" loading="lazy" />,
+    media: () => <img src="/images/copper/ra4.jpg" alt="3D CT와 XRD·EBSD 집합조직 분석 개념도" loading="lazy" decoding="async" />,
   },
 ];
 
@@ -538,7 +548,7 @@ export function LoopSection() {
                     <span className="en">{s.en}.</span> {s.desc}
                   </p>
                 </div>
-                <img src={s.img} alt={s.alt} loading="lazy" />
+                <img src={s.img} alt={s.alt} loading="lazy" decoding="async" />
               </div>
             </li>
           ))}
@@ -688,7 +698,7 @@ export function PaperTile({ paper, className = "" }: { paper: PublicationItem; c
   return (
     <Link className={"ptile " + className} to={`/project/PublishedPapers/${paper.id}`}>
       <span className="pimg">
-        {paper.firstPage ? <img src={paper.firstPage} alt={`${paper.title} 첫 페이지`} loading="lazy" /> : <Mark />}
+        {paper.firstPage ? <img src={paper.firstPage} alt={`${paper.title} 첫 페이지`} loading="lazy" decoding="async" /> : <Mark />}
       </span>
       <span className="pcap">
         <b>{paper.title}</b>
@@ -743,7 +753,7 @@ export function NewsCard({ item }: { item: NewsItem }) {
     <li className="ncard">
       <Link to="/activities/News">
         <span className={"nc-pic" + (isPaper ? " paper" : "") + (item.img ? "" : " none")}>
-          {item.img ? <img src={item.img} alt="" loading="lazy" /> : <Mark size={56} />}
+          {item.img ? <img src={item.img} alt="" loading="lazy" decoding="async" /> : <Mark size={56} />}
         </span>
         <span className="nc-tags">
           <span className="chip">{item.date}</span>
@@ -764,7 +774,7 @@ export function NewsLine({ item }: { item: NewsItem }) {
   return (
     <li className="nl-item">
       <span className={"nl-pic" + (isPaper ? " paper" : "")}>
-        {item.img ? <img src={item.img} alt="" loading="lazy" /> : <Mark size={64} />}
+        {item.img ? <img src={item.img} alt="" loading="lazy" decoding="async" /> : <Mark size={64} />}
       </span>
       <div>
         <b>

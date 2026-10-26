@@ -1,4 +1,4 @@
-import { CSSProperties, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { newsData } from "../data/newsData";
 import { publicationsData as papers } from "../data/papersData";
@@ -23,6 +23,7 @@ import RoomSection from "./room/RoomSection";
 import GrainSection from "./grain/GrainSection";
 import Equip3D from "./equip/Equip3D";
 import type { EquipId } from "./equip/models";
+import { idleTask } from "./idle";
 
 const SIMS = {
   dual: {
@@ -144,7 +145,7 @@ function LabStage() {
               ] as [string, string, string, EquipId][]
             ).map(([img, name, role, eq]) => (
               <li key={name}>
-                <img src={img} alt={name} loading="lazy" />
+                <img src={img} alt={name} loading="lazy" decoding="async" />
                 <Equip3D id={eq} name={name} />
                 <span>
                   <b>{name}</b>
@@ -203,8 +204,8 @@ function Team() {
       <div className="wrap">
         <div className="team">
           <div className="photos">
-            <img src="/images/2026_KSHT_group.jpg" alt="2026 한국열처리공학회 추계학술대회 단체 사진" loading="lazy" />
-            <img src="/images/2026_kickoff_meeting.jpg" alt="국책과제 Kick-Off 미팅 단체 사진" loading="lazy" />
+            <img src="/images/2026_KSHT_group.jpg" alt="2026 한국열처리공학회 추계학술대회 단체 사진" loading="lazy" decoding="async" />
+            <img src="/images/2026_kickoff_meeting.jpg" alt="국책과제 Kick-Off 미팅 단체 사진" loading="lazy" decoding="async" />
           </div>
           <div className="team-copy">
             <h2 className="h">
@@ -231,7 +232,7 @@ function Team() {
             <li key={p.name}>
               <Link to={p.to}>
                 <span className="ph">
-                  <img src={p.img} alt={p.name} loading="lazy" />
+                  <img src={p.img} alt={p.name} loading="lazy" decoding="async" />
                 </span>
                 <b>{p.name}</b>
                 <span>{p.role}</span>
@@ -265,7 +266,27 @@ function News() {
   );
 }
 
+// 3D 묶음(three.js)을 첫 화면을 읽는 동안 미리 받아 두어, 아래로 내려갈 때 받느라 멈추지 않게 한다 (데스크톱만)
+function usePrefetch3D() {
+  useEffect(() => {
+    const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
+    if (nav.connection?.saveData || window.matchMedia("(pointer: coarse)").matches) return;
+    let cancel = () => {};
+    const t = window.setTimeout(() => {
+      cancel = idleTask(() => {
+        import("./equip/hub").catch(() => {});
+        import("./room/Lab3D").catch(() => {});
+      });
+    }, 2500);
+    return () => {
+      window.clearTimeout(t);
+      cancel();
+    };
+  }, []);
+}
+
 function Home() {
+  usePrefetch3D();
   return (
     <>
       <Hero />
