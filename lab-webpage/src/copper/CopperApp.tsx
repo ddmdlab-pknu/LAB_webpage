@@ -93,8 +93,8 @@ function useReveal() {
   const { pathname } = useLocation();
   useEffect(() => {
     const root = document.querySelector(".cu main");
-    // 휴대폰과 태블릿에서는 등장 움직임 없이 바로 보여 준다 (좁은 화면에서 읽기가 먼저)
-    if (!root || !("IntersectionObserver" in window) || window.matchMedia("(max-width: 900px)").matches) return;
+    // 휴대폰·태블릿도 같은 등장 움직임 (좁은 화면은 lila.css 에서 조금 짧게)
+    if (!root || !("IntersectionObserver" in window)) return;
     const timers: number[] = [];
     const io = new IntersectionObserver(
       (entries) => {

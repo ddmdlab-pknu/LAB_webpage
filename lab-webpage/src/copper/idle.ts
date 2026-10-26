@@ -80,6 +80,7 @@ function whenSettled(ms: number, fn: () => void) {
 // 무거운 일 줄: 스크롤이 멈춘 지 조금 지나고 브라우저가 한가할 때 한 번에 하나씩
 const queue: (() => void)[] = [];
 let pumping = false;
+let lastHeavy = -1e9;
 function pump() {
   if (pumping || !queue.length) return;
   pumping = true;
@@ -96,6 +97,7 @@ function pump() {
         } catch (e) {
           // 한 일이 실패해도 나머지는 계속한다
         }
+        lastHeavy = now();
       } while (queue.length && dl && dl.timeRemaining() > 12);
       pump();
     })
@@ -114,12 +116,15 @@ export function idleTask(fn: () => void): () => void {
 }
 
 /** 그림을 그린 프레임들의 간격으로, 이 기기가 3D를 쉬지 않고 돌리기 버거운지 판단한다.
- *  간격 n개의 중앙값이 limit(ms)를 넘으면 true. 한 번 판단하면 바뀌지 않는다 */
-export function frameProbe(n = 6, limit = 45) {
+ *  처음 warm장과 3D 준비 작업 중·직후의 간격은 세지 않고, 간격 n개의 중앙값이 limit(ms)를 넘으면 true.
+ *  한 번 판단하면 바뀌지 않는다 */
+export function frameProbe(n = 12, limit = 50, warm = 20) {
   const xs: number[] = [];
+  let seen = 0;
   let verdict: boolean | null = null;
   return (gap: number) => {
     if (verdict !== null) return verdict;
+    if (queue.length || now() - lastHeavy < 1500 || seen++ < warm) return false;
     xs.push(gap);
     if (xs.length < n) return false;
     xs.sort((a, b) => a - b);

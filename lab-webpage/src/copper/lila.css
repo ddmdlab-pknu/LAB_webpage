@@ -99,5 +99,18 @@
   .js .cu .in [data-words] .wd, .js .cu .in[data-rv] [data-words] .wd { transform: none; opacity: 1; }
   .js .cu [data-part] { transform: none; transition: opacity 1600ms var(--ease-word); transition-delay: calc(150ms + var(--i, 0) * 120ms); }
 }
+/* 좁은 화면: 빨리 넘기며 읽으므로 나타나는 시간을 줄인다 */
+@media (prefers-reduced-motion: no-preference) and (max-width: 900px) {
+  .js .cu [data-part] { transition-duration: 900ms; transition-delay: calc(80ms + var(--i, 0) * 80ms); }
+}
+/* 움직임 줄이기 설정(Windows 애니메이션 효과 끔, 휴대폰 동작 줄이기 등): 미끄러지는 움직임 없이 서서히 나타나기만 */
+@media (prefers-reduced-motion: reduce) {
+  .js .cu .hero .wd { opacity: 0; animation: lilaFade 900ms ease forwards; animation-delay: calc(150ms + var(--w, 0) * 60ms); }
+  .js .cu .hero [data-load], .js .cu .hero [data-open] { opacity: 0; animation: lilaFade 1200ms ease forwards; animation-delay: var(--d, 300ms); }
+  .js .cu [data-words] .wd { opacity: 0; transition: opacity 700ms ease; transition-delay: calc(var(--w, 0) * 50ms); }
+  .js .cu .in [data-words] .wd { opacity: 1; }
+  .js .cu [data-part] { opacity: 0; transition: opacity 1000ms ease; transition-delay: calc(100ms + var(--i, 0) * 100ms); }
+  .js .cu .in [data-part] { opacity: 1; }
+}
 @keyframes lilaWord { to { transform: none; opacity: 1; } }
 @keyframes lilaFade { to { opacity: 1; } }
