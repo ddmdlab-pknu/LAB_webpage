@@ -17,7 +17,6 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
     return null;
   }
   const coarse = window.matchMedia("(pointer: coarse)").matches;
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarse ? 1.75 : 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -222,14 +221,13 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
     clock += dt;
     if (gap && drew && !lite) lite = probe(gap);
     drew = false;
-    const still = reduce.matches;
-    const calm = still || lite;
+    const calm = lite; // 기기의 움직임 줄이기 설정과 상관없이 천천히 돈다 (그래픽이 약한 기기만 멈춤)
     if (!calm && !sel && !down && clock - lastInput > 3.5) {
       goal.az += dir * dt * 0.06;
       if (goal.az > 1.2) dir = -1;
       if (goal.az < 0.15) dir = 1;
     }
-    const k = still ? 1 : 1 - Math.exp(-dt * 3.2);
+    const k = 1 - Math.exp(-dt * 3.2);
     const d = Math.abs(goal.az - now.az) + Math.abs(goal.el - now.el) + Math.abs(goal.dist - now.dist) + goal.t.distanceTo(now.t);
     if (d > 1e-4) {
       now.t.lerp(goal.t, k);
@@ -323,10 +321,8 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
       aim(cur.overview, false);
       jump();
       // 방을 바꾸면 살짝 비켜선 자리에서 들어온다
-      if (!reduce.matches) {
-        now.az += 0.35;
-        now.dist *= 1.12;
-      }
+      now.az += 0.35;
+      now.dist *= 1.12;
       lastInput = clock;
       dirty = true;
       start();

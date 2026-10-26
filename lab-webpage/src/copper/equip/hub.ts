@@ -11,7 +11,6 @@ class Hub {
   renderer: THREE.WebGLRenderer;
   kit = new Kit();
   views = new Set<EView>();
-  reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   coarse = window.matchMedia("(pointer: coarse)").matches;
   W = 0;
   H = 0;
@@ -208,7 +207,7 @@ class EView {
     this.lastInput = this.hub.clock;
   };
   auto() {
-    return !this.hub.reduce.matches && !this.hub.lite && !this.down && this.hub.clock - this.lastInput > 2.5;
+    return !this.hub.lite && !this.down && this.hub.clock - this.lastInput > 2.5;
   }
   busy() {
     return this.auto() || Math.abs(this.goalAz - this.az) + Math.abs(this.goalEl - this.el0) > 1e-4 || !!this.down;
@@ -216,7 +215,7 @@ class EView {
   // 한 프레임 진행. 다시 그려야 하면 true
   step(dt: number) {
     if (this.auto()) this.goalAz += dt * 0.35;
-    const k = this.hub.reduce.matches ? 1 : 1 - Math.exp(-dt * 6);
+    const k = 1 - Math.exp(-dt * 6);
     const d = Math.abs(this.goalAz - this.az) + Math.abs(this.goalEl - this.el0);
     if (d > 1e-4) {
       this.az += (this.goalAz - this.az) * k;

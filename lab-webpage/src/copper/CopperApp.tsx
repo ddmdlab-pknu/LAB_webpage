@@ -37,7 +37,7 @@ function useCopperDocument() {
     const prev = [body.background, html.colorScheme, html.scrollBehavior];
     body.background = "#f8f8f8";
     html.colorScheme = "light";
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) html.scrollBehavior = "smooth";
+    html.scrollBehavior = "smooth";
     const meta = document.querySelector('meta[name="theme-color"]');
     meta?.setAttribute("content", "#f8f8f8");
     return () => {
@@ -49,7 +49,7 @@ function useCopperDocument() {
 }
 
 // 구역이 화면에 들어오면 제목은 단어마다 아래에서 떠오르고(0.6초, 단어 사이 0.05초), 글·그림·카드는 천천히 나타난다.
-// 숨김 상태는 CSS 의 prefers-reduced-motion: no-preference 안에만 있어서, 움직임 줄이기 설정이면 처음부터 다 보인다.
+// 기기의 움직임 줄이기 설정과 상관없이 늘 움직인다 (Lila Sciences 와 같게). 스크립트가 안 돌면(.js 없음) 처음부터 다 보인다.
 const HEADS = "h2.h, h2.h3, h3.h3, .phead h1";
 const PARTS =
   ".body, .statement, .chart, .plate, .tabs, .kit, .rm-stage, .rm-list, .gs-fig, .cells, .ix-list, .ix-frame, .rc-track, .rc-nav, .acc, .pi-left, .pi-right, .career > *, .ptile, .st-head > a, .photos, .team-copy .btns, .roster, .ncard, .nl-item, .tile, .eq-card, .prow, .mcard, .gitem, .proj, .nrow, .joinbox, .map, .info, .phead p, .crumbs, .gs-copy .btns, .cap";

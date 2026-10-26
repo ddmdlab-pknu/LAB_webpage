@@ -15,10 +15,8 @@ interface Opts {
   pixel?: number; // 값이 있으면 저해상도 픽셀 캔버스 (CSS로 늘려 부드럽게 보임)
 }
 
-export const prefersReduced = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+// 기기의 "움직임 줄이기" 설정(Windows 애니메이션 효과 끔 등)과 상관없이 늘 움직인다 (Lila Sciences 와 같게)
+export const prefersReduced = () => false;
 
 export function useCanvas(draw: (f: Frame) => void, opts: Opts = {}) {
   const ref = useRef<HTMLCanvasElement>(null);
