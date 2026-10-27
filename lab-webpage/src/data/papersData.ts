@@ -35,7 +35,7 @@ export const labMemberNames: string[] = [
 // 학술지별 Impact Factor. 값을 넣으면 논문 목록의 학술지 이름 옆에 "IF x.x"로 표시됨
 // 키는 아래 논문 항목의 journal 값과 정확히 같아야 함
 export const journalImpactFactors: Record<string, string> = {
-  "Journal of Materials Research and Technology": "6.6",
+  "Journal of Materials Research and Technology": "7.3",
   "Materials Characterization": "6.2",
   "Scripta Materialia": "5.9",
   "Materials Today Communications": "4.9",
@@ -46,7 +46,8 @@ export const journalImpactFactors: Record<string, string> = {
 
 // 학술지별 JCR 분위(Q1~Q4). 여러 분야에 걸친 학술지는 가장 높은 분위를 적는다.
 // SCIE가 아닌 국내 학술지는 "KCI"로 적는다. 값을 넣으면 논문 목록에 표시됨
-// (2026년 10월 확인. 매년 6월 JCR이 새로 나오면 IF와 함께 고친다)
+// (2026년 10월 확인. Elsevier 학술지는 ScienceDirect 학술지 첫 화면의 Impact Factor 기준.
+//  매년 6월 JCR이 새로 나오면 IF와 함께 고친다)
 export const journalQuartiles: Record<string, string> = {
   "Journal of Materials Research and Technology": "Q1",
   "Materials Characterization": "Q1",
