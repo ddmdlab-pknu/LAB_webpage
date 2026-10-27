@@ -1,7 +1,7 @@
 // 첫 화면과 하위 페이지가 같이 쓰는 큰 덩어리들
 import { CSSProperties, ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { PublicationItem, journalImpactFactors, journalQuartiles, publicationsData as papers } from "../data/papersData";
+import { JCR_YEAR, PublicationItem, journalImpactFactors, journalQuartiles, publicationsData as papers, top10 } from "../data/papersData";
 import { NewsItem } from "../data/newsData";
 import { career, honors, patents, piProfile, piSelectedPapers } from "../data/piData";
 import { ChartData, computeChart, drawBOCard, drawChart, drawDomain, drawMag, Pointer, prefersReduced, useCanvas } from "./fx";
@@ -718,6 +718,7 @@ export function PaperTile({ paper, className = "" }: { paper: PublicationItem; c
           {journalShort(paper.journal)} · {paper.year}
           {q ? ` · ${q}` : ""}
           {f ? ` · IF ${f}` : ""}
+          {top10(paper.journal) ? " · 상위 10%" : ""}
           {paper.status === "accepted" ? " · Accepted" : ""}
         </span>
       </span>
@@ -729,10 +730,16 @@ export function PaperTile({ paper, className = "" }: { paper: PublicationItem; c
 export function JournalChips({ journal, only }: { journal: string; only?: boolean }) {
   const q = journalQuartiles[journal];
   const f = journalImpactFactors[journal];
+  const t = top10(journal);
   return (
     <>
       {!only && <span className="chip">{journal}</span>}
       {q && <span className={"chip q " + q.toLowerCase()}>{q}</span>}
+      {t && (
+        <span className="chip top10" title={`JCR ${JCR_YEAR} ${t.category} ${t.rank}/${t.total}위 (상위 ${t.pct.toFixed(1)}%)`}>
+          상위 10%
+        </span>
+      )}
       {f && <span className="chip">IF {f}</span>}
     </>
   );

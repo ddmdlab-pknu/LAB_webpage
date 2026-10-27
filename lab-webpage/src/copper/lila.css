@@ -23,6 +23,7 @@
 .cu .btn.small { border-radius: var(--r-s); }
 .cu .contact, .cu .menu, .cu .tabs button, .cu .chip-btn, .cu .crumbs a, .cu .seg button, .cu .cell, .cu .rm-list button, .cu .gt-chips button { border-radius: var(--r-s); }
 .cu .chip { border-radius: 6px; }
+.cu .chip.top10 { background: var(--mint); color: #1f6b3a; font-weight: 600; }
 
 /* ── 메뉴: 화면 위에 떠 있는 둥근 막대 ─────────────── */
 .cu .navwrap { padding: calc(env(safe-area-inset-top, 0px) + 10px) max(var(--margin), env(safe-area-inset-right, 0px)) 0 max(var(--margin), env(safe-area-inset-left, 0px)); background: transparent; pointer-events: none; }

@@ -46,8 +46,7 @@ export const journalImpactFactors: Record<string, string> = {
 
 // 학술지별 JCR 분위(Q1~Q4). 여러 분야에 걸친 학술지는 가장 높은 분위를 적는다.
 // SCIE가 아닌 국내 학술지는 "KCI"로 적는다. 값을 넣으면 논문 목록에 표시됨
-// (2026년 10월 확인. Elsevier 학술지는 ScienceDirect 학술지 첫 화면의 Impact Factor 기준.
-//  매년 6월 JCR이 새로 나오면 IF와 함께 고친다)
+// (JCR 2025 기준, 2026년 10월 Clarivate JCR 에서 확인. 매년 6월 JCR이 새로 나오면 IF·분야 순위와 함께 고친다)
 export const journalQuartiles: Record<string, string> = {
   "Journal of Materials Research and Technology": "Q1",
   "Materials Characterization": "Q1",
@@ -59,6 +58,28 @@ export const journalQuartiles: Record<string, string> = {
   "Journal of the Korean Magnetics Society": "KCI",
   "Journal of the Korean Society for Heat Treatment": "KCI",
 };
+
+// 학술지별 JCR 분야 순위: 그 학술지가 가장 높게 매겨진 분야 하나의 IF 순위/전체 학술지 수.
+// 순위/전체가 10% 이내면 논문 목록·상세·타일에 "상위 10%" 표시 (예: 3/37 = 8.1% → 표시, 10/97 = 10.3% → 표시 안 함)
+// (JCR 2025, 2026년 10월 Clarivate JCR 에서 확인. 매년 6월 IF·분위와 함께 고친다)
+export const JCR_YEAR = "2025";
+export const journalRanks: Record<string, { rank: number; total: number; category: string }> = {
+  "Journal of Materials Research and Technology": { rank: 10, total: 97, category: "Metallurgy & Metallurgical Engineering" },
+  "Materials Characterization": { rank: 3, total: 37, category: "Materials Science, Characterization & Testing" },
+  "Scripta Materialia": { rank: 14, total: 97, category: "Metallurgy & Metallurgical Engineering" },
+  "Metals and Materials International": { rank: 21, total: 97, category: "Metallurgy & Metallurgical Engineering" },
+  "Materials Today Communications": { rank: 179, total: 473, category: "Materials Science, Multidisciplinary" },
+  "Korean Journal of Metals and Materials": { rank: 64, total: 97, category: "Metallurgy & Metallurgical Engineering" },
+  "Journal of Magnetics": { rank: 451, total: 473, category: "Materials Science, Multidisciplinary" },
+};
+
+/** 분야 순위가 상위 10% 이내면 그 정보를, 아니면 null */
+export function top10(journal: string) {
+  const r = journalRanks[journal];
+  if (!r) return null;
+  const pct = (r.rank / r.total) * 100;
+  return pct <= 10 ? { ...r, pct } : null;
+}
 
 // 같은 연도 안에서는 배열 순서대로 표시됨 (최신 논문을 위에)
 export const publicationsData: PublicationItem[] = [
