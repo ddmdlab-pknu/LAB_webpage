@@ -10,6 +10,7 @@ export interface PublicationItem {
   figureCaption?: string; // figure 아래 설명. 없으면 생략
   firstPage?: string; // 논문 첫 페이지 이미지 경로. 상세 페이지 맨 아래에 표시
   keywords?: string[]; // 논문에 적힌 키워드. 필독 논문 카드와 상세 페이지에 표시
+  status?: "accepted"; // 게재 승인 후 아직 온라인에 실리지 않은 논문. 목록·상세에 "Accepted" 표시. 온라인에 실리면 지우고 link·abstract·firstPage를 넣는다
 }
 
 // 연구실 구성원 이름 (논문에 적힌 표기 그대로). authors에 있는 이름이 여기 있으면 밑줄로 표시됨
@@ -61,6 +62,16 @@ export const journalQuartiles: Record<string, string> = {
 // 같은 연도 안에서는 배열 순서대로 표시됨 (최신 논문을 위에)
 export const publicationsData: PublicationItem[] = [
   // 2026
+  {
+    id: "2026-ha-jmrt",
+    year: "2026",
+    title:
+      "Reinforcement learning-based inverse design of frequency-dependent processing conditions for core loss minimization in non-oriented electrical steel",
+    journal: "Journal of Materials Research and Technology",
+    authors: ["JunSeo Ha", "Min Su Sung", "Ho Sung Jang", "Sunmi Shin", "Sung-Jin Kim", "SeMin Park*"],
+    keywords: ["Non-oriented electrical steel", "Core loss", "Reinforcement learning", "Inverse design", "Surrogate model"],
+    status: "accepted", // 2026.10.27 게재 승인
+  },
   {
     id: "2026-yu-mtc",
     year: "2026",

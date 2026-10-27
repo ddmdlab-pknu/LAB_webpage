@@ -18,6 +18,7 @@ function PaperDetail() {
           <h1>{paper.title}</h1>
           <p className="meta">
             {paper.journal} · {paper.year}
+            {paper.status === "accepted" ? " · Accepted (게재 승인, 온라인 게재 전)" : ""}
           </p>
           {paper.authors && (
             <p className="au">

@@ -69,6 +69,15 @@
 @media (max-width: 1100px) { .cu .rc-track { grid-auto-columns: calc((100% - 16px) / 2); } }
 @media (max-width: 700px) { .cu .rc-track { grid-auto-columns: 78%; margin-top: 40px; } }
 
+/* ── 첫 페이지 그림이 아직 없는 논문의 표지 (게재 승인) ─── */
+.cu .pcover { display: flex; flex-direction: column; justify-content: space-between; gap: 12px; width: 100%; height: 100%; padding: clamp(16px, 2.2vw, 32px); background: var(--white); color: var(--ink); text-align: left; }
+.cu .pc-j { font-size: var(--t-small); color: var(--muted); }
+.cu .pc-a { font-size: clamp(36px, 5vw, 76px); font-weight: 400; line-height: 1; letter-spacing: -0.035em; }
+.cu .pc-s { align-self: flex-start; padding: 5px 9px; border-radius: 6px; background: var(--mint); font-size: 12px; font-weight: 500; }
+.cu .pcover.compact { justify-content: center; align-items: center; padding: 8px; }
+.cu .pcover.compact .pc-a { font-size: 17px; letter-spacing: -0.02em; }
+.cu .tile .pic .pcover .pc-a { font-size: clamp(32px, 4vw, 56px); }
+
 /* ── 소식 카드 ───────────────────────────────────────── */
 .cu .ncards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 56px 0 0; padding: 0; list-style: none; }
 .cu .ncard > a { display: flex; flex-direction: column; height: 100%; padding: 12px 12px 18px; border-radius: var(--r); background: var(--white); transition: background-color 180ms ease; }

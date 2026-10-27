@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { PageHead, groupOf } from "../ui";
 import PaperAuthors from "../../components/PaperAuthors";
-import { JournalChips, papersByIF } from "../sections";
+import { JournalChips, PaperCover, papersByIF } from "../sections";
 
 // 연구실 논문 가운데 IF가 높은 4편을 자동으로 고른다 (src/data/papersData.ts 의 IF 표 기준)
 function MustRead() {
@@ -19,14 +19,17 @@ function MustRead() {
           {top.map((p) => (
             <Link key={p.id} to={`/project/PublishedPapers/${p.id}`} className="tile paper-tile">
               <div className="pic" style={{ background: "#fff", aspectRatio: "16 / 10" }}>
-                {p.firstPage && (
+                {p.firstPage ? (
                   <img src={p.firstPage} alt={`${p.title} 첫 페이지`} loading="lazy" style={{ objectFit: "cover", objectPosition: "top" }} />
+                ) : (
+                  <PaperCover paper={p} />
                 )}
               </div>
               <div className="txt">
                 <div className="tagrow" style={{ marginTop: 0, paddingTop: 0 }}>
                   <JournalChips journal={p.journal} />
                   <span className="chip">{p.year}</span>
+                  {p.status === "accepted" && <span className="chip">Accepted</span>}
                 </div>
                 <p className="ttl">{p.title}</p>
                 {p.authors && (

@@ -10,6 +10,12 @@ export const newsData: NewsItem[] = [
   // 2026
 
   {
+    date: "2026.10.27",
+    comments:
+      "하준서 학생의 'Reinforcement learning-based inverse design of frequency-dependent processing conditions for core loss minimization in non-oriented electrical steel' 논문이 JMR&T(Journal of Materials Research and Technology)에 게재 승인되었습니다. 축하합니다!",
+    category: "Publication",
+  },
+  {
     date: "2026.10.22",
     comments:
       "규소 6.5%급 광폭 전기강판 및 xEV 전비 향상 기술개발 과제 1차년도 진도 점검 워크숍(울산, 10.21~22)에 참석하여 소재팀 연구 진행 현황을 발표하였습니다.",

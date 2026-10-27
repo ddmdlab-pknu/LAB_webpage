@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { PageHead, groupOf } from "../ui";
 import PaperAuthors from "../../components/PaperAuthors";
 import { publicationsData } from "../../data/papersData";
-import { JournalChips } from "../sections";
+import { JournalChips, PaperCover } from "../sections";
 
 function Papers() {
   // 논문이 있는 연도만 탭으로 보여준다 (최신 연도가 왼쪽)
@@ -26,7 +26,7 @@ function Papers() {
           {list.length === 0 && <p className="empty">Coming soon.</p>}
           {list.map((p) => (
             <Link key={p.id} className="prow" to={`/project/PublishedPapers/${p.id}`}>
-              <div className="thumb">{p.firstPage && <img src={p.firstPage} alt="" loading="lazy" />}</div>
+              <div className="thumb">{p.firstPage ? <img src={p.firstPage} alt="" loading="lazy" /> : <PaperCover paper={p} compact />}</div>
               <div>
                 <b>{p.title}</b>
                 {p.authors && (
@@ -37,6 +37,7 @@ function Papers() {
                 <div className="jn">
                   <JournalChips journal={p.journal} />
                   <span className="chip">{p.year}</span>
+                  {p.status === "accepted" && <span className="chip">Accepted</span>}
                 </div>
               </div>
               <i aria-hidden="true">→</i>

@@ -691,6 +691,18 @@ export function PIBlock({ full = false }: { full?: boolean }) {
   );
 }
 
+/* ---------- 첫 페이지 그림이 아직 없는 논문의 표지 (게재 승인 후 온라인 게재 전) ---------- */
+export function PaperCover({ paper, compact }: { paper: PublicationItem; compact?: boolean }) {
+  if (paper.status !== "accepted") return <Mark size={compact ? 40 : undefined} />;
+  return (
+    <span className={"pcover" + (compact ? " compact" : "")}>
+      {!compact && <span className="pc-j">{paper.journal}</span>}
+      <span className="pc-a">Accepted</span>
+      {!compact && <span className="pc-s">게재 승인 · 온라인 게재 예정</span>}
+    </span>
+  );
+}
+
 /* ---------- 논문 타일 (첫 페이지 그림 + 한 줄 설명) ---------- */
 export function PaperTile({ paper, className = "" }: { paper: PublicationItem; className?: string }) {
   const q = journalQuartiles[paper.journal];
@@ -698,7 +710,7 @@ export function PaperTile({ paper, className = "" }: { paper: PublicationItem; c
   return (
     <Link className={"ptile " + className} to={`/project/PublishedPapers/${paper.id}`}>
       <span className="pimg">
-        {paper.firstPage ? <img src={paper.firstPage} alt={`${paper.title} 첫 페이지`} loading="lazy" decoding="async" /> : <Mark />}
+        {paper.firstPage ? <img src={paper.firstPage} alt={`${paper.title} 첫 페이지`} loading="lazy" decoding="async" /> : <PaperCover paper={paper} />}
       </span>
       <span className="pcap">
         <b>{paper.title}</b>
@@ -706,6 +718,7 @@ export function PaperTile({ paper, className = "" }: { paper: PublicationItem; c
           {journalShort(paper.journal)} · {paper.year}
           {q ? ` · ${q}` : ""}
           {f ? ` · IF ${f}` : ""}
+          {paper.status === "accepted" ? " · Accepted" : ""}
         </span>
       </span>
     </Link>
