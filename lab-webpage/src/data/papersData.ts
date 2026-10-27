@@ -59,26 +59,25 @@ export const journalQuartiles: Record<string, string> = {
   "Journal of the Korean Society for Heat Treatment": "KCI",
 };
 
-// 학술지별 JCR 분야 순위: 그 학술지가 가장 높게 매겨진 분야 하나의 IF 순위/전체 학술지 수.
-// 순위/전체가 10% 이내면 논문 목록·상세·타일에 "상위 10%" 표시 (예: 3/37 = 8.1% → 표시, 10/97 = 10.3% → 표시 안 함)
+// 학술지별 JCR 분야 순위: 그 학술지가 가장 높게 매겨진 분야 하나의 IF 순위/전체 학술지 수와 JIF Percentile.
+// JCR 화면의 JIF Percentile 이 90 이상이면 논문 목록·상세·타일에 "상위 10%" 표시
+// (JIF Percentile = (전체 - 순위 + 0.5) / 전체 × 100. 예: JMR&T 10/97 → 90.2 → 표시)
 // (JCR 2025, 2026년 10월 Clarivate JCR 에서 확인. 매년 6월 IF·분위와 함께 고친다)
 export const JCR_YEAR = "2025";
-export const journalRanks: Record<string, { rank: number; total: number; category: string }> = {
-  "Journal of Materials Research and Technology": { rank: 10, total: 97, category: "Metallurgy & Metallurgical Engineering" },
-  "Materials Characterization": { rank: 3, total: 37, category: "Materials Science, Characterization & Testing" },
-  "Scripta Materialia": { rank: 14, total: 97, category: "Metallurgy & Metallurgical Engineering" },
-  "Metals and Materials International": { rank: 21, total: 97, category: "Metallurgy & Metallurgical Engineering" },
-  "Materials Today Communications": { rank: 179, total: 473, category: "Materials Science, Multidisciplinary" },
-  "Korean Journal of Metals and Materials": { rank: 64, total: 97, category: "Metallurgy & Metallurgical Engineering" },
-  "Journal of Magnetics": { rank: 451, total: 473, category: "Materials Science, Multidisciplinary" },
+export const journalRanks: Record<string, { rank: number; total: number; category: string; percentile: number }> = {
+  "Journal of Materials Research and Technology": { rank: 10, total: 97, category: "Metallurgy & Metallurgical Engineering", percentile: 90.2 },
+  "Materials Characterization": { rank: 3, total: 37, category: "Materials Science, Characterization & Testing", percentile: 93.2 },
+  "Scripta Materialia": { rank: 14, total: 97, category: "Metallurgy & Metallurgical Engineering", percentile: 86.1 },
+  "Metals and Materials International": { rank: 21, total: 97, category: "Metallurgy & Metallurgical Engineering", percentile: 78.9 },
+  "Materials Today Communications": { rank: 179, total: 473, category: "Materials Science, Multidisciplinary", percentile: 62.3 },
+  "Korean Journal of Metals and Materials": { rank: 64, total: 97, category: "Metallurgy & Metallurgical Engineering", percentile: 34.5 },
+  "Journal of Magnetics": { rank: 451, total: 473, category: "Materials Science, Multidisciplinary", percentile: 4.8 },
 };
 
-/** 분야 순위가 상위 10% 이내면 그 정보를, 아니면 null */
+/** JCR JIF Percentile 이 90 이상(상위 10%)이면 그 정보를, 아니면 null */
 export function top10(journal: string) {
   const r = journalRanks[journal];
-  if (!r) return null;
-  const pct = (r.rank / r.total) * 100;
-  return pct <= 10 ? { ...r, pct } : null;
+  return r && r.percentile >= 90 ? r : null;
 }
 
 // 같은 연도 안에서는 배열 순서대로 표시됨 (최신 논문을 위에)

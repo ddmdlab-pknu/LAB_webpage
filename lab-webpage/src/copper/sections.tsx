@@ -736,7 +736,7 @@ export function JournalChips({ journal, only }: { journal: string; only?: boolea
       {!only && <span className="chip">{journal}</span>}
       {q && <span className={"chip q " + q.toLowerCase()}>{q}</span>}
       {t && (
-        <span className="chip top10" title={`JCR ${JCR_YEAR} ${t.category} ${t.rank}/${t.total}위 (상위 ${t.pct.toFixed(1)}%)`}>
+        <span className="chip top10" title={`JCR ${JCR_YEAR} ${t.category} ${t.rank}/${t.total}위 · JIF Percentile ${t.percentile}`}>
           상위 10%
         </span>
       )}
