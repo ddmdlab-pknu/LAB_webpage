@@ -92,7 +92,10 @@ export const publicationsData: PublicationItem[] = [
     journal: "Journal of Materials Research and Technology",
     authors: ["JunSeo Ha", "Min Su Sung", "Ho Sung Jang", "Sunmi Shin", "Sung-Jin Kim", "SeMin Park*"],
     keywords: ["Non-oriented electrical steel", "Core loss", "Reinforcement learning", "Inverse design", "Surrogate model"],
-    status: "accepted", // 2026.10.27 게재 승인
+    link: "https://doi.org/10.1016/j.jmrt.2026.10.241", // 2026.10.27 게재 승인, Journal Pre-proof 온라인 게재
+    abstract:
+      "The core loss of non-oriented electrical steel (NOES) governs motor core efficiency, and the conditions that minimize it depend on the operating frequency because the loss-component contributions change with frequency. The search space of reinforcement learning (RL) was constrained metallurgically by separating the first and final annealing temperature ranges at 800 °C, and a frequency-conditioned policy trained over 50–1000 Hz was used to find conditions that lower core loss while limiting flux density reduction. Surrogate models (TabPFN) predicting the Bertotti loss separation coefficients and B₅₀ were trained on data from 161 processing conditions of a 0.63 wt% Si–0.36 wt% Al NOES, and the reward minimized the standardized core loss at 1.0 T while penalizing the reduction in B₅₀. The measured core loss and B₅₀ differed from the predictions by 3–7% and 2–7%, respectively, at the three frequencies (50, 400, 1000 Hz). With the 400 Hz data held out, the recommendation was similar to that obtained with all six frequencies (variable differences ≤11.1%; same rounded predictions), with 11% lower predicted core loss than the lowest-loss training condition within the search range and B₅₀ within 2% of the highest. The average grain size decreased from 129.2 μm at 50 Hz to 59.6 μm at 1000 Hz and the texture changed from cube-type components to γ-fiber; the policy thus selected coarse grains where hysteresis loss dominates and thin, fine-grained sheets where eddy-current and anomalous losses prevail. The approach enables frequency-specific process design without re-optimization and is reusable via the reward.",
+    firstPage: "/images/papers/2026-ha-jmrt-first-page.jpg",
   },
   {
     id: "2026-yu-mtc",
