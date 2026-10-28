@@ -639,9 +639,9 @@ export function PIBlock({ full = false }: { full?: boolean }) {
             <h3 className="h3">특허</h3>
             <div className="nums">
               {[
-                [patentSummary.total, "전체 (포스코 재직 중)"],
-                [patentSummary.domestic, "국내 · 대표 발명 11"],
-                [patentSummary.pct, "PCT · 대표 발명 5"],
+                [patentSummary.krRegistered, `국내 등록 · 대표 ${patentSummary.krRegisteredLead}`],
+                [patentSummary.pct, `PCT 출원 · 대표 ${patentSummary.pctLead}`],
+                [patentSummary.overseasGranted, "해외 등록 · 미·일·중·유럽"],
               ].map(([n, l]) => (
                 <div key={l}>
                   <b>{n}</b>

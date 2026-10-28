@@ -3,7 +3,8 @@ import { PIBlock } from "../sections";
 import { patentSummary, patents } from "../../data/piData";
 
 function Leader() {
-  const groups = [patents.domesticRep, patents.domesticCo, patents.pctRep, patents.pctCo];
+  const groups = [patents.krLead, patents.krCo, patents.pctLead, patents.pctCo];
+  const s = patentSummary;
   return (
     <>
       <PageHead label="About" title="Leader" ko="지도교수 박세민 · 경력, 특허, 대표 논문" group={groupOf("About")} />
@@ -12,9 +13,12 @@ function Leader() {
       </section>
       <section className="wrap band-s">
         <h2 className="h" style={{ marginBottom: 16 }}>특허 목록</h2>
-        <p className="body" style={{ marginBottom: 32 }}>
-          {patentSummary.note} 특허 {patentSummary.total}건 · 국내 {patentSummary.domestic}건(대표 발명 {patents.domesticRep.count}, 공동{" "}
-          {patents.domesticCo.count}), PCT {patentSummary.pct}건(대표 발명 {patents.pctRep.count}, 공동 {patents.pctCo.count})
+        <p className="body" style={{ marginBottom: 8 }}>
+          국내 등록 {s.krRegistered}건(대표 발명 {s.krRegisteredLead}, 공동 {s.krRegistered - s.krRegisteredLead}), 모두 권리 유지 중 · 국내 출원 전체{" "}
+          {s.krApplications}건(심사 중 {s.krPending}) · PCT {s.pct}건(대표 발명 {s.pctLead}) · 해외 등록 {s.overseasGranted}건
+        </p>
+        <p className="cap" style={{ marginBottom: 32 }}>
+          포스코 기술연구원 재직(2014–2023)과 POSTECH 박사과정 중 출원. KIPRIS·Google Patents 대조, {s.asOf} 기준
         </p>
         <div className="grid2">
           {groups.map((g) => (
