@@ -10,6 +10,13 @@ export const newsData: NewsItem[] = [
   // 2026
 
   {
+    date: "2026.10.28",
+    comments:
+      "2026년도 대한금속·재료학회 추계학술대회 학생세션에서 하준서 학생의 '자가 지도 학습(SSL)과 설명 가능한 인공지능(XAI)을 활용한 무방향성 전기강판의 자기적 성질 기반 결정립 크기 예측' 발표가 최우수논문으로 선정되어 KIM Student of the Year 2026을 수상하였습니다. 축하합니다!",
+    category: "Award",
+    img: "/images/2026_KIM_award.jpg",
+  },
+  {
     date: "2026.10.27",
     comments:
       "하준서 학생의 'Reinforcement learning-based inverse design of frequency-dependent processing conditions for core loss minimization in non-oriented electrical steel' 논문이 JMR&T(Journal of Materials Research and Technology)에 게재 승인되었습니다. 축하합니다!",
