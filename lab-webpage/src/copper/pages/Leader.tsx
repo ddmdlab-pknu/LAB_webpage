@@ -1,9 +1,9 @@
 import { PageHead, groupOf } from "../ui";
 import { PIBlock } from "../sections";
-import { patents } from "../../data/piData";
+import { patentSummary, patents } from "../../data/piData";
 
 function Leader() {
-  const groups = [patents.pctRep, patents.domesticRep, patents.pctCo];
+  const groups = [patents.domesticRep, patents.domesticCo, patents.pctRep, patents.pctCo];
   return (
     <>
       <PageHead label="About" title="Leader" ko="지도교수 박세민 · 경력, 특허, 대표 논문" group={groupOf("About")} />
@@ -11,8 +11,12 @@ function Leader() {
         <PIBlock full />
       </section>
       <section className="wrap band-s">
-        <h2 className="h" style={{ marginBottom: 32 }}>특허 목록</h2>
-        <div className="grid3">
+        <h2 className="h" style={{ marginBottom: 16 }}>특허 목록</h2>
+        <p className="body" style={{ marginBottom: 32 }}>
+          {patentSummary.note} 특허 {patentSummary.total}건 · 국내 {patentSummary.domestic}건(대표 발명 {patents.domesticRep.count}, 공동{" "}
+          {patents.domesticCo.count}), PCT {patentSummary.pct}건(대표 발명 {patents.pctRep.count}, 공동 {patents.pctCo.count})
+        </p>
+        <div className="grid2">
           {groups.map((g) => (
             <div key={g.label} className="tile">
               <div className="txt">

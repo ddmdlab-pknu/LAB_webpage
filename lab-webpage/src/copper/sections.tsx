@@ -3,7 +3,7 @@ import { CSSProperties, ReactNode, useEffect, useLayoutEffect, useRef, useState 
 import { Link } from "react-router-dom";
 import { JCR_YEAR, PublicationItem, journalImpactFactors, journalQuartiles, publicationsData as papers, top10 } from "../data/papersData";
 import { NewsItem } from "../data/newsData";
-import { career, honors, patents, piProfile, piSelectedPapers } from "../data/piData";
+import { career, honors, patentSummary, piProfile, piSelectedPapers } from "../data/piData";
 import { ChartData, computeChart, drawBOCard, drawChart, drawDomain, drawMag, Pointer, prefersReduced, useCanvas } from "./fx";
 import { catLabel } from "./ui";
 
@@ -638,10 +638,14 @@ export function PIBlock({ full = false }: { full?: boolean }) {
           <div>
             <h3 className="h3">특허</h3>
             <div className="nums">
-              {[patents.pctRep, patents.domesticRep, patents.pctCo].map((p) => (
-                <div key={p.label}>
-                  <b>{p.count}</b>
-                  <span>{p.label}</span>
+              {[
+                [patentSummary.total, "전체 (포스코 재직 중)"],
+                [patentSummary.domestic, "국내 · 대표 발명 11"],
+                [patentSummary.pct, "PCT · 대표 발명 5"],
+              ].map(([n, l]) => (
+                <div key={l}>
+                  <b>{n}</b>
+                  <span>{l}</span>
                 </div>
               ))}
             </div>

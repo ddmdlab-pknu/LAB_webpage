@@ -77,39 +77,78 @@ export const piSelectedPapers = [
   "2023-na-mmi",
 ];
 
-// 특허 건수와 대표 목록 (Leader 페이지에 목록으로 표시)
-export const patents = {
-  pctRep: {
-    label: "PCT 대표 발명",
-    count: 5,
-    items: [
-      "PCT/KR2020/017973 CN, EP, JP, US · Grain-oriented electrical steel and its magnetic domain refinement method",
-      "PCT/KR19/018033 JP, EP, CN, US · Grain-oriented electrical steel and its manufacturing method",
-      "PCT/KR2019/06220 JP, EP, CN, US · Grain-oriented electrical steel and its magnetic domain refinement method",
-      "PCT/KR2018/16037 CN, DE, EP, FR, GB, JP · Grain-oriented electrical steel and its magnetic domain refinement method",
-      "PCT/KR17/015204 JP, CN, US · Grain-oriented electrical steel and its magnetic domain refinement method",
-    ],
-  },
+// 특허: 포스코 기술연구원 재직(2014–2023) 중 출원·등록분. 출처는 CV (2026-01 수정본)
+// 건수와 목록은 Leader 페이지와 첫 화면 "지도교수" 구역에 함께 쓰인다. 목록이 건수보다 적으면 "외 N건"으로 표시
+export const patentSummary = {
+  total: 63,
+  domestic: 48, // 대표 11 + 공동 37
+  pct: 15, // 대표 5 + 공동 10
+  note: "포스코 기술연구원 재직(2014–2023) 중 출원·등록",
+};
+
+export interface PatentGroup {
+  label: string;
+  count: number;
+  items: string[]; // "발명의 명칭 · 번호"
+}
+
+export const patents: Record<"domesticRep" | "domesticCo" | "pctRep" | "pctCo", PatentGroup> = {
   domesticRep: {
     label: "국내 대표 발명",
     count: 11,
     items: [
-      "2020-0179368, 2438476 · Grain-oriented electrical steel with superior noise characteristics",
-      "2020-0177989, 2462682 · Grain-oriented electrical steel with superior noise characteristics",
-      "2019-0171286, 2276850 · Process for magnetic domain refined grain-oriented electrical steel with superior magnetic properties",
-      "2019-0172496, 2395230 · Process for temporary magnetic domain refined grain-oriented electrical steel with superior magnetic properties",
-      "2018-0165650, 10-2162984 · Advanced process for permanent magnetic domain refinement of electrical steel",
+      "소음 특성이 우수한 방향성 전기강판 · 등록 10-2438476 (출원 10-2020-0179368)",
+      "소음이 우수한 방향성 전기강판 · 등록 10-2462682 (출원 10-2020-0177989)",
+      "자성이 우수한 자구 미세화 방향성 전기강판 공정 · 등록 10-2276850 (출원 10-2019-0171286)",
+      "자성이 우수한 일시자구 미세화 방향성 전기강판 공정 · 등록 10-2395230 (출원 10-2019-0172496)",
+      "전기강판 영구자구미세화 고도화 공정 · 등록 10-2162984 (출원 10-2018-0165650)",
+      "자성이 향상된 방향성 전기강판 · 등록 10-2126220 (출원 10-2018-0114111)",
+      "자성이 우수한 방향성 전기강판 공정 · 등록 10-2104554 (출원 10-2018-0114110)",
+      "방향성 전기강판 영구자구미세화 공정 · 등록 10-2080172 (출원 10-2017-0179539)",
+      "철손이 우수한 일시자구미세화 전기강판 · 등록 10-2044320 (출원 10-2017-0179924)",
+      "방향성 전기강판의 적층 시 판 간의 결합성 향상 방향 · 등록 10-1919519 (출원 10-2016-0177831)",
+      "방향성 전기강판의 영구자구미세화 방법 · 등록 10-1892226 (출원 10-2016-0177890)",
+    ],
+  },
+  domesticCo: {
+    label: "국내 공동 발명",
+    count: 37,
+    items: [
+      "방향성 전기강판 및 이의 제조방법 · 등록 10-2326327",
+      "영구자구미세화 공정에 있어서의 광학계 하부 용융철 융착 차단 및 제거시스템 · 등록 10-2148384",
+      "방향성 전기강판 영구자구미세화 공정에서의 Spatter 고착방지 장치 및 방법 · 등록 10-2075274",
+      "방향성 전기강판 영구자구미세화 공정에 있어서의 광학계 레이저 조사시스템 · 등록 10-2177531",
+      "방향성 전기강판 영구자구미세화 공정에 있어서의 광학계 레이저 융착물 및 Hill-Up 제거 시스템 · 등록 10-2175847",
+      "방향성 전기강판 영구 자구미세화 레이저 빔 얼라인 장치 · 등록 10-2153193",
+      "방향성 전기강판 레이저 홈가공 설비의 안정화 기술 · 등록 10-2140182",
+      "방향성 전기강판 영구자구미세화 공정에 있어서의 Spatter와 Fume 포집 장치 및 방법 · 등록 10-2178733",
+    ],
+  },
+  pctRep: {
+    label: "PCT 대표 발명",
+    count: 5,
+    items: [
+      "방향성 전기강판 및 그 자구미세화 방법 · PCT/KR2020/017973 (CN, EP, JP, US)",
+      "방향성 전기강판 및 그의 제조 방법 · PCT/KR2019/018033 (JP, EP, CN, US)",
+      "방향성 전기강판 및 그 자구미세화 방법 · PCT/KR2019/06220 (JP, EP, CN, US)",
+      "방향성 전기강판 및 그 자구미세화 방법 · PCT/KR2018/16037 (CN, DE, EP, FR, GB, JP)",
+      "방향성 전기강판 및 그 자구미세화 방법 · PCT/KR2017/015204 (JP, CN, US)",
     ],
   },
   pctCo: {
     label: "PCT 공동 발명",
     count: 10,
     items: [
-      "PCT/KR17/015127 권오열 · Grain-oriented electrical steel and its magnetic domain refinement method",
-      "PCT/KR17/015128 권오열 · Magnetic domain refinement method for grain-oriented electrical steel",
-      "PCT/KR17/015205 권민석 · Annealing separator composition for grain-oriented electrical steel, grain-oriented electrical steel and manufacturing method thereof",
-      "PCT/KR19/12027 홍성철 · Foreign material trapping device and electrical steel manufacturing equipment including the same",
-      "PCT/KR19/17445 홍성철 · Foreign material removal device and electrical steel manufacturing equipment including the same",
+      "방향성 전기강판 및 그 자구미세화 방법 · PCT/KR2017/015127",
+      "방향성 전기강판의 자구미세화 방법 · PCT/KR2017/015128",
+      "방향성 전기강판용 소둔 분리제 조성물, 방향성 전기강판 및 방향성 전기강판의 제조방법 · PCT/KR2017/015205",
+      "이물질 포집장치 및 이를 포함하는 전기강판 제조설비 · PCT/KR2019/12027",
+      "이물질 제거장치 및 이를 포함하는 전기강판 제조설비 · PCT/KR2019/17445",
+      "밀착성 및 자성특성이 우수한 저철손 자구미세화 제조방법 · PCT/KR2015/14034",
+      "방향성 전기강판의 자구미세화 방법과 그 장치 · PCT/KR2016/15161",
+      "방향성 전기강판 및 그의 제조 방법 · PCT/KR2016/15235",
+      "방향성 전기강판의 자구미세화 방법과 그 장치 · PCT/KR2017/00617",
+      "방향성 전기강판 및 그의 제조 방법 · PCT/KR2020/018618",
     ],
   },
 };
