@@ -6,7 +6,7 @@ module.exports = {
       backgroundImage: {
         "first-bg": "url('/public/images/main_img(1).jpg')",
         "second-bg": "url('/public/images/second_img(2).jpg')",
-        "pandat-bg": "url('/public/images/pandat_고화질.png')",
+        "pandat-bg": "url('/public/images/pandat_고화질.webp')",
       },
       keyframes: {
         gotoRight: {

@@ -17,7 +17,7 @@ function ResearchAreas() {
               <div className="lg:mt-0 mt-5 flex justify-center items-center">
                 <img
                   alt="lab logo"
-                  src="/images/logo(2).png"
+                  src="/images/logo(2).webp"
                   className="block w-[300px] h-[300px] object-contain drop-shadow-md"
                 />
               </div>
@@ -115,7 +115,7 @@ function ResearchAreas() {
               <Card className="hover:shadow-2xl transition-all duration-500 border border-slate-100 group">
                 <div className="h-64 p-6 overflow-hidden bg-slate-50">
                   <img
-                    src="/images/research_area_2.png"
+                    src="/images/research_area_2.webp"
                     alt="Magnetostrictive material for sensors"
                     className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                   />
@@ -148,7 +148,7 @@ function ResearchAreas() {
               <Card className="hover:shadow-2xl transition-all duration-500 border border-slate-100 group">
                 <div className="h-64 p-6 overflow-hidden bg-slate-50">
                   <img
-                    src="/images/research_area_3.png"
+                    src="/images/research_area_3.webp"
                     alt="Material AI process and optimization"
                     className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                   />
@@ -181,7 +181,7 @@ function ResearchAreas() {
               <Card className="hover:shadow-2xl transition-all duration-500 border border-slate-100 group">
                 <div className="h-64 p-6 overflow-hidden bg-slate-50">
                   <img
-                    src="/images/research_area_4.png"
+                    src="/images/research_area_4.webp"
                     alt="Texture and magnetic analysis"
                     className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                   />

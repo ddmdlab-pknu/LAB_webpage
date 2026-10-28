@@ -159,7 +159,7 @@ function PolishingGame() {
           <Card className="relative w-full aspect-video overflow-hidden cursor-crosshair shadow-2xl border-4 border-slate-200 rounded-2xl">
             <div className="absolute inset-0">
               <img
-                src="/images/grain.png"
+                src="/images/grain.webp"
                 alt="Specimen Grain Structure"
                 className="w-full h-full object-cover"
               />

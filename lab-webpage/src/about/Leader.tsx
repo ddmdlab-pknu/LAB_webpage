@@ -77,7 +77,7 @@ export default function ProfilePage() {
             />
             <img
               className="w-[300px] h-[200px]"
-              src="/images/Certificate_Prof.png"
+              src="/images/Certificate_Prof.webp"
               alt=""
             />
           </div>

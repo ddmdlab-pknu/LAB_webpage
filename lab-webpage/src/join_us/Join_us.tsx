@@ -36,19 +36,19 @@ function JoinUs() {
     {
       title: "공정 조건 최적화 및 설계",
       desc: "능동 학습(Active Learning) 기법을 통해 실험 횟수를 획기적으로 단축하고, 최소한의 데이터로 최대의 물성을 확보하는 지능형 공정 설계를 수행",
-      img: "/images/join_us_optimg.png",
+      img: "/images/join_us_optimg.webp",
       zoom: true,
     },
     {
       title: "AI 기반 소재 지능화",
       desc: "데이터 증강(Data Augmentation) 및 생성형 모델을 활용한 재료 물성 예측 AI 모델 고도화",
-      img: "/images/join_us_증강.png",
+      img: "/images/join_us_증강.webp",
       zoom: true,
     },
     {
       title: "시뮬레이션을 활용한 재료 설계",
       desc: "Pandat 및 CALPHAD 기반의 열역학 시뮬레이션과 재료 AI 모델을 결합한 최적 설계",
-      img: "/images/pandat_고화질.png",
+      img: "/images/pandat_고화질.webp",
       cover: true,
     },
   ];

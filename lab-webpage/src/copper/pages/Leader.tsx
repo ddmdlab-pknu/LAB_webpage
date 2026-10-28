@@ -38,7 +38,7 @@ function Leader() {
         <h2 className="h" style={{ marginBottom: 32 }}>자격 인증</h2>
         <div className="split" style={{ alignItems: "center" }}>
           <div className="cream" style={{ maxWidth: 520 }}>
-            <img src="/images/Certificate_Prof.png" alt="Pandat 트레이너 인증서" style={{ width: "100%", display: "block" }} loading="lazy" />
+            <img src="/images/Certificate_Prof.webp" alt="Pandat 트레이너 인증서" style={{ width: "100%", display: "block" }} loading="lazy" />
           </div>
           <div>
             <p className="h3">Pandat 공인 트레이너</p>

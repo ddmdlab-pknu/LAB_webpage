@@ -6,9 +6,9 @@ const EMAIL = "newtain@pknu.ac.kr";
 
 const AREAS = [
   { title: "친환경 모빌리티 핵심 소재 개발", desc: "모터코어용 고효율 무방향성 전기강판(Non-oriented Electrical Steel)의 특성 최적화 연구", img: "/images/our_work(2).jpg", cover: true },
-  { title: "공정 조건 최적화 및 설계", desc: "능동 학습(Active Learning) 기법으로 실험 횟수를 줄이고, 최소한의 데이터로 최대의 물성을 확보하는 지능형 공정 설계", img: "/images/join_us_optimg.png" },
-  { title: "AI 기반 소재 지능화", desc: "데이터 증강(Data Augmentation) 및 생성형 모델을 활용한 재료 물성 예측 AI 모델 고도화", img: "/images/join_us_증강.png" },
-  { title: "시뮬레이션을 활용한 재료 설계", desc: "Pandat 및 CALPHAD 기반의 열역학 시뮬레이션과 재료 AI 모델을 결합한 최적 설계", img: "/images/pandat_고화질.png", cover: true },
+  { title: "공정 조건 최적화 및 설계", desc: "능동 학습(Active Learning) 기법으로 실험 횟수를 줄이고, 최소한의 데이터로 최대의 물성을 확보하는 지능형 공정 설계", img: "/images/join_us_optimg.webp" },
+  { title: "AI 기반 소재 지능화", desc: "데이터 증강(Data Augmentation) 및 생성형 모델을 활용한 재료 물성 예측 AI 모델 고도화", img: "/images/join_us_증강.webp" },
+  { title: "시뮬레이션을 활용한 재료 설계", desc: "Pandat 및 CALPHAD 기반의 열역학 시뮬레이션과 재료 AI 모델을 결합한 최적 설계", img: "/images/pandat_고화질.webp", cover: true },
 ];
 
 const BENEFITS = [

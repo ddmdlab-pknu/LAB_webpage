@@ -22,19 +22,19 @@ function MainPage() {
     {
       title: "센서용 자왜 소재",
       desc: "항공기·선박 센서용 고성능 합금 연구",
-      img: "/images/research_area_2.png",
+      img: "/images/research_area_2.webp",
       link: "/project/ResearchAreas",
     },
     {
       title: "재료 AI 최적 설계",
       desc: "AI 기반 공정 및 성분 조건 최적화",
-      img: "/images/research_area_3.png",
+      img: "/images/research_area_3.webp",
       link: "/project/ResearchAreas",
     },
     {
       title: "집합조직 및 자성 분석",
       desc: "금속 확산과 자기적 특성 상관관계 규명",
-      img: "/images/research_area_4.png",
+      img: "/images/research_area_4.webp",
       link: "/project/ResearchAreas",
     },
   ];
@@ -100,7 +100,7 @@ function MainPage() {
             <div className="w-full lg:w-1/2 relative">
               <div className="absolute -top-4 -left-4 w-16 h-16 md:w-24 md:h-24 bg-blue-100 rounded-full -z-10"></div>
               <img
-                src="/images/logo(2).png"
+                src="/images/logo(2).webp"
                 alt="Lab Logo"
                 className="w-full max-w-[280px] md:max-w-md mx-auto drop-shadow-2xl"
               />

@@ -12,7 +12,7 @@ function Overview() {
                 <div className="lg:mt-20 mt-5 flex justify-center items-center">
                   <img
                     alt="logo"
-                    src="/images/logo(2).png"
+                    src="/images/logo(2).webp"
                     className="block w-[400px] h-[400px]"
                   />
                 </div>
