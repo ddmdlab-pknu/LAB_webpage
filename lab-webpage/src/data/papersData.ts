@@ -57,6 +57,7 @@ export const journalQuartiles: Record<string, string> = {
   "Journal of Magnetics": "Q4",
   "Journal of the Korean Magnetics Society": "KCI",
   "Journal of the Korean Society for Heat Treatment": "KCI",
+  "Corrosion Science and Technology": "KCI", // 한국부식방식학회지. SCIE 아님 (ESCI·KCI·Scopus 등재, j-cst.org 기준)
 };
 
 // 학술지별 JCR 분야 순위: 그 학술지가 가장 높게 매겨진 분야 하나의 IF 순위/전체 학술지 수와 JIF Percentile.
@@ -128,6 +129,43 @@ export const publicationsData: PublicationItem[] = [
     abstract:
       "Optimizing the magnetic properties of 0.1 mm ultra-thin non-oriented electrical steel is essential for improving electric vehicle (EV) traction motor efficiency. However, traditional experimental trial-and-error methods incur massive time and costs and suffer from limited data availability. To overcome these limitations, this study aims to confirm the effectiveness of data augmentation without additional experiments, enhancing modeling accuracy for magnetic property optimization using limited data. An integrated artificial intelligence (AI) pipeline combining Denoising Diffusion Probabilistic Model (DDPM)-based data augmentation with the FLAML framework was investigated for predicting the steel's magnetic flux density (B) and hysteresis loss (Wₕ). A systematic three-step validation strategy was conducted, which included initial performance evaluation, augmentation scale optimization, and final interpolation performance evaluation on specific evaluation conditions within the explored domain. Consequently, the boosting-based LightGBM was chosen as the final model for magnetic flux density prediction using large-scale augmented data and a 300-second computation time. For hysteresis loss prediction, the ascending and descending branches of the loop were trained separately, selecting Extra Trees and CatBoost as optimal algorithms to minimize prediction errors. Based on the selected models, a grid search within the process parameter space identified 1,050 °C for 16 minutes as the optimal process among candidates satisfying the target magnetic flux density (B₂₅ ≥ 1.5T). This condition achieved a magnetic flux density of 1.6143 T while minimizing energy loss to 409.18 J/m³. These predictions showed an error of less than 2% against actual experimental measurements. In this study, the data-driven optimization framework significantly reduces the number of experiments required to develop high-performance electrical steel compared to conventional trial-and-error approaches, demonstrating its potential for broad application in alloy design and microstructure control.",
     firstPage: "/images/papers/2026-sung-kjmm-first-page.jpg",
+  },
+  // 국립순천대 김성진 교수 연구팀과의 공동연구 (박세민 공동저자)
+  {
+    id: "2026-oh-cst",
+    year: "2026",
+    title:
+      "초고강도 수소용 파이프 강재 내 미량 첨가된 Cr 및 Mo가 수소트랩효율 및 장기 내식성에 미치는 효과",
+    journal: "Corrosion Science and Technology",
+    authors: ["Jung Wan Oh", "Rupesh S. Pedanekar", "Aasiya S. Jamadar", "Jin Sung Park", "Jae Won Lee", "Se Min Park", "Sung Jin Kim*"],
+    link: "https://doi.org/10.14773/cst.2026.25.2.149",
+    abstract:
+      "This study investigates the effect of minor Mo addition in Cr-bearing ultra-high-strength pipeline steel on microstructure, hydrogen transport behavior, and corrosion response. Two steels with different Mo contents were produced through quenching and tempering, and their characteristics were analyzed using electron backscatter diffraction (EBSD), electrochemical hydrogen permeation testing (HPT), and electrochemical impedance spectroscopy (EIS). EBSD analysis revealed that increased Mo content refined the tempered martensitic lath structure and reduced the prior-austenite grain size, indicating suppressed grain growth during heat treatment, which influences hydrogen transport and trapping behavior in the steel. HPT results demonstrated that hydrogen permeation during the charging stage was similar for both steels; however, a clear difference emerged during the desorption stage. The higher Mo content resulted in a faster decrease in permeation current during the decay transient, indicating greater hydrogen trapping efficiency. This behavior is associated with interactions between hydrogen and microstructural features, including Mo-containing precipitates and associated lattice distortions. EIS results further indicated that the higher-Mo steel exhibited increased polarization resistance during prolonged immersion, suggesting improved long-term corrosion resistance. These results suggest that increasing Mo content enhances hydrogen trapping efficiency and surface stability of the Cr-bearing ultrastrong steels, improving durability for hydrogen transport applications.",
+    keywords: ["Cr", "Mo", "Hydrogen trapping", "Corrosion", "Ultra-strength steel"],
+    firstPage: "/images/papers/2026-oh-cst-first-page.jpg",
+  },
+  {
+    id: "2026-yun-cst",
+    year: "2026",
+    title: "미량의 Cu 첨가가 HSLA 강재의 CO2 포화된 중성 및 산성 수용액 내 부식거동에 미치는 효과",
+    journal: "Corrosion Science and Technology",
+    authors: [
+      "Seong Jun Yun",
+      "Duck Bin Yun",
+      "Hye Rin Bang",
+      "Rupesh S. Pedanekar",
+      "Aasiya S. Jamadar",
+      "Wan Geun Kim",
+      "Se Min Park",
+      "Jin Sung Park",
+      "Jae Won Lee",
+      "Sung Jin Kim*",
+    ],
+    link: "https://doi.org/10.14773/cst.2026.25.1.26",
+    abstract:
+      "This study investigates the influence of minor Cu addition on the CO2 corrosion behavior of API-grade HSLA steel in CO2-saturated aqueous environments. Two types of steel were examined: one Cu-free and one containing 0.5 wt% Cu, under neutral (pH ≈ 6) and mildly acidic (pH 4.0–4.5) conditions. The methods used included electrochemical LPR measurements, microstructural characterization, and surface analyses. The addition of Cu did not significantly alter the ferritic microstructure but allowed for limited precipitation of metallic Cu. Under neutral conditions, Cu accelerated initial Fe dissolution and the formation of CuO/Cu2O, which suppressed stable FeCO3 deposition and decreased corrosion resistance. In contrast, under mildly acidic conditions, preferential Fe dissolution led to pronounced Cu enrichment at the surface. The resulting Cu and Cu-oxide layers increased the local pH and promoted more stable FeCO3 formation during prolonged immersion, resulting in lower corrosion rates compared to the Cu-free steel. These findings demonstrate that while Cu plays a detrimental role in neutral solutions, it enhances corrosion resistance in acidic CO2 environments, indicating the potential applicability of Cu-microalloyed steel for acidic CO2 transport conditions.",
+    keywords: ["Cu", "Alloying element", "Steel", "CO2", "Corrosion"],
+    firstPage: "/images/papers/2026-yun-cst-first-page.jpg",
   },
   // 2025
   {

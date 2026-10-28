@@ -766,6 +766,7 @@ const JOURNAL_SHORT: Record<string, string> = {
   "Korean Journal of Metals and Materials": "KJMM",
   "Journal of the Korean Magnetics Society": "JKMS",
   "Journal of the Korean Society for Heat Treatment": "KSHT",
+  "Corrosion Science and Technology": "CST",
   "Journal of Magnetics": "J. Magn.",
 };
 export const journalShort = (j: string) => JOURNAL_SHORT[j] || j;
