@@ -32,6 +32,10 @@ export const galleryData: GalleryItem[] = [
     comments: "(Oct 2026)_2026 KSHT Autumn Conference_Poster Presentation",
   },
   {
+    img: "/images/2026_UOU_PKNU_motor_seminar.jpg",
+    comments: "(Aug 2026)_2026 Traction Motor Design Technology Exchange Seminar_University of Ulsan × Pukyong National University",
+  },
+  {
     img: "/images/2026_kickoff_meeting.jpg",
     comments:
       "(Jun 2026)_Kick-Off Meeting for the National Project on 6.5% Si Wide Electrical Steel and xEV Motor Development",
