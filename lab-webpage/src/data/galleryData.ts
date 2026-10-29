@@ -13,6 +13,11 @@ export const galleryData: GalleryItem[] = [
       "(Oct 2026)_2026 KIM Autumn Conference_4th Student Session_KIM Student of the Year 2026 (JunSeo Ha)",
   },
   {
+    imgs: ["/images/2026_xEV_workshop_group.jpg", "/images/2026_xEV_workshop_session.jpg"],
+    comments:
+      "(Oct 2026)_1st-Year Progress Workshop for the National Project on 6.5% Si Wide Electrical Steel and xEV_Ulsan, Oct 21–22",
+  },
+  {
     img: "/images/2026_KSHT_award.jpg",
     comments:
       "(Oct 2026)_2026 KSHT Autumn Conference_Winner of the Excellent Paper Award (Jeong In-sang Award)",
