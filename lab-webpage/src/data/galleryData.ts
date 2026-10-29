@@ -8,6 +8,11 @@ export interface GalleryItem {
 
 export const galleryData: GalleryItem[] = [
   {
+    imgs: ["/images/2026_KIM_presentation_HJS.jpg", "/images/2026_KIM_award.jpg"],
+    comments:
+      "(Oct 2026)_2026 KIM Autumn Conference_4th Student Session_KIM Student of the Year 2026 (JunSeo Ha)",
+  },
+  {
     img: "/images/2026_KSHT_award.jpg",
     comments:
       "(Oct 2026)_2026 KSHT Autumn Conference_Winner of the Excellent Paper Award (Jeong In-sang Award)",
