@@ -135,6 +135,19 @@ export const publicationsData: PublicationItem[] = [
   },
   // 국립순천대 김성진 교수 연구팀과의 공동연구 (박세민 공동저자)
   {
+    id: "2026-baek-cst",
+    year: "2026",
+    title:
+      "Effects of Trace Mo and Increasing Cr Content on the Corrosion Behaviors of Steels for Tubular Applications in CO2-Saturated Acidic Environments",
+    journal: "Corrosion Science and Technology",
+    authors: ["Gyu Bin Baek", "Sung Jun Yun", "Duck Bin Yun", "Hye Rin Bang", "Se Min Park", "Wan Keun Kim", "Sung Jin Kim*"],
+    link: "https://doi.org/10.14773/cst.2026.25.5.1",
+    abstract:
+      "The corrosion resistance of carbon steels in CO2 environments is generally achieved by forming a protective FeCO3-rich scale. Although trace Mo addition has been reported to improve corrosion resistance in near-neutral CO2 environments, its effectiveness under acidic conditions remains unclear. In this study, the corrosion behavior of tubular steels containing trace Mo (0.10–0.15 wt%) and Cr (0.4–0.5 wt%) was first evaluated in a CO2-saturated acidic solution (pH 4.5, 70 °C). Subsequently, to establish an effective alloy design strategy, steels with Cr contents systematically increased to 1–3 wt% were evaluated under a more severe acidic flowing condition (pH 4.0, 70 °C, 40 rpm). Unlike in the near-neutral environment, trace Mo addition resulted in little enhancement of corrosion resistance, and the trace Cr-Mo-added steel showed the highest corrosion rate. Surface and cross-sectional analyses revealed coarse, discontinuous FeCO3 scales, indicating suppressed FeCO3 nucleation and precipitation kinetics, presumably due to the reduced availability of CO3²⁻. Consequently, the beneficial effect of trace Mo in promoting FeCO3 nucleation was substantially diminished. In contrast, increasing the Cr content progressively improved corrosion resistance, even under acidic flowing conditions, through the formation of a compact Cr-enriched inner layer with a higher Cr enrichment level.",
+    keywords: ["CO2 Corrosion", "Steel", "Cr", "Mo", "FeCO3"],
+    firstPage: "/images/papers/2026-baek-cst-first-page.jpg",
+  },
+  {
     id: "2026-oh-cst",
     year: "2026",
     title:
