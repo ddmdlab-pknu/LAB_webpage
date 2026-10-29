@@ -298,4 +298,39 @@ export const publicationsData: PublicationItem[] = [
       "Recent interest in sustainable development increased demand for efficient transformer to reduce energy consumption. In order to meet the high demand for efficient transformer, inefficient batch annealing manufacture for grain-oriented silicon steel, which is core material of transformer, should be improved. Therefore, novel process for achieving about 90% columnar Goss grains without an inhibitor in continuous line, which differs from the conventional batch process, is herein described. Fe-2.0%Si–C alloys were cold rolled and subsequently partially decarburized in a wet hydrogen gas and these steps are repeated several times. In this process, the sheet is divided into surface layer (α ferrite) and interior (pearlite-like structure + α ferrite). When two-layer sheet is cold rolled, {111}<112> is formed by concentrated shear strain and it is developed into Goss seed. During decarburization, Goss grains within surface layer grow inward as columnar grain, retaining the Goss texture of about 90%. Concentrated shear strain on surface layer was formed by large difference of strength between the surface and interior. By this difference, large stored energy difference between Goss and {111}<112>, {411}<148> is acquired, and this lead to the growth of Goss grains. Driving force for forming the Goss grains is concentrated shear strain on the surface layer. It has been verified that this novel process has a vast potential for making grain-oriented silicon steel by continuous process.",
     firstPage: "/images/papers/2023-na-mmi-first-page.jpg",
   },
+  // 2025년 이전 (연구실 개설 전, POSTECH·POSCO 시절) — 논문 목록에서 "이전" 탭에 모아 보여 준다
+  {
+    id: "2017-park-mmi",
+    year: "2017",
+    title:
+      "Effects of process variables in decarburization annealing of Fe-3%Si-0.3%C steel sheet on textures and magnetic properties",
+    journal: "Metals and Materials International",
+    authors: ["Se Min Park", "Yang Mo Koo", "Byoung Yul Shim", "Dong Nyung Lee"],
+    link: "https://doi.org/10.1007/s12540-017-6042-0",
+  },
+  {
+    id: "2015-park-mmi",
+    year: "2015",
+    title: "Diffusion behavior of 3.2% Si-grain-oriented steel coated with Al by plasma vapor deposition",
+    journal: "Metals and Materials International",
+    authors: ["Se Min Park", "Jae Sang Lee", "Jae Su Kim", "Kyu Seak Han", "Yang Mo Koo"],
+    link: "https://doi.org/10.1007/s12540-015-4467-x",
+  },
+  {
+    id: "2012-sung-msf",
+    year: "2012",
+    title: "Effect of Mn on <100> Texture Evolution in Fe-Si-Mn Alloys",
+    journal: "Materials Science Forum",
+    authors: ["Jin Kyung Sung", "Se Min Park", "Byoung Yul Shim", "Yang Mo Koo"],
+    link: "https://doi.org/10.4028/www.scientific.net/MSF.702-703.730",
+  },
+  {
+    id: "2011-oh-msea",
+    year: "2011",
+    title:
+      "Thermomechanical treatment for enhancing gamma fiber component in recrystallization texture of copper-bearing bake hardening steel",
+    journal: "Materials Science and Engineering: A",
+    authors: ["Kyu Hwan Oh", "Se Min Park", "Yang Mo Koo", "Dong Nyung Lee"],
+    link: "https://doi.org/10.1016/j.msea.2011.04.081",
+  },
 ];

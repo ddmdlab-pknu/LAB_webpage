@@ -6,10 +6,17 @@ import { publicationsData } from "../../data/papersData";
 import { JournalChips, PaperCover } from "../sections";
 
 function Papers() {
-  // 논문이 있는 연도만 탭으로 보여준다 (최신 연도가 왼쪽)
-  const years = Array.from(new Set(publicationsData.map((p) => p.year))).sort((a, b) => Number(b) - Number(a));
+  // 논문이 있는 연도만 탭으로 보여준다 (최신 연도가 왼쪽). 2025년 전 논문은 "이전" 탭 하나로 모은다 (최근 연도 순)
+  const tabOf = (y: string) => (Number(y) < 2025 ? "이전" : y);
+  const years = Array.from(new Set(publicationsData.map((p) => tabOf(p.year)))).sort((a, b) =>
+    a === "이전" ? 1 : b === "이전" ? -1 : Number(b) - Number(a)
+  );
   const [year, setYear] = useState(years[0]);
-  const list = publicationsData.filter((p) => p.year === year);
+  const list = publicationsData
+    .map((p, i) => ({ p, i }))
+    .filter(({ p }) => tabOf(p.year) === year)
+    .sort((a, b) => Number(b.p.year) - Number(a.p.year) || a.i - b.i)
+    .map(({ p }) => p);
 
   return (
     <>
@@ -18,7 +25,7 @@ function Papers() {
         <div className="seg" role="tablist" aria-label="연도">
           {years.map((y) => (
             <button key={y} type="button" role="tab" aria-selected={y === year} onClick={() => setYear(y)}>
-              {y} · {publicationsData.filter((p) => p.year === y).length}
+              {y} · {publicationsData.filter((p) => tabOf(p.year) === y).length}
             </button>
           ))}
         </div>
