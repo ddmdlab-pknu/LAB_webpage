@@ -6,8 +6,8 @@ import { publicationsData } from "../../data/papersData";
 import { JournalChips, PaperCover } from "../sections";
 
 function Papers() {
-  // 논문이 있는 연도만 탭으로 보여준다 (최신 연도가 왼쪽). 2025년 전 논문은 "이전" 탭 하나로 모은다 (최근 연도 순)
-  const tabOf = (y: string) => (Number(y) < 2025 ? "이전" : y);
+  // 논문이 있는 연도만 탭으로 보여준다 (최신 연도가 왼쪽). 2022년 이전 논문은 "이전" 탭 하나로 모은다 (최근 연도 순)
+  const tabOf = (y: string) => (Number(y) <= 2022 ? "이전" : y);
   const years = Array.from(new Set(publicationsData.map((p) => tabOf(p.year)))).sort((a, b) =>
     a === "이전" ? 1 : b === "이전" ? -1 : Number(b) - Number(a)
   );
