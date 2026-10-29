@@ -50,6 +50,12 @@ export const newsData: NewsItem[] = [
     img: "/images/papers/2026-yu-mtc-first-page.jpg",
   },
   {
+    date: "2026.08.14",
+    comments:
+      "울산대학교 전기에너지변환연구실과 함께한 울산대·부경대 공동 워크숍(8.13~14)에 박세민 교수가 전문가로 참석하였습니다.",
+    category: "Event",
+  },
+  {
     date: "2026.06.13",
     comments:
       "하준서 학생의 'Self-supervised learning for grain size prediction in Fe-Si alloy steel sheets: A TabNet-based approach with explainable AI validation' 논문이 MTC에 게재되었습니다. 축하합니다!",
