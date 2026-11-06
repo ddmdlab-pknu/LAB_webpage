@@ -307,6 +307,15 @@ const R_ITEMS: RItem[] = [
     white: true,
     media: () => <img src="/images/copper/ra4.jpg" alt="3D CT와 XRD·EBSD 집합조직 분석 개념도" loading="lazy" decoding="async" />,
   },
+  {
+    group: "app",
+    ko: "숏피닝 표면 개질",
+    en: "Shot peening",
+    desc: "표면 산화물 제거와 압축 응력으로 집합조직을 제어합니다.",
+    to: "/project/ResearchAreas",
+    white: true,
+    media: () => <img src="/images/copper/ra5b.jpg" alt="숏피닝으로 산화물 제거, 압축 잔류응력 형성, 집합조직 제어 개념도" loading="lazy" decoding="async" />,
+  },
 ];
 
 export function ResearchIndex({ heading = true }: { heading?: boolean }) {

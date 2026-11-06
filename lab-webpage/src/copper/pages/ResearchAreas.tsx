@@ -26,6 +26,12 @@ const AREAS = [
     points: ["철강 확산 열처리에 따른 집합조직 형성과 변화 분석", "XRD, EBSD 기반 조직과 자기적 특성 상관관계 규명"],
     tags: ["XRD/EBSD 분석", "자성 특성", "3D 프린팅", "철강 압연 시뮬레이션"],
   },
+  {
+    img: "/images/copper/ra5.jpg",
+    title: "숏피닝 표면 개질을 통한 집합조직 제어",
+    points: ["숏피닝으로 강판 표면 산화물 제거 및 표면 압축 응력 형성", "응력 분포를 이용한 재결정 제어로 전기강판 집합조직 제어"],
+    tags: ["숏피닝", "표면 산화물 제거", "압축 잔류응력", "집합조직 제어"],
+  },
 ];
 
 const INTRO = [
@@ -37,7 +43,7 @@ const INTRO = [
 function ResearchAreas() {
   return (
     <>
-      <PageHead label="Research" title="Research Areas" ko="자성 재료 · 집합조직 · AI 소재 설계 · 시뮬레이션" group={groupOf("Research")} />
+      <PageHead label="Research" title="Research Areas" ko="자성 재료 · 집합조직 · 표면 개질 · AI 소재 설계 · 시뮬레이션" group={groupOf("Research")} />
       <section className="wrap band-s">
         <h2 className="h">연구 방향</h2>
         <ul className="dots" style={{ marginTop: 32, maxWidth: 860, gap: 14 }}>
