@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import { Kit, Opt, V3 } from "../room/kit";
 
-export type EquipId = "sem" | "electro" | "polish" | "press" | "om" | "gas" | "box" | "ct" | "utm" | "defect" | "prof";
+export type EquipId = "sem" | "electro" | "polish" | "press" | "om" | "gas" | "box" | "ct" | "utm" | "defect" | "prof" | "peen";
 
 const C = {
   black: "#1d1e20",
@@ -455,7 +455,116 @@ const prof: Make = (k) => {
   return g;
 };
 
-const MAKERS: Record<EquipId, Make> = { sem, electro, polish, press, om, gas, box, ct, utm, defect, prof };
+
+// ── 숏피닝 설비 (압축기 + 쇼트 가압 탱크 + 회전 투사 상자 작업대) ──
+const peen: Make = (k) => {
+  const g = new THREE.Group();
+  const { b, r, c } = tools(k, g);
+  const frame = "#e9e6dc";
+  const stain = "#a9adb2";
+  // 작업대: 흰 각관 틀 + 금속 상판
+  const TOP = 0.78;
+  const TX = 0.18;
+  for (const [x, z] of [
+    [TX - 0.55, -0.27],
+    [TX + 0.55, -0.27],
+    [TX - 0.55, 0.27],
+    [TX + 0.55, 0.27],
+  ])
+    b([0.05, TOP, 0.05], frame, [x, 0, z]);
+  for (const y of [0.12, TOP - 0.06]) {
+    b([1.15, 0.05, 0.05], frame, [TX, y, 0.27]);
+    b([1.15, 0.05, 0.05], frame, [TX, y, -0.27]);
+    b([0.05, 0.05, 0.54], frame, [TX - 0.55, y, 0]);
+    b([0.05, 0.05, 0.54], frame, [TX + 0.55, y, 0]);
+  }
+  b([1.2, 0.03, 0.62], "#c8c9c6", [TX, TOP, 0]);
+  const T = TOP + 0.03;
+  // 회전 투사 상자 (스테인리스) + 앞 창 + 옆 축받이
+  const BX = TX + 0.22;
+  r([0.34, 0.42, 0.3], 0.01, stain, [BX, T, -0.02]);
+  b([0.24, 0.3, 0.005], "#22262b", [BX, T + 0.06, 0.131], { noShadow: true });
+  b([0.06, 0.06, 0.006], "#c27a4a", [BX - 0.02, T + 0.17, 0.134], { noShadow: true });
+  c(0.06, 0.03, stain, [BX - 0.185, T + 0.19, -0.02], "x");
+  c(0.03, 0.06, C.steel, [BX - 0.21, T + 0.19, -0.02], "x");
+  c(0.05, 0.05, "#dcdcd8", [BX + 0.19, T + 0.19, -0.02], "x");
+  b([0.36, 0.015, 0.32], stain, [BX, T + 0.42, -0.02]);
+  // 위쪽 투명 덮개 (검은 테두리 아크릴 판)
+  b([0.32, 0.46, 0.012], "#cfd8de", [BX, T + 0.44, -0.12], { opacity: 0.35 });
+  b([0.34, 0.02, 0.016], C.black, [BX, T + 0.89, -0.12]);
+  b([0.02, 0.46, 0.016], C.black, [BX - 0.16, T + 0.44, -0.12]);
+  b([0.02, 0.46, 0.016], C.black, [BX + 0.16, T + 0.44, -0.12]);
+  // 기어 모터 + 체인 톱니
+  const MX = TX - 0.28;
+  c(0.075, 0.22, "#8f969c", [MX, T + 0.1, -0.1], "x");
+  c(0.07, 0.02, "#6b7177", [MX - 0.12, T + 0.1, -0.1], "x");
+  r([0.12, 0.1, 0.12], 0.01, "#8f969c", [MX + 0.15, T, -0.1]);
+  b([0.08, 0.06, 0.05], "#7d848a", [MX, T + 0.17, -0.1]);
+  c(0.045, 0.012, "#5b4a36", [MX + 0.23, T + 0.1, -0.1], "x");
+  b([0.3, 0.012, 0.012], "#4a4a4a", [MX + 0.38, T + 0.15, -0.1]);
+  // 공기 조절기 (게이지)
+  b([0.06, 0.12, 0.05], "#d9d9d4", [TX - 0.42, T, 0.18]);
+  c(0.022, 0.012, "#f0f0ee", [TX - 0.42, T + 0.13, 0.2], "z");
+  // 옆 제어함, 아래 통
+  b([0.06, 0.28, 0.26], "#e4e1d6", [TX + 0.6, T - 0.42, 0.05]);
+  c(0.13, 0.26, "#f3f3f1", [TX + 0.1, 0.0, 0.0], "y", { opacity: 0.85 });
+  c(0.11, 0.02, "#2a2a2a", [TX + 0.1, 0.2, 0.0]);
+  // 쇼트 가압 탱크 (흰 원통 + 회색 뚜껑 + 깔때기)
+  const HX = -0.62;
+  const HZ = 0.22;
+  for (const [dx, dz] of [
+    [-0.12, -0.08],
+    [0.12, -0.08],
+    [0, 0.12],
+  ])
+    c(0.012, 0.32, "#d8d8d4", [HX + dx, 0, HZ + dz]);
+  c(0.17, 0.42, "#efefec", [HX, 0.3, HZ]);
+  c(0.2, 0.03, "#b8bbbe", [HX, 0.72, HZ]);
+  c(0.16, 0.12, "#b8bbbe", [HX, 0.75, HZ]);
+  c(0.05, 0.12, "#b8bbbe", [HX, 0.87, HZ]);
+  const funnel = k.once("peen-funnel", () => new THREE.CylinderGeometry(0.2, 0.05, 0.16, 28, 1, true));
+  const fm = k.mesh(g, funnel, "#a7aaad");
+  (fm.material as THREE.MeshStandardMaterial).side = THREE.DoubleSide;
+  fm.position.set(HX, 1.07, HZ);
+  c(0.008, 0.2, C.steel, [HX, 1.0, HZ]);
+  b([0.2, 0.012, 0.012], C.steel, [HX + 0.06, 1.2, HZ]);
+  // 아래 밸브와 게이지
+  c(0.025, 0.3, "#7a7d80", [HX, 0.2, HZ + 0.19], "x");
+  c(0.03, 0.04, "#b57a3a", [HX + 0.02, 0.2, HZ + 0.19], "z");
+  c(0.028, 0.012, "#f0f0ee", [HX + 0.14, 0.4, HZ + 0.17], "z");
+  b([0.04, 0.14, 0.04], C.black, [HX + 0.14, 0.24, HZ + 0.15]);
+  // 쇼트 호스: 탱크 아래 → 투사 상자
+  const hose = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(HX - 0.05, 0.2, HZ + 0.22),
+    new THREE.Vector3(HX - 0.2, 0.6, HZ + 0.1),
+    new THREE.Vector3(-0.3, 1.25, -0.3),
+    new THREE.Vector3(BX - 0.05, 1.35, -0.25),
+    new THREE.Vector3(BX - 0.08, T + 0.42, -0.1),
+  ]);
+  k.mesh(g, k.once("peen-hose", () => new THREE.TubeGeometry(hose, 40, 0.018, 8)), "#1d1e20");
+  // 뒤 압축기: 파란 탱크 + 흡입 필터 두 개 달린 펌프 + 벨트 덮개
+  const CZ = -0.55;
+  c(0.17, 0.75, "#3b7fc4", [-0.42, 0.22, CZ], "x");
+  for (const x of [-0.7, -0.14]) b([0.04, 0.06, 0.24], "#2a2b2d", [x, 0, CZ]);
+  c(0.03, 0.04, "#2a2b2d", [-0.75, 0.05, CZ + 0.12], "y");
+  const PX = -0.3;
+  b([0.22, 0.14, 0.2], "#6f7479", [PX, 0.39, CZ]);
+  for (const dx of [-0.07, 0.07]) {
+    c(0.06, 0.16, "#8a9095", [PX + dx, 0.53, CZ], "y");
+    c(0.045, 0.06, "#f4f4f2", [PX + dx, 0.69, CZ + 0.04], "z");
+  }
+  r([0.07, 0.34, 0.36], 0.05, "#e2e3e1", [PX + 0.2, 0.39, CZ + 0.02]);
+  c(0.06, 0.16, "#9aa0a5", [PX + 0.36, 0.48, CZ], "x");
+  c(0.022, 0.012, "#f0f0ee", [-0.55, 0.4, CZ + 0.17], "z");
+  // 바닥에 흩어진 구리 띠 시편
+  for (let i = 0; i < 9; i++) {
+    const m = b([0.32, 0.004, 0.03], i % 2 ? "#c47c55" : "#d39572", [-0.95 + (i % 3) * 0.06, 0.004 * (i % 4), 0.45 - i * 0.035]);
+    m.rotation.y = -0.6 + i * 0.17;
+  }
+  return g;
+};
+
+const MAKERS: Record<EquipId, Make> = { sem, electro, polish, press, om, gas, box, ct, utm, defect, prof, peen };
 export function buildEquip(k: Kit, id: EquipId) {
   const g = MAKERS[id](k);
   g.updateMatrixWorld(true);

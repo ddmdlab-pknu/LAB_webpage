@@ -249,6 +249,8 @@
 .cu .eq-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px var(--gutter); margin-top: 24px; }
 .cu .eq-card { margin: 0; min-width: 0; }
 .cu .eq-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.cu .eq-pair.solo { grid-template-columns: 1fr; }
+.cu .eq-pair.solo .eq3d { aspect-ratio: 2 / 1; }
 .cu .eq-pic { display: flex; gap: 2px; aspect-ratio: 1; background: var(--surface-2); overflow: hidden; }
 .cu .eq-pic img { flex: 1; min-width: 0; width: 100%; height: 100%; object-fit: cover; }
 .cu .eq-pair .eq3d { aspect-ratio: 1; }
