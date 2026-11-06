@@ -8,6 +8,10 @@ export interface GalleryItem {
 
 export const galleryData: GalleryItem[] = [
   {
+    img: "/images/2026_ICIMC.jpg",
+    comments: "(Nov 2026)_ICIMC 2026 Oral Presentation_Seoul Olympic Parktel, Nov 6",
+  },
+  {
     imgs: ["/images/2026_KIM_presentation_HJS.jpg", "/images/2026_KIM_award.jpg"],
     comments:
       "(Oct 2026)_2026 KIM Autumn Conference_4th Student Session_KIM Student of the Year 2026 (JunSeo Ha)",

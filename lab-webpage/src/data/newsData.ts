@@ -10,6 +10,13 @@ export const newsData: NewsItem[] = [
   // 2026
 
   {
+    date: "2026.11.06",
+    comments:
+      "박세민 교수가 ICIMC 2026(International Conference on Innovative Materials Corrosion 2026, 서울 올림픽파크텔)에서 'Multimodal AI-Guided Aluminum Surface Diffusion of Electrical Steel: Simultaneous High-Frequency Iron-Loss Reduction, Weld-Free Lamination Bonding, and Corrosion Resistance'를 구두 발표하였습니다.",
+    category: "Conference",
+    img: "/images/2026_ICIMC.jpg",
+  },
+  {
     date: "2026.10.28",
     comments:
       "2026년도 대한금속·재료학회 추계학술대회 학생세션에서 하준서 학생의 '자가 지도 학습(SSL)과 설명 가능한 인공지능(XAI)을 활용한 무방향성 전기강판의 자기적 성질 기반 결정립 크기 예측' 발표가 최우수논문으로 선정되어 KIM Student of the Year 2026을 수상하였습니다. 축하합니다!",
