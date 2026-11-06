@@ -138,8 +138,8 @@ function LabStage() {
           <ul className="kit" aria-label="실험실 장비">
             {(
               [
+                ["/images/copper/ra5b.jpg", "숏피닝 설비", "표면 산화물 제거 · 압축 응력", "peen"],
                 ["/images/mini SEM.jpg", "Mini SEM", "미세조직 관찰", "sem"],
-                ["/images/OM.jpg", "광학 현미경", "조직 관찰", "om"],
                 ["/images/3D_CT.jpg", "3D CT", "내부 3차원 구조", "ct"],
                 ["/images/열처리.jpg", "가스 열처리로", "탈탄·확산 열처리", "gas"],
               ] as [string, string, string, EquipId][]
@@ -313,6 +313,7 @@ function Home() {
       <ChartSection />
       <LabStage />
       <RoomSection />
+      <RoomSection first="surface" id="room2" title={["표면 처리 · 분석실도", "돌려 보세요."]} />
       <ResearchCards />
       <LoopSection />
       <GrainSection />

@@ -3,6 +3,7 @@
 import * as THREE from "three";
 import type { RoomId } from "./data";
 import { Kit } from "./kit";
+import { buildEquip } from "../equip/models";
 export { Kit };
 
 export type View = { t: [number, number, number]; az: number; el: number; dist: number };
@@ -427,7 +428,75 @@ function finish(
   return { group: g, boxes, feet, ...v };
 }
 
-const BUILDERS: Record<RoomId, (k: Kit) => Built> = { materials };
+
+// ── 표면 처리 · 분석실 (숏피닝 설비 + 3D CT) ──────────────────
+function surface(k: Kit): Built {
+  const g = new THREE.Group();
+  const items: Record<string, THREE.Group> = {};
+  const W = 5.2,
+    D = 4,
+    H = 2.5,
+    x0 = -W / 2,
+    z0 = -D / 2;
+  room(k, g, W, D, H, C.epoxy);
+
+  // 왼쪽 벽 회색 문, 안쪽 벽 창문 두 칸
+  k.box(g, [0.03, 2.16, 1.07], "#dcdcda", [x0 + 0.015, 0, 1.2]);
+  k.box(g, [0.04, 2.1, 0.95], "#5d6a78", [x0 + 0.03, 0, 1.2]);
+  k.box(g, [0.07, 0.03, 0.15], "#c4c7ca", [x0 + 0.07, 1.0, 0.85]);
+  for (const wx of [-1.2, 0.55]) {
+    k.box(g, [1.5, 1.0, 0.04], "#d8dadc", [wx, 1.0, z0 + 0.02]);
+    k.box(g, [1.38, 0.88, 0.046], "#b9d3e6", [wx, 1.06, z0 + 0.023], { rough: 0.3 });
+    k.box(g, [0.04, 0.88, 0.05], "#d8dadc", [wx, 1.06, z0 + 0.025]);
+    k.box(g, [1.58, 0.04, 0.14], "#d8dadc", [wx, 0.96, z0 + 0.07]);
+  }
+
+  // 숏피닝 설비 (창가)
+  const peen = item(g, items, "peen");
+  const pm = buildEquip(k, "peen");
+  pm.position.set(-1.05, 0, -1.2);
+  peen.add(pm);
+
+  // 3D CT (오른쪽 안쪽)
+  const ct = item(g, items, "ct");
+  const cm = buildEquip(k, "ct");
+  cm.position.set(1.75, 0, -1.25);
+  cm.rotation.y = -0.25;
+  ct.add(cm);
+
+  // 분석용 컴퓨터 책상 (오른쪽 앞)
+  const desk = item(g, items, "desk");
+  table(k, desk, 1.75, 0.75, 1.3, 0.65, 0.74, C.white);
+  k.box(desk, [0.2, 0.42, 0.42], C.black, [2.2, 0, 0.75]);
+  k.box(desk, [0.04, 0.12, 0.04], C.black, [1.6, 0.74, 0.6]);
+  k.box(desk, [0.56, 0.36, 0.03], C.black, [1.6, 0.86, 0.6]);
+  k.box(desk, [0.52, 0.32, 0.005], "#2b3340", [1.6, 0.88, 0.617], { noShadow: true });
+  k.box(desk, [0.42, 0.02, 0.14], C.dark, [1.6, 0.74, 0.86]);
+  chair(k, desk, 1.6, 1.4, Math.PI);
+
+  // 왼쪽 벽 선반 (시편·쇼트 보관)
+  k.box(g, [0.45, 1.6, 0.9], "#cfd2d4", [x0 + 0.25, 0, -0.15]);
+  for (const y of [0.4, 0.8, 1.2]) k.box(g, [0.43, 0.02, 0.88], "#b5b9bc", [x0 + 0.25, y, -0.15]);
+  for (const [y, z, col] of [
+    [0.42, -0.4, "#d39572"],
+    [0.42, 0.05, "#9aa0a6"],
+    [0.82, -0.3, "#c47c55"],
+    [1.22, 0.1, "#e8e4d8"],
+  ] as [number, number, string][])
+    k.box(g, [0.3, 0.16, 0.3], col, [x0 + 0.25, y, z]);
+
+  return finish(g, items, {
+    overview: { t: [0, 0.45, 0], az: 0.62, el: 0.6, dist: 12.5 },
+    views: {
+      peen: { t: [-1.0, 0.8, -1.2], az: 0.45, el: 0.42, dist: 4.0 },
+      ct: { t: [1.75, 0.9, -1.2], az: 0.2, el: 0.38, dist: 4.0 },
+      desk: { t: [1.75, 0.85, 0.75], az: 0.35, el: 0.5, dist: 3.4 },
+    },
+    azRange: [-0.1, 1.55],
+  });
+}
+
+const BUILDERS: Record<RoomId, (k: Kit) => Built> = { materials, surface };
 export function build(k: Kit, id: RoomId): Built {
   return BUILDERS[id](k);
 }

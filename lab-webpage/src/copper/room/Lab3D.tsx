@@ -9,7 +9,7 @@ import { afterScroll, frameProbe, idleTask, scrolling, softwareGL } from "../idl
 type Cb = { sel: (id: string | null) => void; fail: () => void };
 type Engine = { setRoom: (id: RoomId) => void; select: (id: string | null) => void; dispose: () => void };
 
-function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.MutableRefObject<Cb>): Engine | null {
+function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.MutableRefObject<Cb>, first: RoomId): Engine | null {
   let renderer: THREE.WebGLRenderer;
   try {
     renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "low-power" });
@@ -58,8 +58,8 @@ function createEngine(host: HTMLDivElement, tag: HTMLSpanElement, cb: React.Muta
 
   const kit = new Kit();
   const built: Partial<Record<RoomId, Built>> = {};
-  let roomId: RoomId = "materials";
-  let cur: Built = (built.materials = build(kit, "materials"));
+  let roomId: RoomId = first;
+  let cur: Built = (built[first] = build(kit, first));
   scene.add(cur.group);
 
   let sel: string | null = null,
@@ -373,7 +373,7 @@ export default function Lab3D({ room, sel, onSel, onFail, label }: Props) {
     // 장면 만들기는 무거우므로 스크롤이 멈춘 한가한 때 한다
     const cancel = idleTask(() => {
       if (!alive || !host.current || !tag.current) return;
-      e = createEngine(host.current, tag.current, cb);
+      e = createEngine(host.current, tag.current, cb, roomRef.current);
       if (!e) return cb.current.fail();
       eng.current = e;
       e.setRoom(roomRef.current);

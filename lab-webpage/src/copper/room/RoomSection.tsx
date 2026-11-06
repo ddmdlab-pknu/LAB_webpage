@@ -1,12 +1,15 @@
 // 홈 "실험실을 돌려 보세요" 구역. 무거운 3D 부분(three.js)은 화면 가까이 와야 내려받는다.
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { useMedia } from "../sections";
-import { ROOMS, roomById, RoomId } from "./data";
+import { roomById, RoomId } from "./data";
 
 const Lab3D = lazy(() => import("./Lab3D"));
 
-export default function RoomSection() {
-  const [room, setRoom] = useState<RoomId>("materials");
+type Props = { first?: RoomId; id?: string; title?: [string, string] };
+
+// 방마다 구역 하나. 같은 화면에 둘을 두면 각각 따로 그린다
+export default function RoomSection({ first = "materials", id = "room", title = ["실험실을", "돌려 보세요."] }: Props) {
+  const room = first;
   const [sel, setSel] = useState<string | null>(null);
   const [near, setNear] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -36,13 +39,13 @@ export default function RoomSection() {
   const poster = <img className="rm-poster" src={R.poster} alt={live ? "" : R.alt} />;
 
   return (
-    <section className="band" id="room">
+    <section className="band" id={id}>
       <div className="wrap">
         <div className="rm-head">
           <h2 className="h">
-            실험실을
+            {title[0]}
             <br />
-            돌려 보세요.
+            {title[1]}
           </h2>
           <p className="body">
             사진을 보고 대략 만든 입체 모형입니다. {touch ? "옆으로 밀어" : "끌어서"} 돌려 보고, 장비 이름을 누르면 그 자리로 다가갑니다.
@@ -63,24 +66,6 @@ export default function RoomSection() {
             )}
           </div>
           <div className="rm-side">
-            {ROOMS.length > 1 && (
-              <div className="tabs" role="tablist" aria-label="방 고르기">
-                {ROOMS.map((r) => (
-                  <button
-                    key={r.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={r.id === room}
-                    onClick={() => {
-                      setRoom(r.id);
-                      setSel(null);
-                    }}
-                  >
-                    {r.label}
-                  </button>
-                ))}
-              </div>
-            )}
             <ul className="rm-list" aria-label={R.label + " 장비"}>
               {R.items.map((i) => (
                 <li key={i.id}>

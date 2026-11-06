@@ -272,6 +272,15 @@ const R_ITEMS: RItem[] = [
     ),
   },
   {
+    group: "axis",
+    ko: "숏피닝 표면 개질",
+    en: "Shot peening",
+    desc: "숏피닝으로 강판 표면의 산화물을 걷어내고 표면에 압축 잔류응력을 만듭니다. 이 응력으로 재결정을 이끌어 원하는 집합조직을 얻습니다.",
+    to: "/project/ResearchAreas",
+    white: true,
+    media: () => <img src="/images/copper/ra5b.jpg" alt="숏피닝으로 산화물 제거, 압축 잔류응력 형성, 집합조직 제어 개념도" loading="lazy" decoding="async" />,
+  },
+  {
     group: "app",
     ko: "모빌리티용 철강 소재",
     en: "Mobility steel",
@@ -306,15 +315,6 @@ const R_ITEMS: RItem[] = [
     to: "/project/ResearchAreas",
     white: true,
     media: () => <img src="/images/copper/ra4.jpg" alt="3D CT와 XRD·EBSD 집합조직 분석 개념도" loading="lazy" decoding="async" />,
-  },
-  {
-    group: "app",
-    ko: "숏피닝 표면 개질",
-    en: "Shot peening",
-    desc: "표면 산화물 제거와 압축 응력으로 집합조직을 제어합니다.",
-    to: "/project/ResearchAreas",
-    white: true,
-    media: () => <img src="/images/copper/ra5b.jpg" alt="숏피닝으로 산화물 제거, 압축 잔류응력 형성, 집합조직 제어 개념도" loading="lazy" decoding="async" />,
   },
 ];
 
@@ -366,7 +366,7 @@ export function ResearchIndex({ heading = true }: { heading?: boolean }) {
   }, [wide]);
 
   const groups: [RItem["group"], string][] = [
-    ["axis", "네 연구 축"],
+    ["axis", "다섯 연구 축"],
     ["app", "쓰이는 곳"],
   ];
   const cur = R_ITEMS[act];
@@ -376,12 +376,12 @@ export function ResearchIndex({ heading = true }: { heading?: boolean }) {
         {heading && (
           <div className="ix-head">
             <h2 className="h">
-              네 축이 하나의
+              다섯 축이 하나의
               <br />
               설계로 이어집니다.
             </h2>
             <p className="body">
-              자성 재료, 집합조직, AI 소재 설계, 시뮬레이션. 그 결과는 전기차 모터와 항공기·선박 센서용 소재로 쓰입니다.
+              자성 재료, 집합조직, AI 소재 설계, 시뮬레이션, 숏피닝 표면 개질. 그 결과는 전기차 모터와 항공기·선박 센서용 소재로 쓰입니다.
             </p>
           </div>
         )}
@@ -458,12 +458,12 @@ export function ResearchCards() {
       <div className="wrap">
         <div className="ix-head">
           <h2 className="h">
-            네 축이 하나의
+            다섯 축이 하나의
             <br />
             설계로 이어집니다.
           </h2>
           <p className="body">
-            자성 재료, 집합조직, AI 소재 설계, 시뮬레이션. 그 결과는 전기차 모터와 항공기·선박 센서용 소재로 쓰입니다.
+            자성 재료, 집합조직, AI 소재 설계, 시뮬레이션, 숏피닝 표면 개질. 그 결과는 전기차 모터와 항공기·선박 센서용 소재로 쓰입니다.
           </p>
         </div>
         <div className="rc-track" ref={track}>
