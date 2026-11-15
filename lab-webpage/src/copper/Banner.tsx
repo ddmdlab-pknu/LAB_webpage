@@ -87,6 +87,13 @@ export function NoticePopup() {
     const t = window.setTimeout(() => setOpen(true), 900);
     return () => window.clearTimeout(t);
   }, []);
+  // 5초 뒤 저절로 닫힌다. 마우스를 올리거나 만지는 동안은 기다린다
+  const [hold, setHold] = useState(false);
+  useEffect(() => {
+    if (!open || hold) return;
+    const t = window.setTimeout(() => setOpen(false), 5000);
+    return () => window.clearTimeout(t);
+  }, [open, hold]);
   useEffect(() => {
     if (!open) return;
     const k = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -105,7 +112,16 @@ export function NoticePopup() {
   };
   return (
     <div className="np" onClick={() => setOpen(false)}>
-      <div className="np-box" role="dialog" aria-modal="true" aria-labelledby="np-title" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={hold ? "np-box hold" : "np-box"}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="np-title"
+        onClick={(e) => e.stopPropagation()}
+        onPointerEnter={() => setHold(true)}
+        onPointerLeave={() => setHold(false)}
+        onTouchStart={() => setHold(true)}
+      >
         <button type="button" className="np-x" aria-label="닫기" onClick={() => setOpen(false)}>
           ×
         </button>
@@ -117,6 +133,7 @@ export function NoticePopup() {
           </h2>
           <p className="np-desc">{p.desc}</p>
         </div>
+        <span className="np-timer" aria-hidden="true" />
         <div className="np-foot">
           <button type="button" className="np-skip" onClick={hideToday}>
             오늘 하루 보지 않기

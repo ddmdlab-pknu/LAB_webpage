@@ -157,4 +157,7 @@
 .cu .np-skip, .cu .np-go { border: 0; padding: 6px 0; background: none; font: inherit; font-size: 14px; cursor: pointer; }
 .cu .np-skip { color: var(--muted); }
 .cu .np-go { padding: 10px 16px; border-radius: 10px; background: var(--accent); color: var(--white); font-weight: 600; }
+.cu .np-timer { display: block; height: 3px; background: var(--accent); transform-origin: left; animation: npTimer 5000ms linear forwards; }
+.cu .np-box.hold .np-timer { animation: none; transform: scaleX(0); }
+@keyframes npTimer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 @keyframes npFade { from { opacity: 0; } to { opacity: 1; } }
