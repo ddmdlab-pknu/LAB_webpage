@@ -24,6 +24,7 @@ import GrainSection from "./grain/GrainSection";
 import Equip3D from "./equip/Equip3D";
 import type { EquipId } from "./equip/models";
 import { idleTask } from "./idle";
+import NoticeBanner, { NoticePopup } from "./Banner";
 
 const SIMS = {
   dual: {
@@ -75,6 +76,7 @@ function Hero() {
     >
       <div className="wrap hero-grid">
         <div className="hero-copy">
+          <NoticeBanner mobile />
           <h1 className="display">
             <span className="hl">
               <Words text="데이터로 소재를" />
@@ -94,6 +96,7 @@ function Hero() {
           </div>
         </div>
         <figure className="magnet" data-open>
+          <NoticeBanner />
           <canvas
             ref={ref}
             role="img"
@@ -290,6 +293,7 @@ function Home() {
   return (
     <>
       <Hero />
+      <NoticePopup />
 
       <section className="band intro" id="what" aria-labelledby="what-h">
         <div className="wrap">
