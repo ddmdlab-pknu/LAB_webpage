@@ -766,7 +766,7 @@ export function papersByIF() {
     .map((x) => x.p);
 }
 
-const JOURNAL_SHORT: Record<string, string> = {
+export const JOURNAL_SHORT: Record<string, string> = {
   "Journal of Materials Research and Technology": "JMR&T",
   "Materials Characterization": "Mater. Charact.",
   "Scripta Materialia": "Scripta Mater.",

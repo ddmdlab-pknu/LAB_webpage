@@ -1,7 +1,7 @@
 import { PageHead, groupOf } from "../ui";
 import { ResearchIndex } from "../sections";
 
-const AREAS = [
+export const AREAS = [
   {
     img: "/images/copper/ra1.jpg",
     title: "모빌리티 모터용 철강 소재",

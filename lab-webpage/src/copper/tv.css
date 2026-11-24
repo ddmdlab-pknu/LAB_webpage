@@ -1,0 +1,99 @@
+/* 연구실 앞 TV 홍보 화면 (/tv). 16:9 화면 가로폭(vw)에 맞춰 크기를 정한다 */
+.cu .tv { position: fixed; inset: 0; z-index: 1000; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--f); cursor: pointer; transition: background-color 900ms ease; }
+.cu .tv.idle { cursor: none; }
+.cu .tv.tone-dark { background: #0d1210; color: #f3f3f1; }
+.cu .tv.tone-split { background: linear-gradient(180deg, var(--pink) 0 50%, var(--mint) 50% 100%); }
+.cu .tv-stage { position: absolute; inset: 0; padding: 7vw 6vw 6vw; display: flex; flex-direction: column; justify-content: center; animation: tvFade 900ms ease both; }
+@keyframes tvFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* 글자·그림이 차례로 떠오르는 움직임 */
+.cu .tv-in { animation: tvRise 1100ms var(--ease-expo) both; animation-delay: calc(250ms + var(--i, 0) * 160ms); }
+@keyframes tvRise { from { opacity: 0; transform: translateY(2.4vw); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+/* 그림은 천천히 확대 (켄 번스) */
+.cu .tv-kb { animation: tvKb 9500ms linear both; }
+@keyframes tvKb { from { transform: scale(1); } to { transform: scale(1.08); } }
+
+/* 공통 글자 */
+.cu .tv-kicker { display: inline-block; margin-bottom: 1.4vw; font-size: 1.05vw; font-weight: 700; letter-spacing: 0.18em; color: var(--accent); }
+.cu .tone-dark .tv-kicker { color: var(--mint); }
+.cu .tv-hero { margin: 0; font-size: 6.4vw; font-weight: 600; line-height: 1.08; letter-spacing: -0.03em; }
+.cu .tv-hero.sm { font-size: 4.4vw; }
+.cu .tv-h2 { margin: 0 0 2.4vw; font-size: 3.4vw; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.cu .tv-sub { margin: 2vw 0 0; max-width: 60vw; font-size: 1.7vw; line-height: 1.55; color: rgba(10, 10, 10, 0.75); }
+.cu .tv-lead { margin: 0; max-width: 72vw; font-size: 3.3vw; font-weight: 500; line-height: 1.4; letter-spacing: -0.02em; }
+.cu .tv-lead b { font-weight: 700; background: linear-gradient(transparent 62%, var(--mint) 62%); }
+
+/* 1. 시작 */
+.cu .tv-intro { display: flex; flex-direction: column; align-items: flex-start; }
+.cu .tv-logo-big { width: 7vw; height: 7vw; border-radius: 1.4vw; object-fit: cover; margin-bottom: 3vw; box-shadow: 0 1vw 3vw rgba(0, 0, 0, 0.12); }
+
+/* 2. 하는 일 */
+.cu .tv-chips { display: flex; flex-wrap: wrap; gap: 1vw; margin-top: 3.4vw; }
+.cu .tv-chips span { padding: 0.8vw 1.6vw; border-radius: 999px; background: var(--white); font-size: 1.5vw; font-weight: 600; }
+
+/* 3. 연구 분야 */
+.cu .tv-area { display: grid; grid-template-columns: 1fr 1.15fr; gap: 4vw; align-items: center; height: 100%; }
+.cu .tv-points { margin: 0; padding: 0; list-style: none; display: grid; gap: 1.2vw; }
+.cu .tv-points li { position: relative; padding-left: 2vw; font-size: 1.7vw; line-height: 1.5; }
+.cu .tv-points li::before { content: ""; position: absolute; left: 0; top: 0.75vw; width: 0.8vw; height: 0.8vw; border-radius: 50%; background: var(--accent); }
+.cu .tv-tags { display: flex; flex-wrap: wrap; gap: 0.8vw; margin-top: 2.4vw; }
+.cu .tv-tags span { padding: 0.5vw 1.1vw; border-radius: 999px; background: var(--surface); font-size: 1.15vw; color: var(--muted); }
+.cu .tv-area-pic { height: 36vw; border-radius: 1.6vw; overflow: hidden; background: var(--white); }
+.cu .tv-area-pic img { width: 100%; height: 100%; object-fit: contain; }
+
+/* 4. 숫자 */
+.cu .tv-num-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vw; margin-top: 1vw; }
+.cu .tv-num { display: grid; gap: 0.6vw; padding: 2.4vw 2vw; border-radius: 1.4vw; background: rgba(255, 255, 255, 0.06); }
+.cu .tv-num b { font-size: 7vw; font-weight: 600; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.cu .tv-num span { font-size: 1.7vw; font-weight: 600; }
+.cu .tv-num small { font-size: 1.2vw; opacity: 0.65; }
+
+/* 5. 소식 */
+.cu .tv-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6vw; }
+.cu .tv-card { overflow: hidden; border-radius: 1.4vw; background: var(--white); }
+.cu .tv-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.cu .tv-card div { padding: 1.2vw 1.3vw 1.5vw; }
+.cu .tv-card small { font-size: 1vw; font-weight: 700; color: var(--accent); }
+.cu .tv-card p { margin: 0.6vw 0 0; font-size: 1.2vw; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* 6. 논문 */
+.cu .tv-papers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vw; }
+.cu .tv-paper img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: top; border-radius: 0.8vw; background: var(--white); box-shadow: 0 1vw 2.4vw rgba(0, 0, 0, 0.1); }
+.cu .tv-paper small { display: block; margin-top: 1.2vw; font-size: 1.05vw; font-weight: 700; color: var(--accent); }
+.cu .tv-paper p { margin: 0.5vw 0 0; font-size: 1.15vw; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.cu .tv-cards-wrap .tv-h2 { margin-bottom: 2vw; }
+
+/* 7. 장비 */
+.cu .tv-lab-grid { display: grid; grid-template-columns: 1.3fr 1.3fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1.4vw; height: 32vw; }
+.cu .tv-lab-item { position: relative; overflow: hidden; border-radius: 1.2vw; background: var(--white); }
+.cu .tv-lab-item:nth-child(1), .cu .tv-lab-item:nth-child(2) { grid-row: span 2; }
+.cu .tv-lab-item img { width: 100%; height: 100%; object-fit: cover; }
+.cu .tv-lab-item span { position: absolute; left: 1vw; bottom: 1vw; padding: 0.4vw 1vw; border-radius: 999px; background: rgba(255, 255, 255, 0.92); font-size: 1.15vw; font-weight: 600; }
+
+/* 8. 사람들 */
+.cu .tv-people-row { display: flex; flex-wrap: wrap; gap: 2.4vw; align-items: flex-end; }
+.cu .tv-person { display: grid; justify-items: center; gap: 0.5vw; width: 12vw; text-align: center; }
+.cu .tv-person img { width: 12vw; height: 15vw; border-radius: 1.2vw; object-fit: cover; background: var(--white); }
+.cu .tv-person.pi { width: 15vw; }
+.cu .tv-person.pi img { width: 15vw; height: 19vw; }
+.cu .tv-person b { margin-top: 0.6vw; font-size: 1.5vw; }
+.cu .tv-person span { font-size: 1.1vw; color: var(--muted); }
+
+/* 9. 모집 */
+.cu .tv-join { display: grid; grid-template-columns: 1fr auto; gap: 5vw; align-items: center; }
+.cu .tv-pill { display: inline-block; padding: 0.6vw 1.4vw; border-radius: 999px; background: var(--white); color: #8a2a2f; font-size: 1.4vw; font-weight: 700; margin-bottom: 2vw; }
+.cu .tv-contact { margin: 2vw 0 0; font-size: 1.5vw; font-weight: 600; }
+.cu .tv-qr { display: grid; justify-items: center; gap: 1vw; padding: 2vw; border-radius: 1.6vw; background: var(--white); }
+.cu .tv-qr img { width: 18vw; height: 18vw; image-rendering: pixelated; }
+.cu .tv-qr span { font-size: 1.2vw; font-weight: 600; }
+
+/* 구석 표시와 진행 막대 */
+.cu .tv-brand { position: absolute; left: 6vw; top: 2.6vw; display: flex; align-items: center; gap: 0.8vw; font-size: 1.3vw; font-weight: 700; }
+.cu .tv-brand img { width: 2.2vw; height: 2.2vw; border-radius: 0.5vw; object-fit: cover; }
+.cu .tv-url { position: absolute; right: 6vw; top: 2.9vw; font-size: 1.2vw; font-weight: 600; opacity: 0.6; }
+.cu .tv-bar { position: absolute; left: 6vw; right: 6vw; bottom: 2.4vw; display: flex; gap: 0.5vw; }
+.cu .tv-bar span { position: relative; flex: 1; height: 0.3vw; min-height: 3px; border-radius: 999px; overflow: hidden; background: rgba(10, 10, 10, 0.12); }
+.cu .tone-dark .tv-bar span { background: rgba(255, 255, 255, 0.18); }
+.cu .tv-bar span.done { background: currentColor; opacity: 0.55; }
+.cu .tv-bar span i { position: absolute; inset: 0; background: currentColor; transform-origin: left; animation: tvBar linear both; }
+@keyframes tvBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }

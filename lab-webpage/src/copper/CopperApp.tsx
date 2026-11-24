@@ -20,6 +20,8 @@ import News from "./pages/News";
 import Gallery from "./pages/Gallery";
 import LabGame from "./pages/LabGame";
 import JoinUs from "./pages/JoinUs";
+import TvPromo from "./pages/TvPromo";
+import "./tv.css";
 
 // 글꼴: Pretendard 한 가지 (한글·라틴 모두, SIL OFL). public/fonts/pretendard 에 두고 쓰는 글자 묶음만 내려받는다
 const FONT_URL = "/fonts/pretendard/pretendardvariable-dynamic-subset.css";
@@ -154,6 +156,14 @@ function ScrollToTop() {
 function CopperApp() {
   useCopperDocument();
   useReveal();
+  const { pathname } = useLocation();
+  // 연구실 앞 TV 홍보 화면: 메뉴·바닥글 없이 전체 화면
+  if (/^\/tv\/?$/i.test(pathname))
+    return (
+      <div className="cu">
+        <TvPromo />
+      </div>
+    );
   return (
     <div className="cu">
       <div className="safe-top" />
